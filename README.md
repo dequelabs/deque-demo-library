@@ -116,6 +116,40 @@ public/
 4. Land Phase 1 (clean baseline) before introducing any deliberate issues.
 5. Create a per-sector `ACCESSIBILITY_ISSUES.md` for Phase 2 issue tracking.
 
+## Deploy to GitHub Pages (dequelabs org)
+
+A `.github/workflows/deploy.yml` is included. On every push to `main`, it builds
+the Vite app and deploys `dist/` to GitHub Pages. The Vite base path is set
+dynamically from the repository name so the bundle works at
+`https://dequelabs.github.io/<repo>/`.
+
+Once-off setup from your local machine (assumes you have the `gh` CLI authenticated):
+
+```bash
+# from inside this folder
+gh repo create dequelabs/deque-demo-library \
+  --public \
+  --source=. \
+  --remote=origin \
+  --push \
+  --description "Deque SE multi-sector accessibility demo library"
+```
+
+Or, if you prefer plain git:
+
+```bash
+git remote add origin git@github.com:dequelabs/deque-demo-library.git
+git push -u origin main
+```
+
+After the first push, open the repo on GitHub → **Settings → Pages → Build and
+deployment → Source: GitHub Actions**. The workflow will run on every subsequent
+push and publish to `https://dequelabs.github.io/deque-demo-library/`.
+
+> **Note on routing:** the app uses HashRouter, so URLs look like
+> `https://dequelabs.github.io/deque-demo-library/#/fintech/dashboard`.
+> No 404 fallback / rewrite rule is needed.
+
 ## Demo-time tips
 
 - The **landing page** (`/`) is the meta surface — keep it clean.
