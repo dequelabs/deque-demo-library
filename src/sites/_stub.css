@@ -1,0 +1,70 @@
+/* Shared styling for sector stubs (the "coming soon" placeholder pages). */
+.stub-shell {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 32px;
+  text-align: center;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 209, 102, 0.08) 0px,
+      rgba(255, 209, 102, 0.08) 12px,
+      transparent 12px,
+      transparent 24px
+    ),
+    var(--stub-bg, #f6f5ee);
+}
+.stub-tag {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--stub-accent, #1a1a1a);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.stub-shell h1 {
+  font-size: 44px;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+  color: var(--stub-deep, #0a0a0a);
+}
+.stub-shell p {
+  max-width: 540px;
+  font-size: 16px;
+  color: #525252;
+  margin: 0 0 24px;
+}
+.stub-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto 28px;
+  max-width: 480px;
+  text-align: left;
+}
+.stub-list li {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #404040;
+}
+.stub-list li::before {
+  content: '○';
+  margin-right: 10px;
+  color: var(--stub-accent, #1a1a1a);
+  font-weight: 700;
+}
+.stub-cta {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: var(--stub-deep, #0a0a0a);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}

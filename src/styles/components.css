@@ -1,0 +1,187 @@
+/* Shared component styles - buttons, forms, cards, modals.
+   Sector themes can override via CSS vars on the sector root. */
+
+/* ========== Buttons ========== */
+.btn {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+  background: #fff;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+.btn:hover { text-decoration: none; }
+
+.btn-primary {
+  background: var(--brand-primary);
+  color: #fff;
+}
+.btn-primary:hover { filter: brightness(0.94); }
+
+.btn-outline {
+  background: transparent;
+  border-color: var(--brand-deep);
+  color: var(--brand-deep);
+}
+
+.btn-accent {
+  background: var(--brand-accent);
+  color: #fff;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+}
+
+.btn-block { width: 100%; padding: 12px; }
+
+/* Icon buttons - many of these are intentionally given no accessible name */
+.icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ========== Form ========== */
+.form-row { margin-bottom: 18px; }
+.form-row label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.form-row input,
+.form-row select,
+.form-row textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-family: inherit;
+  background: #fff;
+}
+.form-help {
+  font-size: 12px;
+  color: var(--text-faint);     /* low-contrast helper text - intentional */
+  margin-top: 6px;
+}
+.form-error {
+  color: var(--danger);
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+/* ========== Cards ========== */
+.card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+/* ========== Modal ========== */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(10, 37, 64, 0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.modal-backdrop.is-open { display: flex; }
+.modal {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  max-width: 480px;
+  width: 90%;
+}
+
+/* ========== Table ========== */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.data-table td, .data-table th {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  text-align: left;
+}
+.data-table tr:last-child td { border-bottom: none; }
+
+/* ========== Slim footer site switcher ==========
+   Subtle bar at the bottom of every sector page so the demoer can hop
+   between sectors without backing out to the landing page. */
+.site-switcher {
+  background: #1a1a1a;
+  color: #e5e5e5;
+  font-size: 12px;
+  padding: 8px 16px;
+}
+.site-switcher .switcher-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.switcher-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #ffd166;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.switcher-home:hover { text-decoration: none; opacity: 0.85; }
+.switcher-home .switcher-mark {
+  font-size: 14px;
+  line-height: 1;
+}
+.switcher-list {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+.switcher-link {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  color: #b8b8b8;
+  text-decoration: none;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.switcher-link:hover { color: #fff; text-decoration: none; background: rgba(255,255,255,0.06); }
+.switcher-link.is-active {
+  background: rgba(255, 209, 102, 0.15);
+  color: #ffd166;
+}
+
+@media (max-width: 880px) {
+  .switcher-grid { grid-template-columns: repeat(2, 1fr); }
+}
