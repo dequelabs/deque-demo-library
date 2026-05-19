@@ -116,6 +116,42 @@ public/
 4. Land Phase 1 (clean baseline) before introducing any deliberate issues.
 5. Create a per-sector `ACCESSIBILITY_ISSUES.md` for Phase 2 issue tracking.
 
+## Deploy to Vercel
+
+Vercel auto-detects Vite; `vercel.json` makes the build/install/output
+directories explicit so behaviour is the same in CI as locally. Because the
+app uses HashRouter, no SPA-fallback rewrite rule is needed — every route
+lives under `/#/...` and resolves to `index.html` by default.
+
+**Option A — connect a GitHub repo (recommended, auto-deploys forever):**
+
+1. Push the repo to GitHub (see GitHub Pages section below for the push command).
+2. Go to https://vercel.com/new and import the repo.
+3. Vercel will detect Vite. Confirm and click Deploy.
+4. Every push to `main` (and every PR) gets a deployment.
+
+**Option B — Vercel CLI (one-off or preview):**
+
+```bash
+# from inside this folder
+npm i -g vercel
+vercel              # first run: choose scope (your account or a team),
+                    # link or create project, accepts the defaults from vercel.json
+vercel --prod       # promote latest preview to production
+```
+
+**Option C — drag-and-drop:**
+
+```bash
+npm ci && npm run build
+# then drag the `dist/` folder onto https://vercel.com/new
+```
+
+The Vite `base` defaults to `/` when `VITE_BASE` is not set, which is what
+Vercel needs (the app is served at the deployment's root, e.g.
+`https://deque-demo-library.vercel.app/`). The GitHub Pages workflow sets
+`VITE_BASE=/<repo>/` only inside that workflow; it doesn't affect Vercel.
+
 ## Deploy to GitHub Pages (dequelabs org)
 
 A `.github/workflows/deploy.yml` is included. On every push to `main`, it builds
