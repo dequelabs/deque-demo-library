@@ -2,10 +2,10 @@
 // Used to initialize the store on first load, and to reset the demo.
 
 export const SEED_USER = {
-  id: 'pat',
-  firstName: 'Pat',
-  lastName: 'Louis',
-  email: 'pat@example.com',
+  id: 'dq',
+  firstName: 'Deke',
+  lastName: 'Quinn',
+  email: 'dq@deque.com',
   phone: '(555) 010-3829',
   address: {
     line1: '142 Park Avenue',
@@ -92,7 +92,7 @@ export const SEED_CARDS = [
     locked: false,
     spendingLimit: 2500,
     expISO: '2028-04',
-    nameOnCard: 'PAT LOUIS',
+    nameOnCard: 'DEKE QUINN',
   },
   {
     id: 'c2',
@@ -103,7 +103,7 @@ export const SEED_CARDS = [
     locked: false,
     spendingLimit: 8000,
     expISO: '2027-09',
-    nameOnCard: 'PAT LOUIS',
+    nameOnCard: 'DEKE QUINN',
     creditBalance: 412.90,
     creditLimit: 8000,
   },

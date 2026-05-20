@@ -190,4 +190,5 @@ push and publish to `https://dequelabs.github.io/deque-demo-library/`.
 
 - The **landing page** (`/`) is the meta surface — keep it clean.
 - For a richer scan during a customer demo, flip **Best Practices: ON** in the axe DevTools panel.
-- The store is in `localStorage`. Use **Profile → Reset demo data** before the demo, or clear `dqbc-store-v1` manually.
+- The store is in `localStorage` under key `dqbc-store-v2`. Use **Profile → Reset demo data** before the demo, or clear that key manually.
+- Default seed user: **Deke Quinn** · `dq@deque.com` (any non-empty username + password ≥ 4 chars works at the sign-in page).
