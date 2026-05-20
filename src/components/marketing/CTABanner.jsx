@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { handleHashClick } from './scrollToHash.js';
 
 /**
  * Bottom-of-page CTA banner. Sector-agnostic.
@@ -47,6 +48,8 @@ function Cta({ label, to, href, variant = 'primary', dark }) {
   const darkOutlineStyle = dark && variant === 'outline'
     ? { background: 'transparent', borderColor: '#fff', color: '#fff' }
     : undefined;
-  if (href) return <a className={cls} href={href} style={darkOutlineStyle}>{label}</a>;
+  if (href) {
+    return <a className={cls} href={href} style={darkOutlineStyle} onClick={handleHashClick(href)}>{label}</a>;
+  }
   return <Link className={cls} to={to} style={darkOutlineStyle}>{label}</Link>;
 }
