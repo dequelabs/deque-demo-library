@@ -1,16 +1,20 @@
+import { useId } from 'react';
+
 /**
  * Rates / fees / pricing table. Sector-agnostic.
  *
  * Props:
- *   heading    — section h2 (optional)
- *   subheading — paragraph (optional)
- *   caption    — accessible <caption> for the table (visually hidden)
- *   columns    — array of column header strings
- *   rows       — array of arrays (cells)
- *   alt        — alt section background
- *   note       — small footnote below the table
+ *   id          — anchor id applied to the wrapping <section> (for in-page links)
+ *   heading     — section h2 (optional)
+ *   subheading  — paragraph (optional)
+ *   caption     — accessible <caption> for the table (visually hidden)
+ *   columns     — array of column header strings
+ *   rows        — array of arrays (cells)
+ *   alt         — alt section background
+ *   note        — small footnote below the table
  */
 export default function RatesTable({
+  id,
   heading,
   subheading,
   caption,
@@ -20,7 +24,8 @@ export default function RatesTable({
   note,
   sectionClassName = 'fintech-section',
 }) {
-  const headingId = heading ? 'rates-heading-' + Math.random().toString(36).slice(2, 7) : undefined;
+  const auto = useId();
+  const headingId = heading ? (id ? `${id}-heading` : `rates-${auto}-heading`) : undefined;
   const visuallyHidden = {
     position: 'absolute',
     width: 1, height: 1, padding: 0, margin: -1,
@@ -28,6 +33,7 @@ export default function RatesTable({
   };
   return (
     <section
+      id={id}
       className={sectionClassName + (alt ? ' alt' : '')}
       aria-labelledby={heading ? headingId : undefined}
     >

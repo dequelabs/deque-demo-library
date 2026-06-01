@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { handleHashClick } from './scrollToHash.js';
 
 /**
  * Reusable marketing hero. Sector-agnostic.
@@ -50,7 +51,7 @@ function CtaLink({ label, to, href, variant = 'primary' }) {
     : variant === 'accent'  ? 'btn-accent btn-accent--accessible'
     : 'btn-outline');
   if (href) {
-    return <a className={cls} href={href}>{label}</a>;
+    return <a className={cls} href={href} onClick={handleHashClick(href)}>{label}</a>;
   }
   return <Link className={cls} to={to}>{label}</Link>;
 }

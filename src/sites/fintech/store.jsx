@@ -9,7 +9,9 @@ import { buildInitialState } from './data.js';
  * Use the `resetDemo` action to restore seed data.
  */
 
-const STORAGE_KEY = 'dqbc-store-v1';
+// Bumped to v2 when the default seed user changed from Pat Louis to Deke Quinn,
+// so any browser that loaded v1 gets re-seeded automatically on next visit.
+const STORAGE_KEY = 'dqbc-store-v2';
 
 // ---------- helpers ----------
 const nowISO = () => new Date().toISOString().slice(0, 10);

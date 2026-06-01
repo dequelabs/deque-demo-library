@@ -1,16 +1,28 @@
+import { useId } from 'react';
+
 /**
  * FAQ list using native <details>/<summary> for accessible disclosure.
  *
  * Props:
- *   heading    — section h2 (optional)
- *   subheading — paragraph (optional)
- *   items      — array of { q, a } where a can be string or JSX
- *   alt        — alt section background
+ *   id          — anchor id applied to the wrapping <section> (for in-page links)
+ *   heading     — section h2 (optional)
+ *   subheading  — paragraph (optional)
+ *   items       — array of { q, a } where a can be string or JSX
+ *   alt         — alt section background
  */
-export default function FAQList({ heading, subheading, items = [], alt = true, sectionClassName = 'fintech-section' }) {
-  const headingId = heading ? 'faq-' + Math.random().toString(36).slice(2, 7) : undefined;
+export default function FAQList({
+  id,
+  heading,
+  subheading,
+  items = [],
+  alt = true,
+  sectionClassName = 'fintech-section',
+}) {
+  const auto = useId();
+  const headingId = heading ? (id ? `${id}-heading` : `faq-${auto}-heading`) : undefined;
   return (
     <section
+      id={id}
       className={sectionClassName + (alt ? ' alt' : '')}
       aria-labelledby={heading ? headingId : undefined}
     >
