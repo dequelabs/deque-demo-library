@@ -104,6 +104,46 @@ export default function FintechHome() {
         </div>
       </section>
 
+      {/* PHASE-2 a11y issue MT-011 — see ACCESSIBILITY_ISSUES.md
+          The "Spotlight offer" title below is rendered as a styled <div>, not
+          an <h2>. Visually it reads as a section heading (28 px, bold, dark
+          navy, top margin) but the document outline doesn't include it.
+          axe DevTools Pro Advanced `heading-markup` runs a CV pass over a
+          screenshot and detects text that visually looks like a heading but
+          lacks <h1>-<h6> markup or role="heading". Classic CMS / WYSIWYG
+          pattern when a content editor uses bold + size to "make it a
+          heading" instead of the heading tool. AI-credit-using rule. */}
+      <section className="fintech-section alt">
+        {/* PHASE-2 a11y issue MT-012 — see ACCESSIBILITY_ISSUES.md
+            The ornament-divider.svg is purely decorative (a thin gold line
+            with three dot/ring shapes — no content meaning), but its alt
+            text describes it verbosely. axe DevTools Pro Advanced
+            `image-decorative` runs an AI/CV classifier and reports decorative
+            images that have unnecessary alt text. AI-credit-using rule.
+            Correct treatment for a decorative ornament: `alt=""`, or
+            `role="presentation"`, or `aria-hidden="true"`. */}
+        <img
+          src="/ornament-divider.svg"
+          alt="A delicate horizontal gold-toned ornamental divider featuring three centered dot and ring motifs flanked by tapered horizontal lines, evoking classic financial branding"
+          style={{ display: 'block', margin: '0 auto 24px', maxWidth: 400, height: 'auto' }}
+        />
+        <div
+          style={{
+            fontSize: 28,
+            fontWeight: 700,
+            color: 'var(--brand-deep)',
+            margin: '0 0 8px',
+            textAlign: 'center',
+          }}
+        >
+          Spotlight offer
+        </div>
+        <p className="section-sub">
+          Open a Smart Savings account this month and earn a $200 bonus after
+          your first qualifying deposit.
+        </p>
+      </section>
+
       <section className="fintech-section" aria-labelledby="numbers-heading">
         <h2 id="numbers-heading" className="section-title">By the numbers</h2>
         <p className="section-sub">A century of trust, expressed in figures.</p>

@@ -45,6 +45,9 @@ A "complete" Phase 2 should cover, across the 9 pages, at least:
 | MT-007 | All authed pages | `AuthLayout.jsx` topbar Messages + Notifications icon-btns (20×20, 22 px apart) | 2.5.8 | `target-size`                 | Serious  | axe-core (WCAG 2.2 AA toggle ON) | Live |
 | MT-008 | Login     | `Login.jsx` "Sign in" submit button (aria-label override) | 2.5.3 | `label-content-name-mismatch` | Serious  | axe-core (**Experimental ON**) | Live |
 | MT-009 | Home      | `Home.jsx` feature-grid — three "Learn more" links     | 2.4.4 | `identical-links-same-purpose` | Minor   | axe-core (**Needs Review** — incomplete result, requires human confirmation) | Live |
+| MT-010 | Every page (any icon-btn) | `theme.css` — `.icon-btn:focus, :focus-visible { outline: none; box-shadow: none }` | 2.4.7 | `advanced/css-focus-visible`   | Serious  | **Pro Advanced** (no AI credits — CSS state diff) | Live |
+| MT-011 | Home      | `Home.jsx` "Spotlight offer" `<div>` styled like an h2  | 1.3.1 | `advanced/heading-markup`      | Serious  | **Pro Advanced** (uses AI credits — CV) | Live |
+| MT-012 | Home      | `Home.jsx` `/ornament-divider.svg` with verbose alt    | 1.1.1 | `advanced/image-decorative`    | Minor    | **Pro Advanced** (uses AI credits — image classifier) | Live |
 
 > _Tool column values: `axe-core` / `axe Linter` / `Pro Advanced` / `IGT`._
 > _Status values: `TODO` / `Live` / `Removed` / `Replaced`._
@@ -65,6 +68,15 @@ How to confirm each rule fires using axe DevTools (browser extension), default t
 | MT-007 | Sign in, open any authed page (`/#/fintech/dashboard` is easy). Verify **WCAG 2.2 AA** is ticked in the toggle row, then run a scan | Serious: All touch targets must be 24×24 or have sufficient space (`target-size`) on **two** icon-btns (Messages + Notifications) |
 | MT-008 | Sign out, open `/#/fintech/login`, **flip Experimental: ON**, then run a scan | Serious: Elements with visible labels must include the visible label in the accessible name (`label-content-name-mismatch`) on the Sign-in button. Note: axe-core 4.10 tags this rule `experimental`, so it does **not** appear with Experimental OFF. |
 | MT-009 | Open `/#/fintech` (Home), run a scan | This rule comes back as a **Needs Review / incomplete** finding (not an automatic violation). The axe engine can't programmatically decide whether 3 "Learn more" links serve a similar purpose, so it flags it for human inspection. In the extension, look in the **Needs Review** section. |
+| MT-010 | Sign in, open any authed page (Dashboard is easy). Tab to the topbar Messages / Notifications icon — there is **no visible focus ring**. In axe DevTools Pro, run a scan; the finding will appear in **Automatic Issues (advanced)** rather than the core axe-core bucket. |
+| MT-011 | Open `/#/fintech` (Home). Scroll past the feature cards to the "Spotlight offer" line — it's visually a heading but semantically a `<div>`. In axe DevTools Pro, run a scan; the finding appears in **Automatic Issues (advanced)**. Note: this rule consumes AI credits, so if your org's credit pool is exhausted, the rule is skipped automatically (the panel will tell you). |
+| MT-012 | Open `/#/fintech` (Home). Just above the Spotlight section sits a thin ornamental gold divider — the verbose `alt` description claims "ornamental gold-toned divider…" but the AI rule recognises it as a purely decorative element. In axe DevTools Pro, run a scan; the finding appears in **Automatic Issues (advanced)**. AI credits required. |
+
+## Pro Advanced verification caveat
+
+The MT-010, MT-011, MT-012 rules ship with **axe DevTools Pro** (the Advanced rules pack), not axe-core. Any verification harness that loads axe-core from CDN — including the JS-injection check used during this project — **cannot** fire these rules. The only way to confirm they trigger is to scan the page in a Chrome window where the licensed axe DevTools Pro extension is installed. In the extension, the findings appear under **Automatic Issues (advanced)** rather than **Automatic Issues (axe-core)**.
+
+Two of the three (`heading-markup`, `image-decorative`) consume **AI credits** from your org allocation; if the pool is exhausted, the rule is silently skipped and the issue won't appear. `css-focus-visible` does **not** use AI credits (it's a deterministic CSS-state diff).
 
 ## Pre-existing Phase 1 issues
 
@@ -99,6 +111,9 @@ The `MT-*` IDs above are deliberate Phase 2 additions; the `PL-*` IDs below are 
 | MT-007 | Drop the inline `<div style={{ display: 'inline-flex', gap: 2 }}>` wrapper and remove the `width: 20, height: 20` inline styles on both icon-btns. The `.icon-btn` class default is 38×38 and the parent `.auth-topbar-right` already has 12 px gap. |
 | MT-008 | Remove `aria-label="Submit credentials"` from the submit button — the visible text "Sign in" already provides a sufficient accessible name. |
 | MT-009 | Differentiate the link text: "Learn about checking", "Learn about mortgages", "Learn about investing" (or add `aria-label="Learn more about <topic>"` per link). |
+| MT-010 | Remove the `.sector-fintech .icon-btn:focus, :focus-visible { outline: none; box-shadow: none }` block in `theme.css`. The global `:focus-visible { outline: 2px solid var(--brand-primary) }` then re-applies. |
+| MT-011 | Replace the styled `<div>Spotlight offer</div>` with `<h2 className="section-title">Spotlight offer</h2>` (the existing class gives the right visual weight). |
+| MT-012 | Change the ornament `<img>` to `alt=""` (or add `role="presentation"`, or `aria-hidden="true"`). |
 
 ## Suggested Phase-2 starter set
 

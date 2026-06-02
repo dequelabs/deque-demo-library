@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 32" width="400" height="32" role="img">
+  <title>Ornamental divider</title>
+  <line x1="0" y1="16" x2="170" y2="16" stroke="#c9a961" stroke-width="1" opacity="0.6" />
+  <circle cx="184" cy="16" r="3" fill="#c9a961" />
+  <circle cx="200" cy="16" r="5" fill="none" stroke="#c9a961" stroke-width="1.5" />
+  <circle cx="216" cy="16" r="3" fill="#c9a961" />
+  <line x1="230" y1="16" x2="400" y2="16" stroke="#c9a961" stroke-width="1" opacity="0.6" />
+</svg>
