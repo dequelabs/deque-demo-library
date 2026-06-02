@@ -39,6 +39,9 @@ A "complete" Phase 2 should cover, across the 9 pages, at least:
 | MT-001 | Home      | `Home.jsx` hero `<img>` (~ line 65)                | 1.1.1   | `image-alt`                   | Critical | axe-core | Live     |
 | MT-002 | Dashboard | `Dashboard.jsx` page-head subtitle (~ line 42)     | 1.4.3   | `color-contrast`              | Serious  | axe-core | Live     |
 | MT-003 | Profile   | `Profile.jsx` "Account disclosures" scroll panel   | 2.1.1   | `scrollable-region-focusable` | Serious  | axe-core | Live     |
+| MT-004 | Login     | `Login.jsx` password input (`#login-password`)     | 3.3.2   | `label`                       | Critical | axe-core | Live     |
+| MT-005 | Profile   | `Profile.jsx` ZIP `<Field>` autoComplete attribute | 1.3.5   | `autocomplete-valid`          | Serious  | axe-core | Live     |
+| MT-006 | Transfer  | `Transfer.jsx` memo `<textarea>` (`aria-labeledby` typo) | 4.1.2 | `aria-valid-attr`             | Critical | axe-core | Live     |
 
 > _Tool column values: `axe-core` / `axe Linter` / `Pro Advanced` / `IGT`._
 > _Status values: `TODO` / `Live` / `Removed` / `Replaced`._
@@ -52,7 +55,10 @@ How to confirm each rule fires using axe DevTools (browser extension), default t
 | ------ | ------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | MT-001 | Open `/#/fintech` (Home) and run a scan                 | Critical: Images must have alternate text (`image-alt`) on `img[src="/fintech-hero.svg"]` |
 | MT-002 | Sign in, open `/#/fintech/dashboard`, run a scan         | Serious: Elements must meet minimum color contrast (`color-contrast`) on the "Last sign-in: today, 9:42 AM · Chicago, IL" line |
-| MT-003 | Sign in, open `/#/fintech/profile`, scroll past Notifications, run a scan | Moderate: Scrollable region must have keyboard access (`scrollable-region-focusable`) on the "Account disclosures" container |
+| MT-003 | Sign in, open `/#/fintech/profile`, scroll past Notifications, run a scan | Serious: Scrollable region must have keyboard access (`scrollable-region-focusable`) on the "Account disclosures" container |
+| MT-004 | Sign out, open `/#/fintech/login`, run a scan | Critical: Form elements must have labels (`label`) on `#login-password` |
+| MT-005 | Sign in, open `/#/fintech/profile`, run a scan | Serious: `autocomplete` attribute is correctly formatted (`autocomplete-valid`) on the ZIP input |
+| MT-006 | Sign in, open `/#/fintech/transfer`, run a scan on Step 1 | Critical: ARIA attributes must conform to valid names (`aria-valid-attr`) on the memo textarea |
 
 ## Pre-existing Phase 1 issues
 
@@ -81,6 +87,9 @@ The `MT-*` IDs above are deliberate Phase 2 additions; the `PL-*` IDs below are 
 | MT-001 | Restore `alt=""` + `role="presentation"` on the decorative hero img, OR give it a meaningful `alt="…"` if it's content.  |
 | MT-002 | Remove the inline `style={{ color: '#8a92a3' }}` so the `.subtitle` class falls back to `var(--text-secondary)`.          |
 | MT-003 | Add `tabIndex={0}` + `role="region"` to the scrollable container; the existing `aria-labelledby` already names it.       |
+| MT-004 | Replace the styled `<span className="faux-label">` with a real `<label htmlFor="login-password">Password</label>`.        |
+| MT-005 | Restore `autoComplete="postal-code"` on the ZIP field (a valid WHATWG autofill token).                                   |
+| MT-006 | Fix the misspelling: `aria-labeledby` → `aria-labelledby` (or remove the attribute entirely since the `<label>` already names it). |
 
 ## Suggested Phase-2 starter set
 

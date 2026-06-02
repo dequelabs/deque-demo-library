@@ -189,10 +189,16 @@ function Step1({ state, from, setFrom, to, setTo, amount, setAmount, memo, setMe
 
         <div className="form-row">
           <label htmlFor={memoId}>Memo (optional)</label>
+          {/* PHASE-2 a11y issue MT-006 — see ACCESSIBILITY_ISSUES.md
+              `aria-labeledby` is a misspelling of `aria-labelledby` (one L vs two).
+              The textarea is still properly labelled by the visible <label>, but
+              axe-core's `aria-valid-attr` (Critical, WCAG 4.1.2) fires on the
+              invalid attribute name itself. Classic copy-paste / typo pattern. */}
           <textarea
             id={memoId}
             rows={3}
             placeholder="e.g. Boost emergency fund"
+            aria-labeledby="memo-hint"
             value={memo}
             onChange={(e) => setMemo(e.target.value)}
           />

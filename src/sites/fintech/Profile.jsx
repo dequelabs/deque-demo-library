@@ -96,7 +96,11 @@ export default function FintechProfile() {
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: 16 }}>
             <Field name="city"  label="City"       defaultValue={u.address.city}  autoComplete="address-level2" />
             <Field name="state" label="State"      defaultValue={u.address.state} autoComplete="address-level1" />
-            <Field name="zip"   label="ZIP"        defaultValue={u.address.zip}   autoComplete="postal-code" />
+            {/* PHASE-2 a11y issue MT-005 — see ACCESSIBILITY_ISSUES.md
+                Was: autoComplete="postal-code" (valid HTML autofill token).
+                Changed to autoComplete="zip" which is NOT in the WHATWG autofill
+                token list, so axe-core `autocomplete-valid` (Serious, WCAG 1.3.5) fires. */}
+            <Field name="zip"   label="ZIP"        defaultValue={u.address.zip}   autoComplete="zip" />
           </div>
 
           <button type="submit" className="btn btn-primary mt-16">Save changes</button>

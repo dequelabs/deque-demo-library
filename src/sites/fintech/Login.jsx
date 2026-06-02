@@ -118,7 +118,13 @@ export default function FintechLogin() {
             </div>
 
             <div className="form-row">
-              <label htmlFor="login-password">Password</label>
+              {/* PHASE-2 a11y issue MT-004 — see ACCESSIBILITY_ISSUES.md
+                  Was: <label htmlFor="login-password">Password</label>
+                  Replaced with a styled <span> that LOOKS like a label but is
+                  NOT programmatically associated. No aria-label, no placeholder,
+                  no title — the input has no accessible name. axe-core fires
+                  `label` (Critical, WCAG 3.3.2 / 4.1.2). */}
+              <span className="faux-label" style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Password</span>
               <div className="password-row">
                 <input
                   id="login-password"
