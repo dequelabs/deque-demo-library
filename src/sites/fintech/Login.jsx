@@ -161,7 +161,17 @@ export default function FintechLogin() {
               We may send a one-time code to your phone for additional security.
             </p>
 
-            <button type="submit" className="btn btn-primary btn-block">
+            {/* PHASE-2 a11y issue MT-008 — see ACCESSIBILITY_ISSUES.md
+                Visible label says "Sign in" but aria-label overrides it with
+                "Submit credentials". The accessible name no longer contains
+                the visible text, so voice users saying "click Sign in" can't
+                target this button. axe-core `label-content-name-mismatch`
+                fires (Serious, WCAG 2.5.3 A — "Label in Name"). */}
+            <button
+              type="submit"
+              className="btn btn-primary btn-block"
+              aria-label="Submit credentials"
+            >
               Sign in
             </button>
 

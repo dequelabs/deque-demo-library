@@ -42,6 +42,9 @@ A "complete" Phase 2 should cover, across the 9 pages, at least:
 | MT-004 | Login     | `Login.jsx` password input (`#login-password`)     | 3.3.2   | `label`                       | Critical | axe-core | Live     |
 | MT-005 | Profile   | `Profile.jsx` ZIP `<Field>` autoComplete attribute | 1.3.5   | `autocomplete-valid`          | Serious  | axe-core | Live     |
 | MT-006 | Transfer  | `Transfer.jsx` memo `<textarea>` (`aria-labeledby` typo) | 4.1.2 | `aria-valid-attr`             | Critical | axe-core | Live     |
+| MT-007 | All authed pages | `AuthLayout.jsx` topbar Messages + Notifications icon-btns (20×20, 22 px apart) | 2.5.8 | `target-size`                 | Serious  | axe-core (WCAG 2.2 AA toggle ON) | Live |
+| MT-008 | Login     | `Login.jsx` "Sign in" submit button (aria-label override) | 2.5.3 | `label-content-name-mismatch` | Serious  | axe-core (**Experimental ON**) | Live |
+| MT-009 | Home      | `Home.jsx` feature-grid — three "Learn more" links     | 2.4.4 | `identical-links-same-purpose` | Minor   | axe-core (**Needs Review** — incomplete result, requires human confirmation) | Live |
 
 > _Tool column values: `axe-core` / `axe Linter` / `Pro Advanced` / `IGT`._
 > _Status values: `TODO` / `Live` / `Removed` / `Replaced`._
@@ -59,6 +62,9 @@ How to confirm each rule fires using axe DevTools (browser extension), default t
 | MT-004 | Sign out, open `/#/fintech/login`, run a scan | Critical: Form elements must have labels (`label`) on `#login-password` |
 | MT-005 | Sign in, open `/#/fintech/profile`, run a scan | Serious: `autocomplete` attribute is correctly formatted (`autocomplete-valid`) on the ZIP input |
 | MT-006 | Sign in, open `/#/fintech/transfer`, run a scan on Step 1 | Critical: ARIA attributes must conform to valid names (`aria-valid-attr`) on the memo textarea |
+| MT-007 | Sign in, open any authed page (`/#/fintech/dashboard` is easy). Verify **WCAG 2.2 AA** is ticked in the toggle row, then run a scan | Serious: All touch targets must be 24×24 or have sufficient space (`target-size`) on **two** icon-btns (Messages + Notifications) |
+| MT-008 | Sign out, open `/#/fintech/login`, **flip Experimental: ON**, then run a scan | Serious: Elements with visible labels must include the visible label in the accessible name (`label-content-name-mismatch`) on the Sign-in button. Note: axe-core 4.10 tags this rule `experimental`, so it does **not** appear with Experimental OFF. |
+| MT-009 | Open `/#/fintech` (Home), run a scan | This rule comes back as a **Needs Review / incomplete** finding (not an automatic violation). The axe engine can't programmatically decide whether 3 "Learn more" links serve a similar purpose, so it flags it for human inspection. In the extension, look in the **Needs Review** section. |
 
 ## Pre-existing Phase 1 issues
 
@@ -90,6 +96,9 @@ The `MT-*` IDs above are deliberate Phase 2 additions; the `PL-*` IDs below are 
 | MT-004 | Replace the styled `<span className="faux-label">` with a real `<label htmlFor="login-password">Password</label>`.        |
 | MT-005 | Restore `autoComplete="postal-code"` on the ZIP field (a valid WHATWG autofill token).                                   |
 | MT-006 | Fix the misspelling: `aria-labeledby` → `aria-labelledby` (or remove the attribute entirely since the `<label>` already names it). |
+| MT-007 | Drop the inline `<div style={{ display: 'inline-flex', gap: 2 }}>` wrapper and remove the `width: 20, height: 20` inline styles on both icon-btns. The `.icon-btn` class default is 38×38 and the parent `.auth-topbar-right` already has 12 px gap. |
+| MT-008 | Remove `aria-label="Submit credentials"` from the submit button — the visible text "Sign in" already provides a sufficient accessible name. |
+| MT-009 | Differentiate the link text: "Learn about checking", "Learn about mortgages", "Learn about investing" (or add `aria-label="Learn more about <topic>"` per link). |
 
 ## Suggested Phase-2 starter set
 

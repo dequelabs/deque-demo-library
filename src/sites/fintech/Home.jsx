@@ -73,23 +73,33 @@ export default function FintechHome() {
         <h2 id="features-heading" className="section-title">Everything you need from a modern bank</h2>
         <p className="section-sub">From everyday checking to wealth management, we&apos;ve got you covered.</p>
 
+        {/* PHASE-2 a11y issue MT-009 — see ACCESSIBILITY_ISSUES.md
+            All three feature cards use the same link text "Learn more" but point
+            to different destinations (checking, mortgages, brokerage). A screen-
+            reader user pulling up a links list sees three identical entries and
+            has to guess which is which. axe-core fires
+            `identical-links-same-purpose` (Minor — Best Practice / Pro Advanced;
+            requires the Best Practices toggle ON in axe DevTools). */}
         <div className="feature-grid">
           <article className="feature-card">
             <div className="feature-icon" aria-hidden="true" />
             <h3>Checking &amp; Savings</h3>
             <p>No monthly fees, no minimums, and a top-tier 4.25% APY savings.</p>
+            <Link to="/fintech/checking">Learn more</Link>
           </article>
 
           <article className="feature-card">
             <div className="feature-icon" aria-hidden="true" />
             <h3>Mortgages &amp; Lending</h3>
             <p>Pre-qualification in minutes. Competitive rates on home and auto.</p>
+            <Link to="/fintech/mortgages">Learn more</Link>
           </article>
 
           <article className="feature-card">
             <div className="feature-icon" aria-hidden="true" />
             <h3>Investing &amp; Retirement</h3>
             <p>Self-directed brokerage and managed portfolios. IRAs and 401(k)s.</p>
+            <Link to="/fintech/wealth">Learn more</Link>
           </article>
         </div>
       </section>
