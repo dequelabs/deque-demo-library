@@ -54,6 +54,26 @@ How to confirm each rule fires using axe DevTools (browser extension), default t
 | MT-002 | Sign in, open `/#/fintech/dashboard`, run a scan         | Serious: Elements must meet minimum color contrast (`color-contrast`) on the "Last sign-in: today, 9:42 AM · Chicago, IL" line |
 | MT-003 | Sign in, open `/#/fintech/profile`, scroll past Notifications, run a scan | Moderate: Scrollable region must have keyboard access (`scrollable-region-focusable`) on the "Account disclosures" container |
 
+## Pre-existing Phase 1 issues
+
+These are issues that pre-date the Phase 2 effort. They were introduced inadvertently while building the clean baseline (most are slightly-too-light colors and inline body links without underlines). They are catalogued here so a customer scan returns no "mystery" findings — every finding has a row.
+
+The `MT-*` IDs above are deliberate Phase 2 additions; the `PL-*` IDs below are Phase 1 Leftovers. Status `Pre-existing` means we know about it, we haven't fixed it, and we're choosing to leave it in for now so demos look realistic.
+
+| ID     | Page(s)                          | Component                                                  | WCAG  | axe rule              | Severity | Tool     | Status        |
+| ------ | -------------------------------- | ---------------------------------------------------------- | ----- | --------------------- | -------- | -------- | ------------- |
+| PL-001 | Every public page (header)       | `PublicLayout.jsx` "Open account" CTA `.btn-accent--accessible` (gold `#c9a961` on white ≈ 2.5:1) | 1.4.3 | `color-contrast`      | Serious  | axe-core | Pre-existing |
+| PL-002 | Dashboard                        | `Dashboard.jsx` `.card-head > a` "See all" link            | 1.4.3 | `color-contrast`      | Serious  | axe-core | Pre-existing |
+| PL-003 | Login                            | `Login.jsx` inline "Terms" link in body copy (no underline) | 1.4.1 | `link-in-text-block`  | Serious  | axe-core | Pre-existing |
+| PL-004 | Login                            | `Login.jsx` inline "Privacy Notice" link in body copy       | 1.4.1 | `link-in-text-block`  | Serious  | axe-core | Pre-existing |
+
+### Notes on the PL set
+
+- **PL-001 is single-source, multi-instance.** The button is rendered once in `PublicLayout.jsx` but appears on every public route (Home, Login, About, Business, Wealth, products/*). One fix covers all instances.
+- **PL-002** is likely the `.card-head a` style — a desaturated brand-blue that loses a few points against the panel background. Fix: drop the opacity / fade and use the full `--brand-primary` token.
+- **PL-003 / PL-004** both fail `link-in-text-block` because the inline links in the legal sentence below the Sign-in card are color-only (no underline). Fix: add `text-decoration: underline` to inline body links, or any non-color visual indicator.
+- These rows don't get `PHASE-2` inline tags in the source — they pre-date Phase 2. They're tracked here purely for catalog completeness.
+
 ### Batch 1 — accessible fix (for reference)
 
 | ID     | Minimal fix                                                                                                              |
