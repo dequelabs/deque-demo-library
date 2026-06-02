@@ -38,7 +38,7 @@ A "complete" Phase 2 should cover, across the 9 pages, at least:
 | ------ | --------- | -------------------------------------------------- | ------- | ----------------------------- | -------- | -------- | -------- |
 | MT-001 | Home      | `Home.jsx` hero `<img>` (~ line 65)                | 1.1.1   | `image-alt`                   | Critical | axe-core | Live     |
 | MT-002 | Dashboard | `Dashboard.jsx` page-head subtitle (~ line 42)     | 1.4.3   | `color-contrast`              | Serious  | axe-core | Live     |
-| MT-003 | Profile   | `Profile.jsx` "Account disclosures" scroll panel   | 2.1.1   | `scrollable-region-focusable` | Moderate | axe-core | Live     |
+| MT-003 | Profile   | `Profile.jsx` "Account disclosures" scroll panel   | 2.1.1   | `scrollable-region-focusable` | Serious  | axe-core | Live     |
 
 > _Tool column values: `axe-core` / `axe Linter` / `Pro Advanced` / `IGT`._
 > _Status values: `TODO` / `Live` / `Removed` / `Replaced`._

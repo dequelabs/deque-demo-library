@@ -131,7 +131,7 @@ export default function FintechProfile() {
             This box has `overflow-y: auto` with content that overflows, NO focusable
             descendants (plain <p> text only) and NO `tabIndex={0}` on the container.
             Keyboard users cannot reach or scroll it. Triggers axe-core
-            `scrollable-region-focusable` (Moderate, WCAG 2.1.1). The accessible
+            `scrollable-region-focusable` (Serious, WCAG 2.1.1). The accessible
             fix is `tabIndex={0}` and `role="region"` + an accessible name. */}
         <div
           aria-labelledby="disclosures-heading"
