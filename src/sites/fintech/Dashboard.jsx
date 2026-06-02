@@ -39,7 +39,12 @@ export default function FintechDashboard() {
       <div className="page-head">
         <div>
           <h1>Good {greetingPart()}, {user.firstName}</h1>
-          <p className="subtitle">Last sign-in: today, 9:42 AM · Chicago, IL</p>
+          {/* PHASE-2 a11y issue MT-002 — see ACCESSIBILITY_ISSUES.md
+              Inline color #8a92a3 measures ~3.1:1 on white — passes AA Large but
+              fails AA Normal (4.5:1), tripping axe-core `color-contrast`
+              (Serious, WCAG 1.4.3). The .subtitle class default is the
+              accessible --text-secondary token. */}
+          <p className="subtitle" style={{ color: '#8a92a3' }}>Last sign-in: today, 9:42 AM · Chicago, IL</p>
         </div>
         <div className="page-actions">
           <Link className="btn btn-primary" to="/fintech/transfer">Transfer</Link>

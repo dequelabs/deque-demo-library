@@ -120,6 +120,67 @@ export default function FintechProfile() {
         </form>
       </section>
 
+      {/* Account disclosures */}
+      <section aria-labelledby="disclosures-heading" className="card" style={{ marginBottom: 24 }}>
+        <h2 id="disclosures-heading" style={{ margin: '0 0 12px' }}>Account disclosures</h2>
+        <p className="muted" style={{ marginTop: 0, marginBottom: 12 }}>
+          The agreements below govern your DQBC checking, savings, and brokerage
+          accounts. Use the scrollbar to review the full text.
+        </p>
+        {/* PHASE-2 a11y issue MT-003 — see ACCESSIBILITY_ISSUES.md
+            This box has `overflow-y: auto` with content that overflows, NO focusable
+            descendants (plain <p> text only) and NO `tabIndex={0}` on the container.
+            Keyboard users cannot reach or scroll it. Triggers axe-core
+            `scrollable-region-focusable` (Moderate, WCAG 2.1.1). The accessible
+            fix is `tabIndex={0}` and `role="region"` + an accessible name. */}
+        <div
+          aria-labelledby="disclosures-heading"
+          style={{
+            maxHeight: 180,
+            overflowY: 'auto',
+            border: '1px solid var(--border)',
+            borderRadius: 8,
+            padding: '12px 16px',
+            background: '#fff',
+            fontSize: 13,
+            lineHeight: 1.6,
+            color: 'var(--text-secondary)',
+          }}
+        >
+          <p style={{ marginTop: 0 }}>
+            <strong>Deposit Account Agreement.</strong> By maintaining a DQBC
+            deposit account, you agree to the terms set forth in the Deposit
+            Account Agreement, the Schedule of Fees, and the Funds Availability
+            Policy. DQBC reserves the right to amend these terms upon thirty
+            (30) days written notice delivered electronically to the address of
+            record. Continued use of the account after the effective date of
+            any amendment constitutes acceptance of the revised terms.
+          </p>
+          <p>
+            <strong>Electronic Fund Transfer Disclosure.</strong> Federal
+            Regulation E governs electronic transfers to and from your account,
+            including ACH, debit card, and bill-pay transactions. You have the
+            right to receive documentation of every electronic transfer, to
+            stop preauthorized payments, and to dispute unauthorized transfers
+            within sixty (60) days of the statement on which the transfer
+            appears.
+          </p>
+          <p>
+            <strong>Privacy Policy Summary.</strong> DQBC collects, uses, and
+            shares your personal financial information as described in our
+            Privacy Notice. You may limit certain sharing for marketing
+            purposes by contacting our customer service line. We do not sell
+            personal information to third parties for monetary consideration.
+          </p>
+          <p style={{ marginBottom: 0 }}>
+            <strong>FDIC Insurance.</strong> Deposits at DQBC are insured by
+            the Federal Deposit Insurance Corporation up to the standard
+            maximum deposit insurance amount of $250,000 per depositor, per
+            insured bank, for each ownership category.
+          </p>
+        </div>
+      </section>
+
       {/* Reset demo */}
       <section aria-labelledby="reset-heading" className="card" style={{ borderLeft: '4px solid var(--warning)' }}>
         <h2 id="reset-heading" style={{ margin: '0 0 8px' }}>Reset demo data</h2>

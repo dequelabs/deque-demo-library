@@ -62,7 +62,10 @@ export default function FintechHome() {
         </div>
 
         <div className="fintech-hero-visual">
-          <img src="/fintech-hero.svg" alt="" role="presentation" />
+          {/* PHASE-2 a11y issue MT-001 — see ACCESSIBILITY_ISSUES.md
+              Was: <img src="/fintech-hero.svg" alt="" role="presentation" />
+              Removed alt + role to trigger axe-core `image-alt` (Critical, WCAG 1.1.1). */}
+          <img src="/fintech-hero.svg" />
         </div>
       </section>
 

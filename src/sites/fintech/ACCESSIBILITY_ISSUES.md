@@ -34,12 +34,33 @@ A "complete" Phase 2 should cover, across the 9 pages, at least:
 
 ## Catalog
 
-| ID     | Page          | Component / line              | WCAG   | axe rule(s)               | Severity | Tool            | Status |
-| ------ | ------------- | ----------------------------- | ------ | ------------------------- | -------- | --------------- | ------ |
-| MT-001 | _reserved_    |                               |        |                           |          |                 | TODO   |
-| MT-002 | _reserved_    |                               |        |                           |          |                 | TODO   |
+| ID     | Page      | Component / line                                   | WCAG    | axe rule(s)                   | Severity | Tool     | Status   |
+| ------ | --------- | -------------------------------------------------- | ------- | ----------------------------- | -------- | -------- | -------- |
+| MT-001 | Home      | `Home.jsx` hero `<img>` (~ line 65)                | 1.1.1   | `image-alt`                   | Critical | axe-core | Live     |
+| MT-002 | Dashboard | `Dashboard.jsx` page-head subtitle (~ line 42)     | 1.4.3   | `color-contrast`              | Serious  | axe-core | Live     |
+| MT-003 | Profile   | `Profile.jsx` "Account disclosures" scroll panel   | 2.1.1   | `scrollable-region-focusable` | Moderate | axe-core | Live     |
 
 > _Tool column values: `axe-core` / `axe Linter` / `Pro Advanced` / `IGT`._
+> _Status values: `TODO` / `Live` / `Removed` / `Replaced`._
+
+### Batch 1 — verification cheat sheet
+
+How to confirm each rule fires using axe DevTools (browser extension), default toggles
+(Best Practices OFF, Experimental OFF, Needs Review ON or OFF — these all fire automatically):
+
+| ID     | Steps to reach                                          | Expected finding                                                                          |
+| ------ | ------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| MT-001 | Open `/#/fintech` (Home) and run a scan                 | Critical: Images must have alternate text (`image-alt`) on `img[src="/fintech-hero.svg"]` |
+| MT-002 | Sign in, open `/#/fintech/dashboard`, run a scan         | Serious: Elements must meet minimum color contrast (`color-contrast`) on the "Last sign-in: today, 9:42 AM · Chicago, IL" line |
+| MT-003 | Sign in, open `/#/fintech/profile`, scroll past Notifications, run a scan | Moderate: Scrollable region must have keyboard access (`scrollable-region-focusable`) on the "Account disclosures" container |
+
+### Batch 1 — accessible fix (for reference)
+
+| ID     | Minimal fix                                                                                                              |
+| ------ | ------------------------------------------------------------------------------------------------------------------------ |
+| MT-001 | Restore `alt=""` + `role="presentation"` on the decorative hero img, OR give it a meaningful `alt="…"` if it's content.  |
+| MT-002 | Remove the inline `style={{ color: '#8a92a3' }}` so the `.subtitle` class falls back to `var(--text-secondary)`.          |
+| MT-003 | Add `tabIndex={0}` + `role="region"` to the scrollable container; the existing `aria-labelledby` already names it.       |
 
 ## Suggested Phase-2 starter set
 
