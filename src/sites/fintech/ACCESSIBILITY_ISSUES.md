@@ -48,6 +48,18 @@ A "complete" Phase 2 should cover, across the 9 pages, at least:
 | MT-010 | Every page (any icon-btn) | `theme.css` — `.icon-btn:focus, :focus-visible { outline: none; box-shadow: none }` | 2.4.7 | `advanced/css-focus-visible`   | Serious  | **Pro Advanced** (no AI credits — CSS state diff) | Live |
 | MT-011 | Home      | `Home.jsx` "Spotlight offer" `<div>` styled like an h2  | 1.3.1 | `advanced/heading-markup`      | Serious  | **Pro Advanced** (uses AI credits — CV) | Live |
 | MT-012 | Home      | `Home.jsx` `/ornament-divider.svg` with verbose alt    | 1.1.1 | `advanced/image-decorative`    | Minor    | **Pro Advanced** (uses AI credits — image classifier) | Live |
+| MT-013 | Bills     | `Bills.jsx` "Saved payees" list (`<ul>`/`<li>` → `<div>`) | 1.3.1 | `list`                        | Serious  | axe-core | Live     |
+| MT-014 | Cards     | `Cards.jsx` per-card lock toggle (`<div role="switch">` with no `aria-checked`) | 4.1.2 | `aria-required-attr` (+ `aria-toggle-field-name`) | Critical | axe-core | Live |
+| MT-015 | Cards     | `Cards.jsx` card-visual EXP + cardholder row (#3d5476 on brand-deep linear-gradient) | 1.4.3 | `color-contrast` (typically **Needs Review** in axe-core because the bg is a CSS gradient; reliably fires automatic as `advanced/text-contrast` in axe DevTools Pro) | Serious  | axe-core / Pro | Live |
+| MT-016 | Statements| `Statements.jsx` statements `<table>` — `<th>` elements use invalid `scope="column"` | 1.3.1 | `scope-attr-valid`            | Serious  | axe-core | Live     |
+| MT-017 | Statements| `Statements.jsx` per-row Download anchor → icon-only SVG with no accessible name | 2.4.4 | `link-name`                   | Critical | axe-core | Live     |
+| MT-018 | Deposit   | `Deposit.jsx` Step 1 form — focusable `<button>Clear form</button>` wrapped in `<span aria-hidden="true">` | 4.1.2 | `aria-hidden-focus`           | Serious  | axe-core | Live     |
+| MT-019 | About     | `About.jsx` Leadership section — empty `<a href="#"></a>` (no body, no name) | 2.4.4 | `link-name`                   | Critical | axe-core | Live     |
+| MT-020 | Help      | `Help.jsx` branch-finder ZIP input (`role="searchbox"` with no label / aria-label / placeholder) | 4.1.2 | `aria-input-field-name`       | Moderate | axe-core (BP / Needs Review depending on toggle) | Live |
+| MT-021 | Forgot    | `Forgot.jsx` Email input (`autoComplete="user"` — not a WHATWG token)  | 1.3.5 | `autocomplete-valid`          | Serious  | axe-core | Live     |
+| MT-022 | Wealth    | `Wealth.jsx` "Why DQBC Wealth?" callout — `<h3>` directly after the page `<h1>` (no intermediate `<h2>`) | n/a (BP) | `heading-order`              | Moderate | axe-core (Best Practice) | Live |
+| MT-023 | Business  | `Business.jsx` `<img role="presentation" aria-label="DQBC business banking icon">` (role + name conflict) | n/a (BP) | `presentation-role-conflict` | Minor    | axe-core (Best Practice) | Live |
+| MT-024 | Legal     | `Legal.jsx` two anchors ("Jump to Terms" + "Jump to Privacy") both declare `accessKey="t"` — duplicate accesskey | n/a (BP) | `accesskeys`                  | Serious  | axe-core (Best Practice) | Live |
 
 > _Tool column values: `axe-core` / `axe Linter` / `Pro Advanced` / `IGT`._
 > _Status values: `TODO` / `Live` / `Removed` / `Replaced`._
@@ -114,6 +126,44 @@ The `MT-*` IDs above are deliberate Phase 2 additions; the `PL-*` IDs below are 
 | MT-010 | Remove the `.sector-fintech .icon-btn:focus, :focus-visible { outline: none; box-shadow: none }` block in `theme.css`. The global `:focus-visible { outline: 2px solid var(--brand-primary) }` then re-applies. |
 | MT-011 | Replace the styled `<div>Spotlight offer</div>` with `<h2 className="section-title">Spotlight offer</h2>` (the existing class gives the right visual weight). |
 | MT-012 | Change the ornament `<img>` to `alt=""` (or add `role="presentation"`, or `aria-hidden="true"`). |
+
+### Batch 3 — verification cheat sheet
+
+How to confirm each Batch 3 rule fires using axe DevTools (browser extension).
+Default toggles (Best Practices OFF, Experimental OFF, Needs Review ON) catch most
+of these; the ones that need **Best Practices: ON** are called out per row.
+
+| ID     | Steps to reach                                          | Expected finding                                                                          |
+| ------ | ------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| MT-013 | Sign in, open `/#/fintech/bills`, scroll to "Saved payees", run a scan | Serious: `<ul>` and `<ol>` must only directly contain `<li>`, `<script>` or `<template>` elements (`list`) — or, depending on how axe interprets the demoted markup, a related semantics finding. The visual list is now built from `<div>` wrappers, so it has no programmatic list role. |
+| MT-014 | Sign in, open `/#/fintech/cards`, run a scan | Critical: Required ARIA attributes must be provided (`aria-required-attr`) on the `<div role="switch">` lock toggle — `aria-checked` is required for `switch` and is missing. Often co-fires `aria-toggle-field-name` (Serious) because the switch also has no accessible name. |
+| MT-015 | Sign in, open `/#/fintech/cards`, run a scan | The element fails 4.5:1 by hex math (#3d5476 over the deep-blue gradient ≈ 2.6:1). In **axe-core baseline** this typically surfaces as a **Needs Review** because the background is a CSS `linear-gradient` and axe-core can't pick a definitive background colour. In **axe DevTools Pro** (Experimental ON) the screenshot-based `advanced/text-contrast` rule analyses the rendered pixels and reports it as an automatic Serious finding. |
+| MT-016 | Sign in, open `/#/fintech/statements`, run a scan | Serious: ARIA `scope` attribute values must be valid (`scope-attr-valid`) on every `<th>` in the statements table — `scope="column"` is invalid (valid tokens: `col`, `row`, `colgroup`, `rowgroup`). WCAG 1.3.1. |
+| MT-017 | Sign in, open `/#/fintech/statements`, run a scan | Critical: Links must have discernible text (`link-name`) on the per-row download anchor — the only child is an `aria-hidden` SVG, so there is no accessible name. |
+| MT-018 | Sign in, open `/#/fintech/deposit`, run a scan on Step 1 (no form interaction required, no Best Practices toggle needed) | Serious: ARIA hidden element must not be focusable or contain focusable elements (`aria-hidden-focus`) — the "Clear form" `<button>` is keyboard-focusable but its `<span aria-hidden="true">` wrapper hides it from assistive tech. |
+| MT-019 | Open `/#/fintech/about` and run a scan | Critical: Links must have discernible text (`link-name`) on the empty `<a href="#"></a>` in the Leadership section. |
+| MT-020 | Open `/#/fintech/help`, scroll to "Find a branch", run a scan | Moderate: ARIA input fields must have an accessible name (`aria-input-field-name`) on the ZIP input — `role="searchbox"` with no `<label>`, no `aria-label`, no `aria-labelledby`, no `placeholder`. |
+| MT-021 | Sign out (or open a private window), open `/#/fintech/forgot`, run a scan | Serious: `autocomplete` attribute must be used correctly (`autocomplete-valid`) on the email input — `autoComplete="user"` is not a valid WHATWG autofill token. |
+| MT-022 | Open `/#/fintech/wealth`, **flip Best Practices: ON**, run a scan | Moderate (BP): Heading levels should only increase by one (`heading-order`) — the page jumps from the hero `<h1>` to the "Why DQBC Wealth?" `<h3>` with no intermediate `<h2>`. |
+| MT-023 | Open `/#/fintech/business`, **flip Best Practices: ON**, run a scan | Minor (BP): Elements with `role="presentation"` must not have an accessible name (`presentation-role-conflict`) on the small `<img>` near the top of the page — it declares both `role="presentation"` and `aria-label="DQBC business banking icon"`, which contradict each other. (Originally this row demoed the `region` rule via a stray `<div><p>...</p></div>`, but `PublicLayout.jsx` wraps every page in `<main>`, so the stray paragraph was already inside a landmark and `region` never fired. The paragraph was left in place; the failing element is now the conflicting `<img>`.) |
+| MT-024 | Open `/#/fintech/legal`, **flip Best Practices: ON**, run a scan | Serious (BP): `accesskey` attribute value should be unique (`accesskeys`) — two anchors at the top of the page ("Jump to Terms of service" and "Jump to Privacy notice") both declare `accessKey="t"`. The rule fires on duplicate accesskey values; a single unique accesskey on its own does not trip it. |
+
+### Batch 3 — accessible fix (for reference)
+
+| ID     | Minimal fix                                                                                                              |
+| ------ | ------------------------------------------------------------------------------------------------------------------------ |
+| MT-013 | Restore the `<ul className="payee-list">` wrapper and the `<li className="payee-row">` items. The list-style is already cleared in CSS; semantics return immediately. |
+| MT-014 | Restore the native `<input type="checkbox">` wrapped in a `<label htmlFor={lockId}>`. (If the team really wants a styled switch, add `aria-checked={card.locked}` and `aria-label="Lock this card"` to the `<div role="switch">`.) |
+| MT-015 | Remove the inline `color: '#3d5476'` from the cardholder/EXP row so the `.card-visual` default white text re-applies (white on the deep-blue gradient passes contrast). |
+| MT-016 | Change `scope="column"` to the valid `scope="col"` on each of the five `<th>` elements in the statements table head. |
+| MT-017 | Restore the visible "Download" text inside each per-row anchor (and the visually-hidden `{period} … statement (PDF, …)` span for full context). Alternatively keep the icon and add `aria-label={\`Download ${period} statement (PDF, ${sizeKB} KB)\`}`. |
+| MT-018 | Remove the `<span aria-hidden="true">` wrapper from the "Clear form" `<button>` (or add `tabindex="-1"` to the button so it's not focusable while hidden — though removing the wrapper is the clean fix). |
+| MT-019 | Remove the empty `<a>`, or give it real text (e.g. `<a href="#leaders">Share this story</a>`). |
+| MT-020 | Restore the `<label htmlFor={filterId}>ZIP code</label>` and the `placeholder="60607"`; drop `role="searchbox"` (the native `<input type="text">` is already a textbox). |
+| MT-021 | Restore `autoComplete="email"` (a valid WHATWG autofill token). |
+| MT-022 | Either promote the callout to `<h2>` so the order is h1 → h2 → h2 → h2…, or remove the callout entirely. |
+| MT-023 | Remove either the `role="presentation"` OR the `aria-label="…"` from the `<img>` — a presentational element must not have an accessible name. (If the image is purely decorative, also set `alt=""` and drop the aria-label entirely.) |
+| MT-024 | Drop the `accessKey="t"` attribute from both anchors (or at minimum give each accesskey a unique value). |
 
 ## Suggested Phase-2 starter set
 

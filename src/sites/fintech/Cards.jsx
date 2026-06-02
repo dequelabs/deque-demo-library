@@ -54,7 +54,15 @@ function CardItem({ card, dispatch }) {
         <span className="number" aria-label={`Card number ending in ${card.last4}`}>
           •••• •••• •••• {card.last4}
         </span>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        {/* PHASE-2 a11y issue MT-015 — see ACCESSIBILITY_ISSUES.md
+            Was: cardholder name + EXP rendered with the default white-on-deep-gradient
+            styling from `.card-visual` (passes contrast).
+            Now: inline color: '#3d5476' on the cardholder + EXP row over the deep-blue
+            gradient (#0a2540) — ratio ~2.6:1, well below the 4.5:1 AA threshold for
+            normal text. Triggers axe-core `color-contrast` (Serious, WCAG 1.4.3).
+            (Previously used #7a8595, but at ~5.9:1 against the deep brand background
+            it actually passed and the rule didn't fire.) */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', color: '#3d5476' }}>
           <span className="name">{card.nameOnCard}</span>
           <span className="exp">EXP {card.expISO.replace('-', '/')}</span>
         </div>
@@ -67,18 +75,36 @@ function CardItem({ card, dispatch }) {
       )}
 
       <div className="card-controls" style={{ marginTop: 16 }}>
-        <label
-          htmlFor={lockId}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontWeight: 600, fontSize: 14 }}
+        {/* PHASE-2 a11y issue MT-014 — see ACCESSIBILITY_ISSUES.md
+            Was: <label htmlFor={lockId}><input id={lockId} type="checkbox" checked={card.locked}
+                  onChange={...} /> Lock this card</label>
+            Now: <div role="switch"> with NO `aria-checked` and NO `aria-label`.
+            Triggers axe-core `aria-required-attr` (Critical, WCAG 4.1.2) — a switch
+            role requires aria-checked. Also commonly co-fires `aria-toggle-field-name`. */}
+        <div
+          id={lockId}
+          role="switch"
+          tabIndex={0}
+          onClick={() => dispatch(actions.toggleCardLock(card.id))}
+          onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); dispatch(actions.toggleCardLock(card.id)); } }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontWeight: 600, fontSize: 14, cursor: 'pointer' }}
         >
-          <input
-            id={lockId}
-            type="checkbox"
-            checked={card.locked}
-            onChange={() => dispatch(actions.toggleCardLock(card.id))}
-          />
+          <span
+            aria-hidden="true"
+            style={{
+              width: 32, height: 18, borderRadius: 10, position: 'relative',
+              background: card.locked ? 'var(--brand-primary)' : 'var(--border)',
+              transition: 'background 120ms ease',
+            }}
+          >
+            <span style={{
+              position: 'absolute', top: 2, left: card.locked ? 16 : 2,
+              width: 14, height: 14, borderRadius: '50%', background: '#fff',
+              transition: 'left 120ms ease',
+            }} />
+          </span>
           {card.locked ? 'Card is locked' : 'Lock this card'}
-        </label>
+        </div>
       </div>
 
       <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px solid var(--border)' }} />

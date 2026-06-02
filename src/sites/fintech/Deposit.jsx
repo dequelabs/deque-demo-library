@@ -180,9 +180,26 @@ function DepositStep1({ state, accountId, setAccountId, amount, setAmount, memo,
           </div>
         </fieldset>
 
+        {/* PHASE-2 a11y issue MT-018 — see ACCESSIBILITY_ISSUES.md
+            Pivoted from `nested-interactive` (which axe-core 4.10 does NOT fire on
+            a <button> inside an <a href>; the browser's accessibility tree
+            collapses it) to `aria-hidden-focus` (Serious, WCAG 4.1.2). A wrapper
+            <span aria-hidden="true"> contains a focusable <button>, hiding it
+            from AT while it remains in the keyboard tab order — a classic
+            "developer hid this with aria-hidden to suppress an announcement"
+            pattern. Reliably fires on first page load. */}
         <div className="flex gap-8 mt-24">
           <button type="submit" className="btn btn-primary">Review</button>
           <Link className="btn btn-outline" to="/fintech/dashboard">Cancel</Link>
+          <span aria-hidden="true">
+            <button
+              type="button"
+              className="btn-link"
+              onClick={(e) => { e.preventDefault(); }}
+            >
+              Clear form
+            </button>
+          </span>
         </div>
       </form>
     </>
@@ -229,8 +246,20 @@ const DepositStep3 = forwardRef(function DepositStep3({ account, amount, onAnoth
       </div>
 
       <div className="flex gap-8">
-        <Link className="btn btn-primary" to="/fintech/dashboard">Back to dashboard</Link>
-        <button className="btn btn-outline" onClick={onAnother}>Make another deposit</button>
+        {/* MT-018 was previously demonstrated here (nested <button> inside the
+            "Back to dashboard" <Link>), but Step 3 isn't reachable on a fresh
+            axe scan. The nested-interactive pair has been moved to the Step 1
+            "Cancel" Link so it fires on first page load. */}
+        <Link className="btn btn-primary" to="/fintech/dashboard">
+          Back to dashboard
+        </Link>
+        <button
+          type="button"
+          className="btn btn-outline"
+          onClick={onAnother}
+        >
+          Make another deposit
+        </button>
       </div>
     </div>
   );

@@ -93,9 +93,15 @@ export default function FintechBills() {
             No payees yet. <button className="btn-link" onClick={() => setShowAddPayee(true)}>Add your first payee</button>.
           </div>
         ) : (
+          /* PHASE-2 a11y issue MT-013 — see ACCESSIBILITY_ISSUES.md
+              Was: <ul className="payee-list"> ... <li className="payee-row"> ... </li> </ul>
+              Now: keep the <ul> wrapper, but each row is a <div> instead of an <li>.
+              axe-core's `list` rule fires when a <ul>/<ol> contains non-<li> direct
+              children (Serious, WCAG 1.3.1). The `.payee-list` / `.payee-row` styling
+              still applies; only the implicit role="listitem" on each row is lost. */
           <ul className="payee-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             {state.payees.map((p) => (
-              <li key={p.id} className="payee-row">
+              <div key={p.id} className="payee-row">
                 <div className="payee-meta">
                   <span className="name">{p.name}</span>
                   <span className="acct">{p.accountNumber} · {p.category}</span>
@@ -108,7 +114,7 @@ export default function FintechBills() {
                 >
                   Remove
                 </button>
-              </li>
+              </div>
             ))}
           </ul>
         )}

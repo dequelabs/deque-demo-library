@@ -21,6 +21,17 @@ export default function FintechLegal() {
 
       <div className="fintech-section">
         <div className="legal-stack">
+          {/* PHASE-2 a11y issue MT-024 — see ACCESSIBILITY_ISSUES.md
+              Added: TWO in-page anchors that both declare accessKey="t" — "Jump to
+              Terms" and "Jump to Privacy". axe-core's `accesskeys` rule fires on
+              duplicate accesskey values (the rule is about uniqueness, not the
+              mere presence of an accesskey). Two anchors sharing "t" reliably
+              triggers `accesskeys` (Serious, Best Practice). */}
+          <p style={{ marginTop: 0, marginBottom: 16, fontSize: 14 }}>
+            <a href="#terms" accessKey="t">Jump to Terms of service</a>
+            {' · '}
+            <a href="#privacy" accessKey="t">Jump to Privacy notice</a>
+          </p>
           <section id="terms" aria-labelledby="terms-heading">
             <h2 id="terms-heading">Terms of service</h2>
             <p>

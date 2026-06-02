@@ -18,6 +18,20 @@ export default function FintechWealth() {
         visual={<img src="/fintech-hero.svg" alt="" role="presentation" />}
       />
 
+      {/* PHASE-2 a11y issue MT-022 — see ACCESSIBILITY_ISSUES.md
+          Added: a small "Why DQBC Wealth?" callout that uses <h3> directly after the
+          page's <h1> (in MarketingHero). No intermediate <h2> exists yet, so the
+          heading order jumps h1 → h3. Triggers axe-core `heading-order`
+          (Moderate, Best Practice). */}
+      <section className="fintech-section" aria-labelledby="wealth-callout-heading">
+        <div className="container" style={{ maxWidth: 920 }}>
+          <h3 id="wealth-callout-heading" className="section-title">Why DQBC Wealth?</h3>
+          <p className="section-sub">
+            Low fees, transparent pricing, and human advisors when you need them.
+          </p>
+        </div>
+      </section>
+
       <FeatureGrid
         heading="Three ways to invest with DQBC"
         subheading="Pick the level of involvement that fits your life."

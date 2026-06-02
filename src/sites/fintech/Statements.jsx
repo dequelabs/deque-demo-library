@@ -72,12 +72,18 @@ export default function FintechStatements() {
             Available statements
           </caption>
           <thead>
+            {/* PHASE-2 a11y issue MT-016 — see ACCESSIBILITY_ISSUES.md
+                Was: each <th> had a valid scope="col".
+                Now: each <th> has scope="column" — an INVALID value (the valid tokens
+                are "col" / "row" / "colgroup" / "rowgroup"). Triggers axe-core
+                `scope-attr-valid` (Serious, WCAG 1.3.1) reliably; merely dropping
+                the scope attribute didn't fire a rule on its own. */}
             <tr>
-              <th scope="col">Period</th>
-              <th scope="col">Account</th>
-              <th scope="col">Statement date</th>
-              <th scope="col">Size</th>
-              <th scope="col" style={{ textAlign: 'right' }}>
+              <th scope="column">Period</th>
+              <th scope="column">Account</th>
+              <th scope="column">Statement date</th>
+              <th scope="column">Size</th>
+              <th scope="column" style={{ textAlign: 'right' }}>
                 <span style={{ position: 'absolute', left: -9999 }}>Download</span>
               </th>
             </tr>
@@ -92,11 +98,29 @@ export default function FintechStatements() {
                   <td><time dateTime={s.endISO}>{fmtDateFull(s.endISO)}</time></td>
                   <td>{s.sizeKB} KB</td>
                   <td style={{ textAlign: 'right' }}>
+                    {/* PHASE-2 a11y issue MT-017 — see ACCESSIBILITY_ISSUES.md
+                        Was: <a href="…"> Download <span sr-only>{period} ... statement (PDF, … KB)</span></a>
+                        Now: icon-only <a> with an inline SVG (aria-hidden) and NO
+                        accessible name. Triggers axe-core `link-name` (Critical, WCAG 2.4.4). */}
                     <a
                       href={`#statement-${s.id}`}
                       onClick={(e) => { e.preventDefault(); alert(`Download stub: ${s.period} statement (${acct ? acct.name : ''})`); }}
                     >
-                      Download <span style={{ position: 'absolute', left: -9999 }}>{s.period} {acct ? acct.name : ''} statement (PDF, {s.sizeKB} KB)</span>
+                      <svg
+                        aria-hidden="true"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                      </svg>
                     </a>
                   </td>
                 </tr>

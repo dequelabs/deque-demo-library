@@ -41,6 +41,14 @@ export default function FintechAbout() {
         <h2 id="leaders-heading" className="section-title">Leadership</h2>
         <p className="section-sub">The team shaping the next chapter.</p>
 
+        {/* PHASE-2 a11y issue MT-019 — see ACCESSIBILITY_ISSUES.md
+            Added: an empty <a href="#"></a> meant as a "share this story" link that was
+            never wired up with text or an icon. Triggers axe-core `link-name`
+            (Critical, WCAG 2.4.4). */}
+        <p className="section-sub" style={{ marginTop: 0 }}>
+          <a href="#" onClick={(e) => e.preventDefault()}></a>
+        </p>
+
         <ul className="team-grid" style={{ listStyle: 'none' }}>
           {LEADERS.map((l) => (
             <li key={l.name} className="team-card">

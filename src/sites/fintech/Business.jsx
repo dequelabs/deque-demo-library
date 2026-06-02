@@ -7,6 +7,27 @@ import CTABanner    from '../../components/marketing/CTABanner.jsx';
 export default function FintechBusiness() {
   return (
     <>
+      {/* PHASE-2 a11y issue MT-023 — see ACCESSIBILITY_ISSUES.md
+          Was: a stray top-of-page <div><p>...</p></div> intended to trip the
+          `region` rule. But PublicLayout.jsx wraps every page in <main>, so the
+          stray paragraph was already inside a landmark and `region` never fired.
+          Now: an <img> with BOTH role="presentation" AND aria-label="DQBC business
+          banking icon". The combination of a presentational role and an accessible
+          name is a contradiction — triggers axe-core `presentation-role-conflict`
+          (Minor, Best Practice — fires with Best Practices toggle ON). */}
+      <div>
+        <p style={{ maxWidth: 720, margin: '24px auto', textAlign: 'center', color: 'var(--text-secondary)', fontSize: 14 }}>
+          Trusted by 18,000+ businesses across 14 states — from solo founders to
+          500-employee operations.
+        </p>
+        <img
+          src="/fintech-hero.svg"
+          role="presentation"
+          aria-label="DQBC business banking icon"
+          style={{ display: 'block', width: 48, height: 48, margin: '0 auto 24px' }}
+        />
+      </div>
+
       <MarketingHero
         pill="Business"
         heading="Banking that scales with your business."
