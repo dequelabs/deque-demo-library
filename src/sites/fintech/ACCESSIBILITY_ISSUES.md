@@ -60,6 +60,18 @@ A "complete" Phase 2 should cover, across the 9 pages, at least:
 | MT-022 | Wealth    | `Wealth.jsx` "Why DQBC Wealth?" callout — `<h3>` directly after the page `<h1>` (no intermediate `<h2>`) | n/a (BP) | `heading-order`              | Moderate | axe-core (Best Practice) | Live |
 | MT-023 | Business  | `Business.jsx` `<img role="presentation" aria-label="DQBC business banking icon">` (role + name conflict) | n/a (BP) | `presentation-role-conflict` | Minor    | axe-core (Best Practice) | Live |
 | MT-024 | Legal     | `Legal.jsx` two anchors ("Jump to Terms" + "Jump to Privacy") both declare `accessKey="t"` — duplicate accesskey | n/a (BP) | `accesskeys`                  | Serious  | axe-core (Best Practice) | Live |
+| MT-025 | Home      | `Home.jsx` "Pick the right account for you" `<select>` (no label / aria-label / aria-labelledby / title) | 4.1.2 | `select-name`                 | Critical | axe-core | Live |
+| MT-026 | Home      | `Home.jsx` inline ascending bar-chart `<svg role="img">` inside the hero `.fintech-pill` (no `<title>`, no aria-label) | 1.1.1 | `svg-img-alt`                 | Serious  | axe-core | Live |
+| MT-027 | Home      | `Home.jsx` "Customer favorites" `<div role="listbox">` whose children are plain `<div>`s (no `role="option"`) | 1.3.1 | `aria-required-children`      | Critical | axe-core | Live |
+| MT-028 | Home      | `Home.jsx` promotional-rate stripe — white text on a near-white / pale gold `linear-gradient` (~2.5–3.5:1) | 1.4.3 | `advanced/text-contrast` (axe-core `color-contrast` returns **Needs Review** because the bg is a gradient) | Serious | **Pro Advanced** | Live |
+| MT-029 | Home      | `Home.jsx` `/branch-photo.svg` informative branch-building image served with `alt=""` | 1.1.1 | `advanced/image-informative-has-alt` | Minor | **Pro Advanced** (uses AI credits — image classifier) | Live |
+| MT-030 | Home      | `Home.jsx` "Show more" `<button aria-expanded="yes">` next to the tagline — invalid value (valid: `true`/`false`) | 4.1.2 | `aria-valid-attr-value`       | Critical | axe-core | Live |
+| MT-031 | Dashboard | `Dashboard.jsx` "Recent activity highlights" `<li role="treeitem">` items inside a plain `<ul>` (no `role="tree"`/`role="group"` ancestor) | 1.3.1 | `aria-required-parent`        | Critical | axe-core | Live |
+| MT-032 | Dashboard | `Dashboard.jsx` `<span lang="frx">Coup d'œil</span>` in the balance banner delta line | 3.1.2 | `valid-lang`                  | Serious  | axe-core | Live |
+| MT-033 | Dashboard | `Dashboard.jsx` "Acknowledge new statements" `<div role="button" aria-required="true">` — aria-required not allowed on role=button | 4.1.2 | `aria-allowed-attr`           | Critical | axe-core | Live |
+| MT-034 | Dashboard | `Dashboard.jsx` "Account at a glance" `<dl>` containing bare `<div>` children (no `<dt>`/`<dd>` pairs) | 1.3.1 | `definition-list`             | Serious  | axe-core | Live |
+| MT-035 | Dashboard | `Dashboard.jsx` "Spending snapshot" `<div>` styled as a heading (24 px / 700 / brand-deep / top margin) | 1.3.1 | `advanced/heading-markup`     | Serious  | **Pro Advanced** (uses AI credits — CV) | Live |
+| MT-036 | Dashboard | `Dashboard.jsx` "Top categories this month" `<table>` — `<td headers="trend-col">` references a header id that doesn't exist (the `<th>` has id="trend-column") | 1.3.1 | `td-headers-attr`             | Serious  | axe-core | Live |
 
 > _Tool column values: `axe-core` / `axe Linter` / `Pro Advanced` / `IGT`._
 > _Status values: `TODO` / `Live` / `Removed` / `Replaced`._
@@ -148,6 +160,31 @@ of these; the ones that need **Best Practices: ON** are called out per row.
 | MT-023 | Open `/#/fintech/business`, **flip Best Practices: ON**, run a scan | Minor (BP): Elements with `role="presentation"` must not have an accessible name (`presentation-role-conflict`) on the small `<img>` near the top of the page — it declares both `role="presentation"` and `aria-label="DQBC business banking icon"`, which contradict each other. (Originally this row demoed the `region` rule via a stray `<div><p>...</p></div>`, but `PublicLayout.jsx` wraps every page in `<main>`, so the stray paragraph was already inside a landmark and `region` never fired. The paragraph was left in place; the failing element is now the conflicting `<img>`.) |
 | MT-024 | Open `/#/fintech/legal`, **flip Best Practices: ON**, run a scan | Serious (BP): `accesskey` attribute value should be unique (`accesskeys`) — two anchors at the top of the page ("Jump to Terms of service" and "Jump to Privacy notice") both declare `accessKey="t"`. The rule fires on duplicate accesskey values; a single unique accesskey on its own does not trip it. |
 
+### Batch 4 — verification cheat sheet
+
+How to confirm each Batch 4 rule fires using axe DevTools (browser extension).
+Default toggles (WCAG 2.2 AA ON, Best Practices OFF, Experimental OFF) catch all
+of the axe-core rows below — no toggles need to be flipped. The three Pro
+Advanced rules (MT-028, MT-029, MT-035) only appear when scanning in a Chrome
+window with the licensed **axe DevTools Pro** extension installed; they surface
+in **Automatic Issues (advanced)** rather than the axe-core bucket. MT-029 and
+MT-035 consume AI credits.
+
+| ID     | Steps to reach                                          | Expected finding                                                                          |
+| ------ | ------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| MT-025 | Open `/#/fintech` (Home), scroll to "Pick the right account for you" above the feature cards, run a scan | Critical: Select element must have an accessible name (`select-name`) on the `<select>` — no `<label>`, no `aria-label`, no `aria-labelledby`, no `title`. |
+| MT-026 | Open `/#/fintech` (Home), run a scan | Serious: `<svg>` elements with an img role must have an alternative text (`svg-img-alt`) on the small ascending bar-chart svg inside the `New · Smart Savings 4.25% APY` pill. |
+| MT-027 | Open `/#/fintech` (Home), scroll to "Customer favorites", run a scan | Critical: Certain ARIA roles must contain particular children (`aria-required-children`) on the `<div role="listbox">` — the children are bare `<div>`s with no `role="option"`. |
+| MT-028 | Open `/#/fintech` (Home) in a Chrome window with **axe DevTools Pro** installed. Run a scan. The finding appears in **Automatic Issues (advanced)** | Serious: Text contrast (`advanced/text-contrast`) on the "Limited-time promotional rate…" stripe — white text on a near-white / pale gold `linear-gradient`. axe-core `color-contrast` will simultaneously return this as **Needs Review** because the background is a gradient and single-colour math can't decide. |
+| MT-029 | Open `/#/fintech` (Home) in a Chrome window with **axe DevTools Pro** installed (AI credits available). Scroll to the branch-photo image under "Customer favorites". Run a scan. The finding appears in **Automatic Issues (advanced)** | Minor: Informative images must have alternative text (`advanced/image-informative-has-alt`) on `/branch-photo.svg`. The image shows a stylised bank branch with "DQBC Downtown" signage; the AI classifier reads it as informative content rather than decoration, but it ships with `alt=""`. |
+| MT-030 | Open `/#/fintech` (Home), run a scan | Critical: ARIA attribute value must be valid (`aria-valid-attr-value`) on the "Show more" disclosure `<button aria-expanded="yes">`. `aria-expanded` accepts only `true` / `false`. |
+| MT-031 | Sign in, open `/#/fintech/dashboard`, scroll to "Recent activity highlights", run a scan | Critical: Certain ARIA roles must be contained by particular parents (`aria-required-parent`) on each `<li role="treeitem">` — the surrounding `<ul>` has implicit role `list`, not `tree` or `group`. |
+| MT-032 | Sign in, open `/#/fintech/dashboard`, run a scan | Serious: `lang` attribute must have a valid value (`valid-lang`) on the `<span lang="frx">Coup d'œil</span>` inside the balance banner delta line. `frx` is not a valid BCP 47 primary language subtag. |
+| MT-033 | Sign in, open `/#/fintech/dashboard`, run a scan | Critical: ARIA attributes must be allowed for an element's role (`aria-allowed-attr`) on the "Acknowledge new statements" `<div role="button" aria-required="true">`. `aria-required` is not in the allowed-attr list for `role=button`. |
+| MT-034 | Sign in, open `/#/fintech/dashboard`, scroll to "Account at a glance", run a scan | Serious: `<dl>` elements must only directly contain properly-ordered `<dt>` and `<dd>` groups, `<script>`, `<template>` or `<div>` wrappers (`definition-list`) — the `<dl>` here has bare `<div>` children with no `<dt>`/`<dd>` pairs inside. |
+| MT-035 | Sign in, open `/#/fintech/dashboard` in a Chrome window with **axe DevTools Pro** installed (AI credits available). Scroll to the "Spending snapshot" text above the spending breakdown. Run a scan. The finding appears in **Automatic Issues (advanced)** | Serious: Heading markup (`advanced/heading-markup`) on the "Spending snapshot" `<div>` — visually a heading (24 px / 700 / brand-deep / top margin), semantically a `<div>`. CV/AI classifier detects the heading pattern. |
+| MT-036 | Sign in, open `/#/fintech/dashboard`, scroll to "Top categories this month", run a scan | Moderate: All cells with a headers attribute must refer to header cells in the same table (`td-headers-attr`) on the 3 `<td headers="trend-col">` cells — there is no `<th id="trend-col">` (the actual id is `"trend-column"`). |
+
 ### Batch 3 — accessible fix (for reference)
 
 | ID     | Minimal fix                                                                                                              |
@@ -164,6 +201,23 @@ of these; the ones that need **Best Practices: ON** are called out per row.
 | MT-022 | Either promote the callout to `<h2>` so the order is h1 → h2 → h2 → h2…, or remove the callout entirely. |
 | MT-023 | Remove either the `role="presentation"` OR the `aria-label="…"` from the `<img>` — a presentational element must not have an accessible name. (If the image is purely decorative, also set `alt=""` and drop the aria-label entirely.) |
 | MT-024 | Drop the `accessKey="t"` attribute from both anchors (or at minimum give each accesskey a unique value). |
+
+### Batch 4 — accessible fix (for reference)
+
+| ID     | Minimal fix                                                                                                              |
+| ------ | ------------------------------------------------------------------------------------------------------------------------ |
+| MT-025 | Add a `<label htmlFor="account-picker">Pick the right account for you</label>` and give the `<select>` matching `id="account-picker"`. (Or, if a visible label is undesirable, add `aria-label="Pick the right account for you"` on the `<select>` itself.) |
+| MT-026 | Add `<title>Recent savings growth</title>` as the first child of the `<svg>`, OR move the icon to `aria-hidden="true"` and drop `role="img"` if it's purely decorative alongside the visible "Smart Savings 4.25% APY" text. |
+| MT-027 | Either add `role="option"` to each child `<div>` (and `tabindex="-1"` plus keyboard handling for a real listbox), OR drop `role="listbox"` and let the list be a plain `<ul>` / `<li>` group. The simplest fix in this demo is to remove `role="listbox"`. |
+| MT-028 | Replace the white text with a colour that meets 4.5:1 against the lightest stop of the gradient (e.g. `color: var(--brand-deep)` over the pale-gold side), or change the gradient to a single solid background that yields ≥ 4.5:1 with the existing text colour. |
+| MT-029 | Give the image a meaningful `alt` (e.g. `alt="DQBC Downtown branch building"`), OR — if it really is decorative beside the other branch copy — drop it from the markup. (`role="presentation"` / `aria-hidden="true"` is acceptable only when the image conveys nothing the surrounding text doesn't.) |
+| MT-030 | Set `aria-expanded="true"` or `aria-expanded="false"` (boolean) — `"yes"` is not a valid value for that attribute. |
+| MT-031 | Add `role="tree"` (and `aria-label="Recent activity highlights"`) to the `<ul>`, OR drop `role="treeitem"` from the `<li>`s and let the list be a plain unordered list. |
+| MT-032 | Change `lang="frx"` to a valid BCP 47 value — e.g. `lang="fr"` for French. (Or drop the `lang` attribute entirely if the surrounding text is already in English.) |
+| MT-033 | Replace the `<div role="button">` with a native `<button type="button">` and drop `aria-required` (it isn't meaningful on a button). If the styled-div pattern must stay, simply remove `aria-required="true"`. |
+| MT-034 | Wrap each row in `<div><dt>Routing number</dt><dd>071000013</dd></div>` etc., OR drop the `<dl>` and use a plain `<ul>` / `<li>` (or a small `<table>`) instead. |
+| MT-035 | Replace the styled `<div>Spending snapshot</div>` with `<h2 style={…}>Spending snapshot</h2>` (or `<h3>` if `<h2>` is already taken at this level — the existing "Spending this month" `<h2>` would then need to be re-evaluated). |
+| MT-036 | Fix the `<th id="trend-column">` ↔ `<td headers="trend-col">` mismatch — either rename the `<th>` id to `"trend-col"` or change every `<td>`'s `headers` to `"trend-column"`. If the column doesn't carry header semantics at all, drop the `headers` attributes from the body cells. |
 
 ## Suggested Phase-2 starter set
 

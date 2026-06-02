@@ -45,11 +45,41 @@ export default function FintechHome() {
     <>
       <section className="fintech-hero" aria-labelledby="hero-heading">
         <div>
-          <span className="fintech-pill">New · Smart Savings 4.25% APY</span>
+          <span className="fintech-pill">
+            New · Smart Savings 4.25% APY
+            {/* PHASE-2 a11y issue MT-026 — see ACCESSIBILITY_ISSUES.md
+                Inline ascending bar-chart SVG with role="img" but no <title>,
+                no aria-label, no aria-labelledby. axe-core `svg-img-alt`
+                fires Serious (WCAG 1.1.1) because an svg[role="img"] must
+                have an accessible name. */}
+            <svg role="img" width="28" height="14" viewBox="0 0 28 14" style={{ marginLeft: 8, verticalAlign: 'middle' }}>
+              <rect x="0" y="9" width="4" height="5" fill="#1a7a4d" />
+              <rect x="6" y="6" width="4" height="8" fill="#1a7a4d" />
+              <rect x="12" y="3" width="4" height="11" fill="#1a7a4d" />
+              <rect x="18" y="1" width="4" height="13" fill="#1a7a4d" />
+            </svg>
+          </span>
           <h1 id="hero-heading">Banking that works as hard as you do.</h1>
           <p className="sub">
             Manage checking, savings, investments, and lending all in one place.
             Backed by 100 years of trust and modern, mobile-first tools.
+          </p>
+          {/* PHASE-2 a11y issue MT-030 — see ACCESSIBILITY_ISSUES.md
+              Pivoted from `aria-prohibited-attr` (which surfaced as
+              Needs Review because the <p> had visible text content).
+              Now: a "Show more" disclosure button with aria-expanded="yes"
+              — invalid value. Valid values are "true" / "false" only.
+              axe-core `aria-valid-attr-value` fires Critical (WCAG 4.1.2). */}
+          <p className="muted" style={{ fontSize: 13, marginTop: 6 }}>
+            Smart money, simple banking.{' '}
+            <button
+              type="button"
+              className="btn-link"
+              aria-expanded="yes"
+              onClick={(e) => e.preventDefault()}
+            >
+              Show more
+            </button>
           </p>
           <div className="flex gap-12">
             <Link className="btn btn-primary" to={isAuthenticated ? '/fintech/dashboard' : '/fintech/login'}>
@@ -72,6 +102,23 @@ export default function FintechHome() {
       <section className="fintech-section alt" aria-labelledby="features-heading">
         <h2 id="features-heading" className="section-title">Everything you need from a modern bank</h2>
         <p className="section-sub">From everyday checking to wealth management, we&apos;ve got you covered.</p>
+
+        {/* PHASE-2 a11y issue MT-025 — see ACCESSIBILITY_ISSUES.md
+            "Pick the right account for you" mini-widget: a native <select>
+            with options but no associated <label htmlFor>, no aria-label,
+            no aria-labelledby, no title attribute. axe-core `select-name`
+            fires Critical (WCAG 4.1.2) because the select has no
+            accessible name. */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, margin: '0 0 24px' }}>
+          <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>Pick the right account for you:</span>
+          <select style={{ padding: '8px 10px', border: '1px solid var(--border)', borderRadius: 6 }}>
+            <option value="">Choose an option</option>
+            <option value="checking">Everyday checking</option>
+            <option value="savings">Smart Savings</option>
+            <option value="mortgage">Home mortgage</option>
+            <option value="invest">Brokerage / IRA</option>
+          </select>
+        </div>
 
         {/* PHASE-2 a11y issue MT-009 — see ACCESSIBILITY_ISSUES.md
             All three feature cards use the same link text "Learn more" but point
@@ -102,6 +149,57 @@ export default function FintechHome() {
             <Link to="/fintech/wealth">Learn more</Link>
           </article>
         </div>
+      </section>
+
+      {/* PHASE-2 a11y issue MT-028 — see ACCESSIBILITY_ISSUES.md
+          Promotional-rate stripe with white text over a near-white/pale
+          gold linear-gradient background. Computed contrast lands around
+          2.5–3.5:1. axe-core `color-contrast` typically returns
+          Needs Review here (gradient bg defeats single-colour math), but
+          axe DevTools Pro Advanced `text-contrast` screenshot-analyses
+          the rendered pixels and reports Serious (WCAG 1.4.3) as an
+          automatic finding. */}
+      <div
+        style={{
+          background: 'linear-gradient(90deg, #f5e9c4 0%, #ffffff 100%)',
+          color: '#ffffff',
+          textAlign: 'center',
+          padding: '10px 16px',
+          fontSize: 14,
+          fontWeight: 600,
+        }}
+      >
+        Limited-time promotional rate: 4.50% APY on new Smart Savings deposits
+      </div>
+
+      <section className="fintech-section" aria-labelledby="favorites-heading">
+        <h2 id="favorites-heading" className="section-title">Customer favorites</h2>
+        <p className="section-sub">A quick look at what our members open most.</p>
+
+        {/* PHASE-2 a11y issue MT-027 — see ACCESSIBILITY_ISSUES.md
+            <div role="listbox"> with text-only <div> children — none of
+            the children carry role="option". axe-core
+            `aria-required-children` fires Critical (WCAG 1.3.1) because
+            role=listbox must contain at least one role=option descendant. */}
+        <div role="listbox" aria-label="Customer favorites" style={{ maxWidth: 480, margin: '0 auto', border: '1px solid var(--border)', borderRadius: 8, padding: 12 }}>
+          <div style={{ padding: '6px 8px' }}>Smart Savings (4.25% APY)</div>
+          <div style={{ padding: '6px 8px' }}>Everyday checking</div>
+          <div style={{ padding: '6px 8px' }}>Cash-back credit card</div>
+          <div style={{ padding: '6px 8px' }}>30-year fixed mortgage</div>
+        </div>
+
+        {/* PHASE-2 a11y issue MT-029 — see ACCESSIBILITY_ISSUES.md
+            Informative branch-building photo (signage reads "DQBC
+            Downtown") served with alt="". axe DevTools Pro Advanced AI
+            `image-informative-has-alt` runs an image classifier and
+            recognises this as informative content that should describe
+            the location, not a decorative ornament. Fires Minor
+            (WCAG 1.1.1) in the Automatic Issues (advanced) bucket. */}
+        <img
+          src="/branch-photo.svg"
+          alt=""
+          style={{ display: 'block', margin: '24px auto 0', maxWidth: 320, height: 'auto', borderRadius: 8 }}
+        />
       </section>
 
       {/* PHASE-2 a11y issue MT-011 — see ACCESSIBILITY_ISSUES.md
