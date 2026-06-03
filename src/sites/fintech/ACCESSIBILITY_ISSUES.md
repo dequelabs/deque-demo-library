@@ -82,7 +82,7 @@ A "complete" Phase 2 should cover, across the 9 pages, at least:
 | MT-044 | Profile   | `Profile.jsx` "Profile completeness" `<div role="meter">` without accessible name | 1.1.1 | `aria-meter-name`             | Critical | axe-core | Live |
 | MT-045 | Profile   | `Profile.jsx` Two-factor `<button role="switch">` empty / no accessible name | 4.1.2 | `aria-toggle-field-name` (often co-fires as `button-name`) | Serious | axe-core | Live |
 | MT-046 | Profile   | `Profile.jsx` `<object data="/branch-photo.svg">` with no `aria-label` / body fallback | 1.1.1 | `object-alt`                  | Serious  | axe-core | Live |
-| MT-047 | Profile   | `Profile.jsx` `<section role="region" aria-orientation="diagonal">` — invalid value | 4.1.2 | `aria-valid-attr-value`       | Critical | axe-core | Live |
+| MT-047 | Profile   | `Profile.jsx` `<section role="region" aria-orientation="diagonal">` — `aria-orientation` is neither valid on `region` nor a valid value; co-fires `aria-valid-attr-value` + `aria-allowed-attr` | 4.1.2 | `aria-valid-attr-value` (+ `aria-allowed-attr`) | Critical | axe-core | Live |
 | MT-048 | Profile   | `Profile.jsx` "Security preferences" `<div>` styled as h3 (22 px / 700) | 1.3.1 | `advanced/heading-markup`     | Serious  | **Pro Advanced** | Live |
 | MT-049 | Transfer  | `Transfer.jsx` Step 1 "Frequency" `<select>` with no label/aria-label | 4.1.2 | `select-name`                 | Critical | axe-core | Live |
 | MT-050 | Transfer  | `Transfer.jsx` Step 1 "Recent recipients" `<div role="combobox">` missing required `aria-expanded` | 4.1.2 | `aria-required-attr`          | Critical | axe-core | Live |
@@ -473,3 +473,56 @@ For the most balanced spread across the four severity buckets:
 - **Best Practices: ON** during customer demos. This is where the `heading-order`, `accesskeys`, `image-redundant-alt`, `page-has-heading-one`, `region`, `landmark-one-main`, and `presentation-role-conflict` findings appear.
 - **Experimental: ON** if you want `target-size` (WCAG 2.5.8) to fire automatically on the small touch targets we add.
 - **Needs Review: ON** to surface placeholder-as-label and similar deferred checks.
+
+## Scan-vs-catalog alignment (verified June 2026)
+
+This appendix is the result of a full Chrome sanity sweep across all 15 pages using axe-core 4.10.2 with WCAG 2.2 AA + Best Practices tags enabled. It's the SE's quick reference for "what should I expect to fire where" — and where the gaps are.
+
+### Per-page expected violation counts (axe-core, default WCAG + BP toggles)
+
+| Page                  | Distinct rules | Catalog rows fired | Notes                                                                |
+| --------------------- | -------------- | ------------------ | -------------------------------------------------------------------- |
+| `/fintech` (Home)     | 9 rules        | MT-001, 025–027, 030 + PL-001 | + BP firings: `aria-allowed-role` ×3, `heading-order`, `region`. Pro: MT-011/012/028/029 in extension. |
+| `/fintech/login`      | 10 rules       | MT-004, 037–040 + PL-001, 003, 004 | + BP `region`, `heading-order`. MT-008 is Experimental, MT-041 is Pro. |
+| `/fintech/about`      | 4 rules        | MT-019 + PL-001    | + BP `heading-order`, `region`. IGT-005 (multi-h1) and IGT-011 (image-of-text) are manual review. |
+| `/fintech/help`       | 4 rules        | MT-020 + PL-001    | MT-020 fires as `label` (broader than the original `aria-input-field-name` target — still valid). + BP `heading-order`, `region`. IGT-003 manual. |
+| `/fintech/forgot`     | 4 rules        | MT-021 + PL-001    | + BP `heading-order`, `region`. |
+| `/fintech/wealth`     | 3 rules        | MT-022, IGT-004 + PL-001 | `heading-order` carries 2 nodes (MT-022's `<h1>`→`<h3>` and IGT-004's `<h1>`→`<h4>`). |
+| `/fintech/business`   | 5 rules        | MT-023 + PL-001    | + BP `aria-allowed-role`, `heading-order`, `region`. |
+| `/fintech/legal`      | 4 rules        | MT-024 + PL-001    | + BP `heading-order`, `region`. |
+| `/fintech/dashboard`  | 8 rules        | MT-002, 007, 031–034, 036 + PL-002 | + BP side-effect `list` ×1. Pro MT-010/035 and IGT-010/017 in extension. |
+| `/fintech/transfer`   | 8 rules        | MT-006, 049–052, IGT-019 + PL pre-existings | `target-size` count is 5 (AuthLayout topbar 2 + 3 small inline targets). Pro MT-053 and IGT-009 manual. |
+| `/fintech/bills`      | 7 rules        | MT-013, 055–059 + MT-007 | Each repeats 4× across saved payees. Pro MT-060 and IGT-013/014 manual. |
+| `/fintech/cards`      | 8 rules        | MT-014, 061–065 + MT-007 | Each repeats 2× across cards. IGT-001 (`role="presentation"` wrapper) causes a side-effect `aria-allowed-attr` ×2. Pro MT-066 in extension. |
+| `/fintech/statements` | 10 rules       | MT-016 (×5), 017 (×36), 067–071 + MT-007 | IGT-002 (second `<main>`) co-fires `landmark-main-is-top-level` + `landmark-no-duplicate-main`. Pro MT-072 and IGT-018 manual. |
+| `/fintech/deposit`    | 6 rules        | MT-018, 073, 075 (as `button-name`), 076, 077 + MT-007 | Pro MT-078 in extension; MT-074 radiogroup pattern doesn't fire (see Gaps). |
+| `/fintech/profile`    | 9 rules        | MT-003, 005, 044, 045 (as `button-name`), 046, 047 (co-fires `aria-allowed-attr`), IGT-006 (`empty-heading`) + MT-007 | MT-043 form-field-multiple-labels doesn't fire on default toggles (see Gaps). Pro MT-048, IGT-008/015 manual. |
+
+### Known gaps (catalogued, not yet firing automatically)
+
+1. **MT-042** `avoid-inline-spacing` (Login) — axe-core 4.10 doesn't reliably flag inline `letterSpacing/wordSpacing/lineHeight` set in CSS px. Probable pivot: use `!important` (requires a CSS class rather than inline React style) or em-unit values that more clearly defeat user stylesheets.
+2. **MT-043** `form-field-multiple-labels` (Profile) — two `<label htmlFor="display-name">` on one `<input>` doesn't trip the rule in 4.10. Probable pivot: place a `<label>` and an `aria-labelledby` referencing another visible-text element so two distinct labelling mechanisms collide.
+3. **MT-054** / **MT-074** `aria-required-children` (Transfer / Deposit) — a `role="radiogroup"` with no `role="radio"` children passes in 4.10. Probable pivot: change role to `role="tree"` (which still requires `treeitem` children and reliably fires) or add at least one child with `role="radio"` missing `aria-checked` so a different rule lights up.
+
+### Side-effects firing that the catalog should call out
+
+- **Cards / IGT-001** — wrapping the page top-level in `<div role="presentation">` strips landmark/region semantics AND lifts `aria-allowed-attr` violations on descendant elements that would otherwise be allowed in the now-removed role. Counts as 2 extra `aria-allowed-attr` nodes per scan. Realistic and useful for the Structure IGT demo.
+- **Statements / IGT-002** — adding a second `<main>` co-fires axe-core BP `landmark-main-is-top-level` + `landmark-no-duplicate-main` in addition to the IGT Structure script manual review. Useful demo beat.
+- **Dashboard / MT-031** — a `<ul>` containing `<li role="treeitem">` sometimes triggers the BP `list` rule as a side-effect alongside the primary `aria-required-parent` violation. Counts as +1 node.
+
+### Pro Advanced / Experimental / Manual-review (extension-only) rows
+
+These appear in your axe DevTools® Pro panel but NOT in any CDN-loaded axe-core verification harness:
+
+- **Pro Advanced (Automatic Issues — advanced bucket):** MT-010, MT-011, MT-012, MT-015 (gradient fallback), MT-028, MT-029, MT-035, MT-041, MT-048, MT-053, MT-060, MT-066, MT-072, MT-078.
+- **Experimental (gated by Experimental toggle ON):** MT-008.
+- **Needs Review (incomplete, surfaces in Guided Issues / Needs Review):** MT-009, MT-015 (gradient).
+- **IGT manual-review only:** all 20 IGT-001..IGT-020 rows require the SE to run the relevant axe DevTools Pro Intelligent Guided Test script — they don't appear in a default scan.
+
+### Demo-time confidence summary
+
+- Default scan (WCAG 2.2 AA, BP OFF, Experimental OFF) — 30–40 distinct rule violations across the 13 fintech pages, dominated by axe-core baseline.
+- Default scan + **BP ON** — adds roughly 12 BP-tagged rule firings (the per-page `region` + `heading-order` baseline, plus `aria-allowed-role`, `landmark-*`, `list`, `image-redundant-alt`, `presentation-role-conflict`, `accesskeys`, `tabindex`).
+- + **Experimental ON** — adds MT-008 (`label-content-name-mismatch` on Login).
+- + **Pro pack** (always on with Pro license) — adds ~13 Automatic Issues (advanced) rows across Home, Login, Dashboard, Cards, Profile, Statements, Transfer, Bills, Deposit.
+- + **Guided Tests run** — surfaces all 20 IGT-* findings.
