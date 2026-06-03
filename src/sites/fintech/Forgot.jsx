@@ -77,12 +77,17 @@ export default function FintechForgot() {
                   <strong>Error:</strong> {error}
                 </div>
               )}
+              {/* PHASE-2 a11y issue MT-021 — see ACCESSIBILITY_ISSUES.md
+                  Was: autoComplete="email" (a valid WHATWG autofill token).
+                  Now: autoComplete="user" (NOT a valid WHATWG token — the spec defines
+                  "username", "email", etc., but not bare "user"). Triggers axe-core
+                  `autocomplete-valid` (Serious, WCAG 1.3.5). */}
               <div className="form-row">
                 <label htmlFor={emailId}>Email address</label>
                 <input
                   id={emailId}
                   type="email"
-                  autoComplete="email"
+                  autoComplete="user"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   aria-invalid={!!error}

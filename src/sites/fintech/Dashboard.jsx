@@ -39,7 +39,12 @@ export default function FintechDashboard() {
       <div className="page-head">
         <div>
           <h1>Good {greetingPart()}, {user.firstName}</h1>
-          <p className="subtitle">Last sign-in: today, 9:42 AM · Chicago, IL</p>
+          {/* PHASE-2 a11y issue MT-002 — see ACCESSIBILITY_ISSUES.md
+              Inline color #8a92a3 measures ~3.1:1 on white — passes AA Large but
+              fails AA Normal (4.5:1), tripping axe-core `color-contrast`
+              (Serious, WCAG 1.4.3). The .subtitle class default is the
+              accessible --text-secondary token. */}
+          <p className="subtitle" style={{ color: '#8a92a3' }}>Last sign-in: today, 9:42 AM · Chicago, IL</p>
         </div>
         <div className="page-actions">
           <Link className="btn btn-primary" to="/fintech/transfer">Transfer</Link>
@@ -47,13 +52,136 @@ export default function FintechDashboard() {
         </div>
       </div>
 
+      {/* PHASE-2 a11y issue IGT-010 (Images IGT) — see ACCESSIBILITY_ISSUES.md
+          Two <img> elements with the SAME src AND SAME alt="DQBC seal"
+          rendered in two different positions on the page. The Images IGT
+          flags redundant image alt (an SR user hears "DQBC seal" twice for
+          the same logical image). */}
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 8 }}>
+        <img src="/fintech-hero.svg" alt="DQBC seal" style={{ width: 24, height: 24 }} />
+        <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Official member portal</span>
+        <img src="/fintech-hero.svg" alt="DQBC seal" style={{ width: 24, height: 24 }} />
+      </div>
+
       <section aria-labelledby="balance-heading">
         <h2 id="balance-heading" className="sr-only" style={srOnly}>Total balance</h2>
         <div className="balance-banner">
           <div className="label">Total balance across accounts</div>
           <div className="total">{fmtMoney(totalBalance)}</div>
-          <div className="delta">+ {fmtMoney(312.06)} this month</div>
+          <div className="delta">
+            + {fmtMoney(312.06)} this month
+            {' '}
+            {/* PHASE-2 a11y issue MT-032 — see ACCESSIBILITY_ISSUES.md
+                A French financial phrase ("Coup d'œil") wrapped in a
+                <span lang="frx"> — "frx" is not a valid BCP 47 primary
+                language subtag. axe-core `valid-lang` fires Serious
+                (WCAG 3.1.2) because lang values must conform to BCP 47. */}
+            <span lang="frx" className="muted">· Coup d&apos;œil</span>
+          </div>
         </div>
+      </section>
+
+      {/* PHASE-2 a11y issue MT-031 — see ACCESSIBILITY_ISSUES.md
+          A <ul> wrapper hosting <li role="treeitem"> children. role=treeitem
+          requires an ancestor with role="tree" or role="group" — there is
+          none here (<ul> has implicit role="list"). axe-core
+          `aria-required-parent` fires Critical (WCAG 1.3.1). */}
+      <section aria-labelledby="recent-highlights-heading" style={{ marginTop: 24 }}>
+        <h2 id="recent-highlights-heading" style={{ fontSize: 16, color: 'var(--brand-deep)', margin: '0 0 8px' }}>
+          Recent activity highlights
+        </h2>
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+          <li role="treeitem" style={{ padding: '4px 0' }}>Direct deposit posted Friday</li>
+          <li role="treeitem" style={{ padding: '4px 0' }}>Smart Savings interest credited</li>
+          <li role="treeitem" style={{ padding: '4px 0' }}>Card ending ··4417 used in Chicago, IL</li>
+        </ul>
+      </section>
+
+      {/* PHASE-2 a11y issue MT-033 — see ACCESSIBILITY_ISSUES.md
+          <div role="button"> with aria-required="true". aria-required is
+          not allowed on role=button (it's only valid on form-control
+          roles like textbox, combobox, listbox, radiogroup…). axe-core
+          `aria-allowed-attr` fires Critical (WCAG 4.1.2). */}
+      <div
+        role="button"
+        tabIndex={0}
+        aria-required="true"
+        style={{ display: 'inline-block', padding: '8px 12px', border: '1px solid var(--border)', borderRadius: 6, marginTop: 12, cursor: 'pointer' }}
+      >
+        Acknowledge new statements
+      </div>
+
+      {/* PHASE-2 a11y issue MT-034 — see ACCESSIBILITY_ISSUES.md
+          "Account at a glance" — a <dl> whose direct children are plain
+          <div>s (no <dt>/<dd> pairs inside). axe-core `definition-list`
+          fires Serious (WCAG 1.3.1): a <dl> may only directly contain
+          <dt>, <dd>, <script>, <template>, or <div> wrappers that hold
+          dt/dd pairs. */}
+      <section aria-labelledby="glance-heading" style={{ marginTop: 24 }}>
+        <h2 id="glance-heading" style={{ fontSize: 16, color: 'var(--brand-deep)', margin: '0 0 8px' }}>
+          Account at a glance
+        </h2>
+        <dl style={{ margin: 0 }}>
+          <div>Routing number: 071000013</div>
+          <div>Primary checking: ··4417</div>
+          <div>Statement cycle: 1st of the month</div>
+        </dl>
+      </section>
+
+      {/* PHASE-2 a11y issue MT-035 — see ACCESSIBILITY_ISSUES.md
+          "Spending snapshot" text styled as a heading (24 px, bold, top
+          margin, dark navy) but rendered as a <div>. Different position
+          from MT-011 (Home). axe DevTools Pro Advanced `heading-markup`
+          runs a CV/AI pass on the screenshot, detects the visual
+          heading pattern, and reports Serious (WCAG 1.3.1) in the
+          Automatic Issues (advanced) bucket. AI-credit-using rule. */}
+      <div
+        style={{
+          fontSize: 24,
+          fontWeight: 700,
+          color: 'var(--brand-deep)',
+          margin: '28px 0 8px',
+        }}
+      >
+        Spending snapshot
+      </div>
+
+      {/* PHASE-2 a11y issue MT-036 — see ACCESSIBILITY_ISSUES.md
+          Pivoted from `empty-table-header` (which is Best-Practice tagged
+          and doesn't fire on default WCAG-only toggles) to `td-headers-attr`
+          (Moderate, WCAG 1.3.1). Each <td> in the trend column declares
+          `headers="trend-col"` but the corresponding <th> has id="trend-column"
+          — the headers reference doesn't resolve. axe-core fires. */}
+      <section aria-labelledby="top-cats-heading" style={{ marginTop: 8 }}>
+        <h3 id="top-cats-heading" style={{ fontSize: 14, color: 'var(--brand-deep)', margin: '0 0 8px' }}>
+          Top categories this month
+        </h3>
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th scope="col" id="cat-col">Category</th>
+              <th scope="col" id="amt-col" style={{ textAlign: 'right' }}>Amount</th>
+              <th scope="col" id="trend-column">Trend</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td headers="cat-col">Groceries</td>
+              <td headers="amt-col" style={{ textAlign: 'right' }}>{fmtMoney(412.18)}</td>
+              <td headers="trend-col">up</td>
+            </tr>
+            <tr>
+              <td headers="cat-col">Dining</td>
+              <td headers="amt-col" style={{ textAlign: 'right' }}>{fmtMoney(284.06)}</td>
+              <td headers="trend-col">down</td>
+            </tr>
+            <tr>
+              <td headers="cat-col">Transit</td>
+              <td headers="amt-col" style={{ textAlign: 'right' }}>{fmtMoney(96.40)}</td>
+              <td headers="trend-col">flat</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
       <section aria-labelledby="accounts-heading">
@@ -61,8 +189,14 @@ export default function FintechDashboard() {
           Your accounts
         </h2>
         <div className="account-grid">
-          {state.accounts.map((a) => (
-            <article key={a.id} className="account-card">
+          {state.accounts.map((a, i) => (
+            /* PHASE-2 a11y issue IGT-017 (Reading Order IGT) — see ACCESSIBILITY_ISSUES.md
+               First account card gets `order: -1`, so the visual order moves it
+               into the first slot regardless of DOM position. Visual order
+               diverges from DOM (and from the tab/SR reading order). The
+               Reading Order IGT walks the SE through verifying DOM vs visual
+               order parity. */
+            <article key={a.id} className="account-card" style={i === 0 ? { order: -1 } : undefined}>
               <span className="label">{a.name} ··{a.last4}</span>
               <span className="balance">{fmtMoney(a.balance)}</span>
               {a.apy > 0 && <span className="muted" style={{ fontSize: 13 }}>{a.apy}% APY</span>}

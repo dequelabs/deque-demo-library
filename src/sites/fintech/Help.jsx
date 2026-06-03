@@ -49,15 +49,19 @@ export default function FintechHelp() {
         <p className="section-sub">Filter by ZIP code to see your nearest branches.</p>
 
         <div className="container" style={{ maxWidth: 760, marginBottom: 16 }}>
+          {/* PHASE-2 a11y issue MT-020 — see ACCESSIBILITY_ISSUES.md
+              Was: a real <label htmlFor={filterId}>ZIP code</label> + <input ... placeholder="60607" />
+              with implicit role=textbox + visible label.
+              Now: role="searchbox" with NO <label>, NO aria-label, NO aria-labelledby,
+              NO placeholder. Triggers axe-core `aria-input-field-name` (Moderate, WCAG 4.1.2). */}
           <div className="form-row" style={{ marginBottom: 0 }}>
-            <label htmlFor={filterId}>ZIP code</label>
             <input
               id={filterId}
+              role="searchbox"
               type="text"
               inputMode="numeric"
               pattern="[0-9]*"
               autoComplete="postal-code"
-              placeholder="60607"
               value={zip}
               onChange={(e) => setZip(e.target.value)}
             />
@@ -83,6 +87,16 @@ export default function FintechHelp() {
             </ul>
           )}
         </div>
+      </section>
+
+      {/* PHASE-2 a11y issue IGT-003 (Structure IGT) — see ACCESSIBILITY_ISSUES.md
+          Orphan region: a <section> with no aria-label, no aria-labelledby,
+          and no heading inside. The Structure IGT script flags regions that
+          contribute a landmark but lack an accessible name. */}
+      <section style={{ padding: '12px 16px', background: 'var(--bg-soft)', borderRadius: 6, margin: '24px auto', maxWidth: 760 }}>
+        <p style={{ margin: 0, fontSize: 13 }}>
+          Branch hours may vary on bank holidays. Call ahead to confirm.
+        </p>
       </section>
 
       <FAQList

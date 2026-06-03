@@ -125,10 +125,12 @@ lives under `/#/...` and resolves to `index.html` by default.
 
 **Option A — connect a GitHub repo (recommended, auto-deploys forever):**
 
-1. Push the repo to GitHub (see GitHub Pages section below for the push command).
+1. Push the repo to GitHub (the dequelabs org requires a PR — push to a
+   feature branch and open one).
 2. Go to https://vercel.com/new and import the repo.
 3. Vercel will detect Vite. Confirm and click Deploy.
-4. Every push to `main` (and every PR) gets a deployment.
+4. Every merge to `main` produces a Production deployment; every PR gets a
+   Preview deployment automatically.
 
 **Option B — Vercel CLI (one-off or preview):**
 
@@ -149,42 +151,11 @@ npm ci && npm run build
 
 The Vite `base` defaults to `/` when `VITE_BASE` is not set, which is what
 Vercel needs (the app is served at the deployment's root, e.g.
-`https://deque-demo-library.vercel.app/`). The GitHub Pages workflow sets
-`VITE_BASE=/<repo>/` only inside that workflow; it doesn't affect Vercel.
+`https://deque-demo-library.vercel.app/`).
 
-## Deploy to GitHub Pages (dequelabs org)
-
-A `.github/workflows/deploy.yml` is included. On every push to `main`, it builds
-the Vite app and deploys `dist/` to GitHub Pages. The Vite base path is set
-dynamically from the repository name so the bundle works at
-`https://dequelabs.github.io/<repo>/`.
-
-Once-off setup from your local machine (assumes you have the `gh` CLI authenticated):
-
-```bash
-# from inside this folder
-gh repo create dequelabs/deque-demo-library \
-  --public \
-  --source=. \
-  --remote=origin \
-  --push \
-  --description "Deque SE multi-sector accessibility demo library"
-```
-
-Or, if you prefer plain git:
-
-```bash
-git remote add origin git@github.com:dequelabs/deque-demo-library.git
-git push -u origin main
-```
-
-After the first push, open the repo on GitHub → **Settings → Pages → Build and
-deployment → Source: GitHub Actions**. The workflow will run on every subsequent
-push and publish to `https://dequelabs.github.io/deque-demo-library/`.
-
-> **Note on routing:** the app uses HashRouter, so URLs look like
-> `https://dequelabs.github.io/deque-demo-library/#/fintech/dashboard`.
-> No 404 fallback / rewrite rule is needed.
+> Vercel is the only deploy target. The repo previously had a GitHub Pages
+> workflow but it has been removed — Vercel handles per-branch previews and
+> production-from-`main`, which is all we need.
 
 ## Demo-time tips
 

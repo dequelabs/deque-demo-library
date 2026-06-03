@@ -19,6 +19,25 @@ export default function FintechAbout() {
         visual={<img src="/fintech-hero.svg" alt="" role="presentation" />}
       />
 
+      {/* PHASE-2 a11y issue IGT-005 (Headings IGT) — see ACCESSIBILITY_ISSUES.md
+          A SECOND <h1> ("DQBC, in a nutshell") on the About page in addition
+          to the MarketingHero <h1>. The Headings IGT surfaces "page has more
+          than one h1" as a manual review finding. */}
+      <h1 style={{ textAlign: 'center', margin: '24px 0 8px', fontSize: 26, color: 'var(--brand-deep)' }}>
+        DQBC, in a nutshell
+      </h1>
+
+      {/* PHASE-2 a11y issue IGT-011 (Images IGT) — see ACCESSIBILITY_ISSUES.md
+          Image-of-text pattern: the visual is itself text rendered as an
+          image (branch signage) but the alt does not match the visible
+          text in the image. The Images IGT walks the SE through verifying
+          the alt against the visual text content. */}
+      <img
+        src="/branch-photo.svg"
+        alt="Our story"
+        style={{ display: 'block', margin: '0 auto 24px', maxWidth: 240, height: 'auto' }}
+      />
+
       <section className="fintech-section alt" aria-labelledby="story-heading">
         <div className="container" style={{ maxWidth: 920 }}>
           <h2 id="story-heading" className="section-title">Our story</h2>
@@ -40,6 +59,14 @@ export default function FintechAbout() {
       <section className="fintech-section" aria-labelledby="leaders-heading">
         <h2 id="leaders-heading" className="section-title">Leadership</h2>
         <p className="section-sub">The team shaping the next chapter.</p>
+
+        {/* PHASE-2 a11y issue MT-019 — see ACCESSIBILITY_ISSUES.md
+            Added: an empty <a href="#"></a> meant as a "share this story" link that was
+            never wired up with text or an icon. Triggers axe-core `link-name`
+            (Critical, WCAG 2.4.4). */}
+        <p className="section-sub" style={{ marginTop: 0 }}>
+          <a href="#" onClick={(e) => e.preventDefault()}></a>
+        </p>
 
         <ul className="team-grid" style={{ listStyle: 'none' }}>
           {LEADERS.map((l) => (

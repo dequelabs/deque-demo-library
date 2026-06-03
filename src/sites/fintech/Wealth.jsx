@@ -18,6 +18,34 @@ export default function FintechWealth() {
         visual={<img src="/fintech-hero.svg" alt="" role="presentation" />}
       />
 
+      {/* PHASE-2 a11y issue MT-022 — see ACCESSIBILITY_ISSUES.md
+          Added: a small "Why DQBC Wealth?" callout that uses <h3> directly after the
+          page's <h1> (in MarketingHero). No intermediate <h2> exists yet, so the
+          heading order jumps h1 → h3. Triggers axe-core `heading-order`
+          (Moderate, Best Practice). */}
+      <section className="fintech-section" aria-labelledby="wealth-callout-heading">
+        <div className="container" style={{ maxWidth: 920 }}>
+          <h3 id="wealth-callout-heading" className="section-title">Why DQBC Wealth?</h3>
+          <p className="section-sub">
+            Low fees, transparent pricing, and human advisors when you need them.
+          </p>
+        </div>
+      </section>
+
+      {/* PHASE-2 a11y issue IGT-004 (Headings IGT) — see ACCESSIBILITY_ISSUES.md
+          Extends MT-022 with a wider gap: a brand-new section uses <h4>
+          directly after the hero <h1> (no intermediate h2/h3 owns the
+          content above this <h4>). The Headings IGT walks the SE through
+          the manual heading-order check that catches "skipped levels". */}
+      <section className="fintech-section" aria-labelledby="wealth-h4-callout">
+        <div className="container" style={{ maxWidth: 920 }}>
+          <h4 id="wealth-h4-callout" className="section-title">A note on advisor availability</h4>
+          <p className="section-sub">
+            Wealth advisors typically reply within one business day.
+          </p>
+        </div>
+      </section>
+
       <FeatureGrid
         heading="Three ways to invest with DQBC"
         subheading="Pick the level of involvement that fits your life."

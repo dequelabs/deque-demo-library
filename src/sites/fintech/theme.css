@@ -31,6 +31,21 @@
   border-radius: 3px;
 }
 
+/* PHASE-2 a11y issue MT-010 — see ACCESSIBILITY_ISSUES.md
+   Overrides the global :focus-visible accessible default to strip the
+   keyboard focus ring on .icon-btn with no replacement visual state.
+   axe DevTools Pro Advanced `css-focus-visible` runs a screenshot diff of
+   the unfocused vs focused element and reports when there is no visible
+   change AND no JS focus/blur handler. Realistic mistake: designer asked
+   for "cleaner topbar icons" without thinking through keyboard users.
+   Affects: PublicLayout search button, AuthLayout Messages/Notifications,
+   Bills dialog close, SearchPopover close. */
+.sector-fintech .icon-btn:focus,
+.sector-fintech .icon-btn:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
 /* ---------- Skip link ---------- */
 .skip-link {
   position: absolute;

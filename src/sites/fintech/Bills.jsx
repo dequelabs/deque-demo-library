@@ -82,6 +82,42 @@ export default function FintechBills() {
         </form>
       </section>
 
+      {/* PHASE-2 a11y issue MT-060 — see ACCESSIBILITY_ISSUES.md
+          Pivoted from advanced/css-focus-visible (already covered globally
+          on .icon-btn by MT-010) to Pro Advanced `text-contrast`. Light
+          gold text on a near-white gradient — axe-core color-contrast
+          goes Needs Review (gradient bg), Pro fires Serious (WCAG 1.4.3). */}
+      <div
+        style={{
+          background: 'linear-gradient(90deg, #fff 0%, #f5e9c4 100%)',
+          color: '#e8c267',
+          padding: '8px 14px',
+          borderRadius: 6,
+          marginBottom: 16,
+          fontSize: 14,
+        }}
+      >
+        Save $25 when you set up 3+ recurring bill payments this month.
+      </div>
+
+      {/* PHASE-2 a11y issue MT-056 — see ACCESSIBILITY_ISSUES.md
+          <div role="tablist"> whose children are plain <div>s (no
+          role="tab"). axe-core `aria-required-children` fires Critical
+          (WCAG 1.3.1): tablist must own at least one role="tab". */}
+      <div role="tablist" aria-label="Bill category" style={{ marginBottom: 16, display: 'flex', gap: 8 }}>
+        <div style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, fontSize: 14 }}>All</div>
+        <div style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, fontSize: 14 }}>Utilities</div>
+        <div style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, fontSize: 14 }}>Telecom</div>
+        <div style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, fontSize: 14 }}>Insurance</div>
+      </div>
+
+      {/* PHASE-2 a11y issue MT-057 — see ACCESSIBILITY_ISSUES.md
+          Stray <dd> outside any <dl>. axe-core `dlitem` fires Serious
+          (WCAG 1.3.1). */}
+      <dd style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '0 0 16px' }}>
+        Most recent payment: ComEd — $98.00 — yesterday
+      </dd>
+
       {/* Saved payees */}
       <section aria-labelledby="payees-heading">
         <div className="card-head">
@@ -93,13 +129,47 @@ export default function FintechBills() {
             No payees yet. <button className="btn-link" onClick={() => setShowAddPayee(true)}>Add your first payee</button>.
           </div>
         ) : (
+          /* PHASE-2 a11y issue MT-013 — see ACCESSIBILITY_ISSUES.md
+              Was: <ul className="payee-list"> ... <li className="payee-row"> ... </li> </ul>
+              Now: keep the <ul> wrapper, but each row is a <div> instead of an <li>.
+              axe-core's `list` rule fires when a <ul>/<ol> contains non-<li> direct
+              children (Serious, WCAG 1.3.1). The `.payee-list` / `.payee-row` styling
+              still applies; only the implicit role="listitem" on each row is lost. */
           <ul className="payee-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             {state.payees.map((p) => (
-              <li key={p.id} className="payee-row">
+              <div key={p.id} className="payee-row">
                 <div className="payee-meta">
-                  <span className="name">{p.name}</span>
+                  <span className="name">
+                    {p.name}{' '}
+                    {/* PHASE-2 a11y issue MT-059 — see ACCESSIBILITY_ISSUES.md
+                        <span lang="xx-bills"> wraps the payee category with
+                        an invalid BCP 47 language tag. axe-core
+                        `valid-lang` fires Serious (WCAG 3.1.2). */}
+                    <span lang="xx-bills" style={{ fontSize: 11, color: 'var(--text-secondary)', marginLeft: 4 }}>
+                      ({p.category})
+                    </span>
+                  </span>
                   <span className="acct">{p.accountNumber} · {p.category}</span>
                 </div>
+                {/* PHASE-2 a11y issue MT-055 — see ACCESSIBILITY_ISSUES.md
+                    Icon-only "Edit payee" <button> with no text, no
+                    aria-label, no title. axe-core `button-name` fires
+                    Critical (WCAG 4.1.2). */}
+                <button
+                  type="button"
+                  className="icon-btn pay-now-btn"
+                  onClick={(e) => e.preventDefault()}
+                  style={{ width: 28, height: 28 }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <path d="M12 20h9" />
+                    <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4z" />
+                  </svg>
+                </button>
+                {/* PHASE-2 a11y issue MT-058 — see ACCESSIBILITY_ISSUES.md
+                    Empty <span role="tooltip">. axe-core
+                    `aria-tooltip-name` fires Serious (WCAG 4.1.2). */}
+                <span role="tooltip"></span>
                 <button
                   type="button"
                   className="btn-link"
@@ -108,7 +178,7 @@ export default function FintechBills() {
                 >
                   Remove
                 </button>
-              </li>
+              </div>
             ))}
           </ul>
         )}
@@ -159,7 +229,13 @@ export default function FintechBills() {
       )}
 
       {showAddPayee && (
-        <Dialog title="Add a payee" onClose={() => setShowAddPayee(false)}>
+        /* PHASE-2 a11y issue IGT-013 (Modals IGT) — see ACCESSIBILITY_ISSUES.md
+           The Add payee dialog deliberately opts OUT of focus management
+           (no initial focus, no focus trap) via the `noFocusManagement`
+           prop. Keyboard users can tab right out of the open dialog into
+           the page behind it. The Modals IGT walks the SE through the
+           focus-trap verification flow. */
+        <Dialog title="Add a payee" onClose={() => setShowAddPayee(false)} noFocusManagement>
           <form onSubmit={onAddPayee}>
             <div className="form-row">
               <label htmlFor="np-name" className="required-mark">Payee name</label>
@@ -189,7 +265,12 @@ export default function FintechBills() {
       )}
 
       {removeId && (
-        <Dialog title="Remove payee?" onClose={() => setRemoveId(null)}>
+        /* PHASE-2 a11y issue IGT-014 (Modals IGT) — see ACCESSIBILITY_ISSUES.md
+           The remove-payee confirm dialog disables its Escape-key handler
+           via the `noEscape` prop — pressing Esc no longer closes the
+           dialog. The Modals IGT walks the SE through Esc-to-close
+           verification. */
+        <Dialog title="Remove payee?" onClose={() => setRemoveId(null)} noEscape>
           <p>This will remove the payee from your saved list. Scheduled payments to them will not be cancelled automatically.</p>
           <div className="flex gap-8 mt-16">
             <button
@@ -264,31 +345,31 @@ function MemoField() {
 }
 
 /* ---------- Accessible dialog ---------- */
-function Dialog({ title, onClose, children }) {
+function Dialog({ title, onClose, children, noFocusManagement = false, noEscape = false }) {
   const titleId = useId();
   const ref = useRef(null);
   const previouslyFocused = useRef(null);
 
   useEffect(() => {
     previouslyFocused.current = document.activeElement;
-    if (ref.current) {
+    if (!noFocusManagement && ref.current) {
       const focusable = ref.current.querySelector(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
       (focusable || ref.current).focus();
     }
     const onKey = (e) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'Tab') trapFocus(e, ref.current);
+      if (!noEscape && e.key === 'Escape') onClose();
+      if (!noFocusManagement && e.key === 'Tab') trapFocus(e, ref.current);
     };
     document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('keydown', onKey);
-      if (previouslyFocused.current && previouslyFocused.current.focus) {
+      if (!noFocusManagement && previouslyFocused.current && previouslyFocused.current.focus) {
         previouslyFocused.current.focus();
       }
     };
-  }, [onClose]);
+  }, [onClose, noFocusManagement, noEscape]);
 
   return (
     <div

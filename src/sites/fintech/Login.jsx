@@ -56,16 +56,45 @@ export default function FintechLogin() {
           Sign in to manage checking, savings, investments, lending, and bill pay
           — all in one place. Your security is our priority.
         </p>
+        {/* PHASE-2 a11y issue MT-041 — see ACCESSIBILITY_ISSUES.md
+            Low-contrast sub-text (#7a92b8) on the dark-blue brand-deep
+            gradient. axe-core color-contrast goes Needs Review (gradient
+            bg), Pro Advanced `text-contrast` analyses the rendered pixels
+            and reports Serious (WCAG 1.4.3). */}
+        <p style={{ color: '#7a92b8', fontSize: 13, marginTop: 4 }}>
+          Member FDIC · Equal Housing Lender · Routing #071000013
+        </p>
+        {/* PHASE-2 a11y issue MT-042 — see ACCESSIBILITY_ISSUES.md
+            Inline letter-spacing + word-spacing + line-height set as fixed
+            values that override user stylesheets. axe-core
+            `avoid-inline-spacing` fires Serious (WCAG 1.4.12 Reflow). */}
+        <p style={{ letterSpacing: '0.5px', wordSpacing: '0.5px', lineHeight: '1.2', marginTop: 12 }}>
+          A century of trust meets a decade of mobile-first banking.
+        </p>
         <ul>
           <li>Biometric and FIDO2 sign-in supported</li>
           <li>Real-time fraud alerts on every transaction</li>
           <li>$0 liability for unauthorized purchases</li>
         </ul>
+        {/* PHASE-2 a11y issue MT-040 — see ACCESSIBILITY_ISSUES.md
+            Stray <dt> outside any <dl>. axe-core `dlitem` fires Serious
+            (WCAG 1.3.1). HTML spec requires <dt>/<dd> to appear only as
+            children of <dl>. */}
+        <dt style={{ marginTop: 16, fontWeight: 600, fontSize: 13 }}>Customer since 1923</dt>
       </aside>
 
       <section className="fintech-login-main">
         <div className="fintech-login-card">
           <h2 style={{ margin: '0 0 6px', color: 'var(--brand-deep)' }}>Sign in</h2>
+          {/* PHASE-2 a11y issue MT-037 — see ACCESSIBILITY_ISSUES.md
+              <input type="button"> with NO value, NO aria-label, NO title.
+              axe-core `input-button-name` fires Critical (WCAG 4.1.2):
+              "Input buttons must have a discernible text". */}
+          <input
+            type="button"
+            style={{ float: 'right', marginTop: -28, width: 28, height: 24, border: '1px solid var(--border)', borderRadius: 4, background: '#fff', cursor: 'pointer' }}
+            onClick={(e) => e.preventDefault()}
+          />
           <p className="muted" style={{ margin: 0 }}>Use your online banking credentials.</p>
 
           <div role="tablist" aria-label="Account type" className="fintech-tabs">
@@ -118,7 +147,13 @@ export default function FintechLogin() {
             </div>
 
             <div className="form-row">
-              <label htmlFor="login-password">Password</label>
+              {/* PHASE-2 a11y issue MT-004 — see ACCESSIBILITY_ISSUES.md
+                  Was: <label htmlFor="login-password">Password</label>
+                  Replaced with a styled <span> that LOOKS like a label but is
+                  NOT programmatically associated. No aria-label, no placeholder,
+                  no title — the input has no accessible name. axe-core fires
+                  `label` (Critical, WCAG 3.3.2 / 4.1.2). */}
+              <span className="faux-label" style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Password</span>
               <div className="password-row">
                 <input
                   id="login-password"
@@ -140,7 +175,37 @@ export default function FintechLogin() {
                     <circle cx="12" cy="12" r="3" />
                   </svg>
                 </button>
+                {/* PHASE-2 a11y issue MT-039 — see ACCESSIBILITY_ISSUES.md
+                    <span role="tooltip"> with NO text content and NO
+                    aria-label. axe-core `aria-tooltip-name` fires
+                    Serious (WCAG 4.1.2). */}
+                <span role="tooltip"></span>
               </div>
+              {/* PHASE-2 a11y issue MT-038 — see ACCESSIBILITY_ISSUES.md
+                  <div role="progressbar"> for "Password strength" with
+                  aria-valuenow/min/max set, but NO accessible name (no
+                  aria-label / aria-labelledby / title). axe-core
+                  `aria-progressbar-name` fires Critical (WCAG 1.1.1). */}
+              <div
+                role="progressbar"
+                aria-valuenow={40}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                style={{ height: 4, background: '#e3e8ef', borderRadius: 2, marginTop: 6, overflow: 'hidden' }}
+              >
+                <div style={{ width: '40%', height: '100%', background: 'var(--warning)' }} />
+              </div>
+            </div>
+
+            {/* PHASE-2 a11y issue IGT-007 (Forms IGT) — see ACCESSIBILITY_ISSUES.md
+                Extra "Security question" field is `required` but has NO visible
+                "required" marker, NO `aria-required`, NO asterisk near the
+                label. Sighted users can't tell it's required until they submit.
+                The Forms IGT walks the SE through verifying required-state
+                visibility. */}
+            <div className="form-row">
+              <label htmlFor="login-security-q">Security question</label>
+              <input id="login-security-q" name="securityQ" type="text" required />
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, margin: '8px 0 24px' }}>
@@ -155,7 +220,17 @@ export default function FintechLogin() {
               We may send a one-time code to your phone for additional security.
             </p>
 
-            <button type="submit" className="btn btn-primary btn-block">
+            {/* PHASE-2 a11y issue MT-008 — see ACCESSIBILITY_ISSUES.md
+                Visible label says "Sign in" but aria-label overrides it with
+                "Submit credentials". The accessible name no longer contains
+                the visible text, so voice users saying "click Sign in" can't
+                target this button. axe-core `label-content-name-mismatch`
+                fires (Serious, WCAG 2.5.3 A — "Label in Name"). */}
+            <button
+              type="submit"
+              className="btn btn-primary btn-block"
+              aria-label="Submit credentials"
+            >
               Sign in
             </button>
 
