@@ -26,9 +26,28 @@ import FintechStatements from './sites/fintech/Statements.jsx';
 import FintechCards from './sites/fintech/Cards.jsx';
 import FintechProfile from './sites/fintech/Profile.jsx';
 
-// Other sectors - stubbed pending approval
+// Education / Government (Northbrook Connect)
 import EduGovLayout from './sites/edu-gov/Layout.jsx';
-import EduGovStub from './sites/edu-gov/Stub.jsx';
+import EduGovPublicLayout from './sites/edu-gov/PublicLayout.jsx';
+import EduGovAuthLayout from './sites/edu-gov/AuthLayout.jsx';
+import { ProtectedRoute as EduGovProtectedRoute } from './sites/edu-gov/auth.jsx';
+import EduGovHome from './sites/edu-gov/Home.jsx';
+import EduGovLogin from './sites/edu-gov/Login.jsx';
+import EduGovAccount from './sites/edu-gov/Account.jsx';
+import EduGovSchools from './sites/edu-gov/Schools.jsx';
+import EduGovEnroll from './sites/edu-gov/Enroll.jsx';
+import EduGovGrades from './sites/edu-gov/Grades.jsx';
+import EduGovUniversity from './sites/edu-gov/University.jsx';
+import EduGovRegister from './sites/edu-gov/Register.jsx';
+import EduGovServices from './sites/edu-gov/Services.jsx';
+import EduGovDMV from './sites/edu-gov/DMV.jsx';
+import EduGovBenefits from './sites/edu-gov/Benefits.jsx';
+import EduGovCity from './sites/edu-gov/City.jsx';
+import EduGovPermits from './sites/edu-gov/Permits.jsx';
+import EduGovVote from './sites/edu-gov/Vote.jsx';
+import EduGovComingSoon from './sites/edu-gov/ComingSoon.jsx';
+
+// Other sectors - stubbed pending approval
 import SaasLayout from './sites/saas/Layout.jsx';
 import SaasStub from './sites/saas/Stub.jsx';
 import AgencyLayout from './sites/agency/Layout.jsx';
@@ -77,9 +96,36 @@ export default function App() {
         </Route>
       </Route>
 
-      {/* Education / Government */}
+      {/* Education / Government — Northbrook Connect */}
       <Route path="/edu-gov" element={<EduGovLayout />}>
-        <Route index element={<EduGovStub />} />
+        {/* Public-facing pages */}
+        <Route element={<EduGovPublicLayout />}>
+          <Route index               element={<EduGovHome />} />
+          <Route path="login"        element={<EduGovLogin />} />
+          <Route path="schools"      element={<EduGovSchools />} />
+          <Route path="university"   element={<EduGovUniversity />} />
+          <Route path="services"     element={<EduGovServices />} />
+          <Route path="city"         element={<EduGovCity />} />
+          <Route path="about"        element={<EduGovComingSoon />} />
+        </Route>
+
+        {/* Authed pages */}
+        <Route
+          element={
+            <EduGovProtectedRoute>
+              <EduGovAuthLayout />
+            </EduGovProtectedRoute>
+          }
+        >
+          <Route path="account"              element={<EduGovAccount />} />
+          <Route path="schools/enroll"       element={<EduGovEnroll />} />
+          <Route path="schools/grades"       element={<EduGovGrades />} />
+          <Route path="university/register"  element={<EduGovRegister />} />
+          <Route path="services/dmv"         element={<EduGovDMV />} />
+          <Route path="services/benefits"    element={<EduGovBenefits />} />
+          <Route path="city/permits"         element={<EduGovPermits />} />
+          <Route path="city/vote"            element={<EduGovVote />} />
+        </Route>
       </Route>
 
       {/* SaaS */}
