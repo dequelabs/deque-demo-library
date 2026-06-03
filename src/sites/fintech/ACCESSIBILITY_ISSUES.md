@@ -72,6 +72,48 @@ A "complete" Phase 2 should cover, across the 9 pages, at least:
 | MT-034 | Dashboard | `Dashboard.jsx` "Account at a glance" `<dl>` containing bare `<div>` children (no `<dt>`/`<dd>` pairs) | 1.3.1 | `definition-list`             | Serious  | axe-core | Live |
 | MT-035 | Dashboard | `Dashboard.jsx` "Spending snapshot" `<div>` styled as a heading (24 px / 700 / brand-deep / top margin) | 1.3.1 | `advanced/heading-markup`     | Serious  | **Pro Advanced** (uses AI credits — CV) | Live |
 | MT-036 | Dashboard | `Dashboard.jsx` "Top categories this month" `<table>` — `<td headers="trend-col">` references a header id that doesn't exist (the `<th>` has id="trend-column") | 1.3.1 | `td-headers-attr`             | Serious  | axe-core | Live |
+| MT-037 | Login     | `Login.jsx` `<input type="button">` next to "Sign in" header (no value/aria-label/title) | 4.1.2 | `input-button-name`           | Critical | axe-core | Live |
+| MT-038 | Login     | `Login.jsx` password-strength `<div role="progressbar">` (no aria-label / aria-labelledby) | 1.1.1 | `aria-progressbar-name`       | Critical | axe-core | Live |
+| MT-039 | Login     | `Login.jsx` empty `<span role="tooltip">` next to password input | 4.1.2 | `aria-tooltip-name`           | Serious  | axe-core | Live |
+| MT-040 | Login     | `Login.jsx` stray `<dt>Customer since 1923</dt>` outside any `<dl>` in welcome panel | 1.3.1 | `dlitem`                      | Serious  | axe-core | Live |
+| MT-041 | Login     | `Login.jsx` low-contrast disclaimer `#7a92b8` on brand-deep gradient in welcome panel | 1.4.3 | `advanced/text-contrast`      | Serious  | **Pro Advanced** | Live |
+| MT-042 | Login     | `Login.jsx` paragraph with inline `letterSpacing/wordSpacing/lineHeight` fixed values | 1.4.12 | `avoid-inline-spacing`       | Serious  | axe-core | Live |
+| MT-043 | Profile   | `Profile.jsx` "Display name" input has TWO `<label htmlFor="display-name">` pointing at one input | 3.3.2 | `form-field-multiple-labels`  | Moderate | axe-core | Live |
+| MT-044 | Profile   | `Profile.jsx` "Profile completeness" `<div role="meter">` without accessible name | 1.1.1 | `aria-meter-name`             | Critical | axe-core | Live |
+| MT-045 | Profile   | `Profile.jsx` Two-factor `<button role="switch">` empty / no accessible name | 4.1.2 | `aria-toggle-field-name` (often co-fires as `button-name`) | Serious | axe-core | Live |
+| MT-046 | Profile   | `Profile.jsx` `<object data="/branch-photo.svg">` with no `aria-label` / body fallback | 1.1.1 | `object-alt`                  | Serious  | axe-core | Live |
+| MT-047 | Profile   | `Profile.jsx` `<section role="region" aria-orientation="diagonal">` — invalid value | 4.1.2 | `aria-valid-attr-value`       | Critical | axe-core | Live |
+| MT-048 | Profile   | `Profile.jsx` "Security preferences" `<div>` styled as h3 (22 px / 700) | 1.3.1 | `advanced/heading-markup`     | Serious  | **Pro Advanced** | Live |
+| MT-049 | Transfer  | `Transfer.jsx` Step 1 "Frequency" `<select>` with no label/aria-label | 4.1.2 | `select-name`                 | Critical | axe-core | Live |
+| MT-050 | Transfer  | `Transfer.jsx` Step 1 "Recent recipients" `<div role="combobox">` missing required `aria-expanded` | 4.1.2 | `aria-required-attr`          | Critical | axe-core | Live |
+| MT-051 | Transfer  | `Transfer.jsx` Step 1 empty `<a href="/fintech/help">` (no body, no aria-label) | 2.4.4 | `link-name`                   | Critical | axe-core | Live |
+| MT-052 | Transfer  | `Transfer.jsx` Step 1 `<div role="presentation" aria-required="true">` — disallowed attr on presentation | 4.1.2 | `aria-allowed-attr`           | Critical | axe-core | Live |
+| MT-053 | Transfer  | `Transfer.jsx` Step 1 "tip" banner — white text on gold-to-white gradient | 1.4.3 | `advanced/text-contrast`      | Serious  | **Pro Advanced** | Live |
+| MT-054 | Transfer  | `Transfer.jsx` Step 1 "Transfer speed" `<div role="radiogroup">` with `<div>` children | 1.3.1 | `aria-required-children` (may not fire on radiogroup-without-radio in axe-core 4.10 — see notes) | Critical | axe-core | Live |
+| MT-055 | Bills     | `Bills.jsx` icon-only "Edit payee" `<button>` per payee (no aria-label) | 4.1.2 | `button-name`                 | Critical | axe-core | Live |
+| MT-056 | Bills     | `Bills.jsx` "Bill category" `<div role="tablist">` with `<div>` children (no role="tab") | 1.3.1 | `aria-required-children`      | Critical | axe-core | Live |
+| MT-057 | Bills     | `Bills.jsx` stray `<dd>Most recent payment…</dd>` outside any `<dl>` | 1.3.1 | `dlitem`                      | Serious  | axe-core | Live |
+| MT-058 | Bills     | `Bills.jsx` empty `<span role="tooltip">` next to each payee Edit button | 4.1.2 | `aria-tooltip-name`           | Serious  | axe-core | Live |
+| MT-059 | Bills     | `Bills.jsx` `<span lang="xx-bills">(category)</span>` on each payee name | 3.1.2 | `valid-lang`                  | Serious  | axe-core | Live |
+| MT-060 | Bills     | `Bills.jsx` "Save $25" promo banner — gold text on white-to-gold gradient | 1.4.3 | `advanced/text-contrast`      | Serious  | **Pro Advanced** | Live |
+| MT-061 | Cards     | `Cards.jsx` per-card "Spending limit" `<div role="progressbar">` (no accessible name) | 1.1.1 | `aria-progressbar-name`       | Critical | axe-core | Live |
+| MT-062 | Cards     | `Cards.jsx` icon-only "Freeze card" `<button>` per card (no aria-label) | 4.1.2 | `button-name`                 | Critical | axe-core | Live |
+| MT-063 | Cards     | `Cards.jsx` per-card "Card style" `<select>` (no label) | 4.1.2 | `select-name`                 | Critical | axe-core | Live |
+| MT-064 | Cards     | `Cards.jsx` per-card info icon-only `<a>` (no aria-label, no text body) | 2.4.4 | `link-name`                   | Critical | axe-core | Live |
+| MT-065 | Cards     | `Cards.jsx` per-card network badge `<span role="img" aria-orientation="diagonal">` invalid value | 4.1.2 | `aria-valid-attr-value`       | Critical | axe-core | Live |
+| MT-066 | Cards     | `Cards.jsx` per-card decorative `/ornament-divider.svg` with verbose alt | 1.1.1 | `advanced/image-decorative`   | Minor    | **Pro Advanced** (AI) | Live |
+| MT-067 | Statements| `Statements.jsx` "Quick filters" `<div role="grid">` with plain `<div>` children | 1.3.1 | `aria-required-children`      | Critical | axe-core | Live |
+| MT-068 | Statements| `Statements.jsx` `<dl>` containing only `<p>` children (no `<dt>`/`<dd>`) | 1.3.1 | `definition-list`             | Serious  | axe-core | Live |
+| MT-069 | Statements| `Statements.jsx` `<span lang="zzx">Form W-9</span>` on tax-form acronym | 3.1.2 | `valid-lang`                  | Serious  | axe-core | Live |
+| MT-070 | Statements| `Statements.jsx` "Show more years" `<button aria-rowindex={2}>` — disallowed attr | 4.1.2 | `aria-allowed-attr`           | Critical | axe-core | Live |
+| MT-071 | Statements| `Statements.jsx` "Statement type" `<select>` (no label) | 4.1.2 | `select-name`                 | Critical | axe-core | Live |
+| MT-072 | Statements| `Statements.jsx` "Tax documents" section title rendered as a styled `<p>` (22 px / 700) | 1.3.1 | `advanced/heading-markup`     | Serious  | **Pro Advanced** (AI) | Live |
+| MT-073 | Deposit   | `Deposit.jsx` Step 1 `<input type="image" src="/check-success.svg">` with no `alt` | 1.1.1 | `input-image-alt`             | Critical | axe-core | Live |
+| MT-074 | Deposit   | `Deposit.jsx` Step 1 "Deposit type" `<div role="radiogroup">` with `<div>` children | 1.3.1 | `aria-required-children` (radiogroup-no-radios may not fire in axe-core 4.10 — see notes) | Critical | axe-core | Live |
+| MT-075 | Deposit   | `Deposit.jsx` Step 1 "Auto-deposit" `<button role="switch">` empty (no name) | 4.1.2 | `aria-toggle-field-name` (often co-fires as `button-name`) | Serious | axe-core | Live |
+| MT-076 | Deposit   | `Deposit.jsx` Step 1 "Daily deposit limit" `<div role="meter">` (no accessible name) | 1.1.1 | `aria-meter-name`             | Critical | axe-core | Live |
+| MT-077 | Deposit   | `Deposit.jsx` Step 1 `<span lang="frzz">Reçu</span>` invalid lang | 3.1.2 | `valid-lang`                  | Serious  | axe-core | Live |
+| MT-078 | Deposit   | `Deposit.jsx` Step 1 hint banner — gold text on white-to-gold gradient | 1.4.3 | `advanced/text-contrast`      | Serious  | **Pro Advanced** | Live |
 
 > _Tool column values: `axe-core` / `axe Linter` / `Pro Advanced` / `IGT`._
 > _Status values: `TODO` / `Live` / `Removed` / `Replaced`._
@@ -95,6 +137,102 @@ How to confirm each rule fires using axe DevTools (browser extension), default t
 | MT-010 | Sign in, open any authed page (Dashboard is easy). Tab to the topbar Messages / Notifications icon — there is **no visible focus ring**. In axe DevTools Pro, run a scan; the finding will appear in **Automatic Issues (advanced)** rather than the core axe-core bucket. |
 | MT-011 | Open `/#/fintech` (Home). Scroll past the feature cards to the "Spotlight offer" line — it's visually a heading but semantically a `<div>`. In axe DevTools Pro, run a scan; the finding appears in **Automatic Issues (advanced)**. Note: this rule consumes AI credits, so if your org's credit pool is exhausted, the rule is skipped automatically (the panel will tell you). |
 | MT-012 | Open `/#/fintech` (Home). Just above the Spotlight section sits a thin ornamental gold divider — the verbose `alt` description claims "ornamental gold-toned divider…" but the AI rule recognises it as a purely decorative element. In axe DevTools Pro, run a scan; the finding appears in **Automatic Issues (advanced)**. AI credits required. |
+
+### Batch 5 — verification cheat sheet
+
+All axe-core rows fire on **default toggles** (WCAG 2.2 AA ON, BP OFF, Experimental OFF) unless noted. Pro Advanced rows appear in **Automatic Issues (advanced)** in axe DevTools Pro.
+
+| ID     | Steps to reach                                                       | Expected finding |
+| ------ | -------------------------------------------------------------------- | ---------------- |
+| MT-037 | Sign out, open `/#/fintech/login`                                    | Critical: Input buttons must have a discernible text (`input-button-name`) on the small `<input type="button">` next to the "Sign in" heading. |
+| MT-038 | Same as MT-037                                                       | Critical: Progressbar elements must have an accessible name (`aria-progressbar-name`) on the password-strength bar. |
+| MT-039 | Same as MT-037                                                       | Serious: Tooltip elements must have an accessible name (`aria-tooltip-name`) on the empty `<span role="tooltip">` next to the password input. |
+| MT-040 | Same as MT-037                                                       | Serious: `<dt>` and `<dd>` elements must be contained by a `<dl>` (`dlitem`) on the stray "Customer since 1923" element in the welcome panel. |
+| MT-041 | Same as MT-037 (Pro Advanced)                                        | Serious: text-contrast finding on the low-contrast disclaimer line over the dark gradient panel. Appears in **Automatic Issues (advanced)**. |
+| MT-042 | Same as MT-037                                                       | Serious: Inline styles should not be used to set spacing (`avoid-inline-spacing`) on the paragraph with `letterSpacing` / `wordSpacing` / `lineHeight` inline. |
+| MT-043 | Sign in, open `/#/fintech/profile`                                   | Moderate: Form field has multiple label elements (`form-field-multiple-labels`) on the `#display-name` input. |
+| MT-044 | Same as MT-043                                                       | Critical: Meter elements must have an accessible name (`aria-meter-name`) on the "Profile completeness" meter at the top. |
+| MT-045 | Same as MT-043                                                       | Serious: Toggle field / button must have an accessible name (`aria-toggle-field-name` or `button-name`) on the empty Two-factor switch. |
+| MT-046 | Same as MT-043                                                       | Serious: `<object>` elements must have alternate text (`object-alt`) on the embedded branch-photo svg. |
+| MT-047 | Same as MT-043                                                       | Critical: ARIA attribute value must be valid (`aria-valid-attr-value`) on `<section aria-orientation="diagonal">`. |
+| MT-048 | Same as MT-043 (Pro Advanced)                                        | Serious: heading-markup finding on the "Security preferences" pseudo-heading. **Automatic Issues (advanced)**. |
+| MT-049 | Sign in, open `/#/fintech/transfer` (Step 1)                         | Critical: Select must have an accessible name (`select-name`) on the unlabelled "Frequency" select. |
+| MT-050 | Same as MT-049                                                       | Critical: Required ARIA attributes must be provided (`aria-required-attr`) on the "Recent recipients" combobox missing `aria-expanded`. |
+| MT-051 | Same as MT-049                                                       | Critical: Links must have discernible text (`link-name`) on the empty Help anchor. |
+| MT-052 | Same as MT-049                                                       | Critical: Elements must only use allowed ARIA attributes (`aria-allowed-attr`) on `<div role="presentation" aria-required="true">`. |
+| MT-053 | Same as MT-049 (Pro Advanced)                                        | Serious: text-contrast finding on the white-on-gradient "tip" banner. **Automatic Issues (advanced)**. |
+| MT-054 | Same as MT-049                                                       | Critical: ARIA roles must contain particular children (`aria-required-children`) on the Transfer speed radiogroup. Note: axe-core 4.10 may not fire `radiogroup-with-no-radios` in all configurations — verify in the extension. |
+| MT-055 | Sign in, open `/#/fintech/bills`                                     | Critical: Buttons must have discernible text (`button-name`) on each per-payee Edit icon-button. |
+| MT-056 | Same as MT-055                                                       | Critical: ARIA roles must contain particular children (`aria-required-children`) on the "Bill category" tablist. |
+| MT-057 | Same as MT-055                                                       | Serious: `dlitem` on the stray `<dd>` above the saved-payees list. |
+| MT-058 | Same as MT-055                                                       | Serious: Tooltip must have an accessible name (`aria-tooltip-name`) on the empty tooltip span beside each Edit button. |
+| MT-059 | Same as MT-055                                                       | Serious: `lang` attribute must have a valid value (`valid-lang`) on the `(category)` span beside each payee name. |
+| MT-060 | Same as MT-055 (Pro Advanced)                                        | Serious: text-contrast on the "Save $25" promo banner. **Automatic Issues (advanced)**. |
+| MT-061 | Sign in, open `/#/fintech/cards`                                     | Critical: Progressbar must have a name (`aria-progressbar-name`) on each card's "Spending limit" bar. |
+| MT-062 | Same as MT-061                                                       | Critical: Button name on each card's Freeze icon-button. |
+| MT-063 | Same as MT-061                                                       | Critical: Select name on each "Card style" select. |
+| MT-064 | Same as MT-061                                                       | Critical: Link name on each per-card info icon-link. |
+| MT-065 | Same as MT-061                                                       | Critical: ARIA attribute value must be valid (`aria-valid-attr-value`) on `<span role="img" aria-orientation="diagonal">`. |
+| MT-066 | Same as MT-061 (Pro Advanced)                                        | Minor: image-decorative on the per-card ornament with verbose alt. **Automatic Issues (advanced)**. |
+| MT-067 | Sign in, open `/#/fintech/statements`                                | Critical: Required children on the "Quick filters" grid. |
+| MT-068 | Same as MT-067                                                       | Serious: `<dl>` must only contain proper dt/dd (`definition-list`) on the prose dl. |
+| MT-069 | Same as MT-067                                                       | Serious: `valid-lang` on the `<span lang="zzx">Form W-9</span>` element. |
+| MT-070 | Same as MT-067                                                       | Critical: `aria-allowed-attr` on the "Show more years" button with `aria-rowindex`. |
+| MT-071 | Same as MT-067                                                       | Critical: `select-name` on the "Statement type" select. |
+| MT-072 | Same as MT-067 (Pro Advanced)                                        | Serious: heading-markup on the "Tax documents" pseudo-heading paragraph. **Automatic Issues (advanced)**. |
+| MT-073 | Sign in, open `/#/fintech/deposit` (Step 1)                          | Critical: Image inputs must have alternate text (`input-image-alt`) on the scan-to-capture image input. |
+| MT-074 | Same as MT-073                                                       | Critical: Required children on the "Deposit type" radiogroup. (Same caveat as MT-054 — verify in the extension.) |
+| MT-075 | Same as MT-073                                                       | Serious: Toggle field / button name on the empty Auto-deposit switch. |
+| MT-076 | Same as MT-073                                                       | Critical: Meter must have an accessible name on the "Daily deposit limit" meter. |
+| MT-077 | Same as MT-073                                                       | Serious: `valid-lang` on the `<span lang="frzz">Reçu</span>` element. |
+| MT-078 | Same as MT-073 (Pro Advanced)                                        | Serious: text-contrast on the deposit hint banner. **Automatic Issues (advanced)**. |
+
+### Batch 5 — accessible fix (for reference)
+
+| ID     | Minimal fix |
+| ------ | ----------- |
+| MT-037 | Add a `value="Help"` (or `aria-label="Help"`) to the `<input type="button">`. |
+| MT-038 | Add `aria-label="Password strength"` (or `aria-labelledby` pointing to a visible label) to the progressbar `<div>`. |
+| MT-039 | Either remove the empty tooltip span entirely, or give it text content / `aria-label`. |
+| MT-040 | Move the `<dt>` inside a real `<dl>` paired with a `<dd>`, OR change the `<dt>` to a `<p>` / `<span>`. |
+| MT-041 | Pick a foreground colour that meets 4.5:1 on the darkest portion of the gradient (e.g. `#cfe0f3`), or solidify the background. |
+| MT-042 | Remove the inline `letterSpacing` / `wordSpacing` / `lineHeight` and let user stylesheets / the cascade decide. |
+| MT-043 | Keep exactly one `<label htmlFor="display-name">`; remove the second. |
+| MT-044 | Add `aria-label="Profile completeness"` (or `aria-labelledby`) to the `<div role="meter">`. |
+| MT-045 | Add `aria-label="Two-factor authentication"` to the switch, or wrap it in a `<label>` and include text. |
+| MT-046 | Add an `aria-label` or fallback body text inside the `<object>`. |
+| MT-047 | Either remove `aria-orientation` or set it to `horizontal`, `vertical`, or `undefined`. |
+| MT-048 | Replace the styled `<div>` with `<h3>Security preferences</h3>`. |
+| MT-049 | Add a `<label>` (or `aria-label`) for the Frequency select. |
+| MT-050 | Add `aria-expanded="false"` to the combobox (required attribute). |
+| MT-051 | Give the Help anchor text (e.g. "Need help?") or an `aria-label`. |
+| MT-052 | Remove `aria-required` from a presentation element, or drop `role="presentation"`. |
+| MT-053 | Pick a foreground colour with sufficient contrast against the gold gradient. |
+| MT-054 | Use `<input type="radio" name="speed">` inside the radiogroup (or set role="radio" on the option `<div>`s with `aria-checked`). |
+| MT-055 | Add `aria-label="Edit payee"` to each Edit icon-button. |
+| MT-056 | Use `<button role="tab">` for the tab children (or add `role="tab"` to the existing `<div>`s). |
+| MT-057 | Move the `<dd>` inside a `<dl>` paired with a `<dt>`, or use `<p>`. |
+| MT-058 | Remove or name the empty tooltip span. |
+| MT-059 | Use a valid BCP 47 code (e.g. `lang="en"`) or remove the attribute. |
+| MT-060 | Increase the foreground colour contrast against the gradient. |
+| MT-061 | Add `aria-label="Spending limit used: X%"` to each progressbar. |
+| MT-062 | Add `aria-label="Freeze card"` to each Freeze button. |
+| MT-063 | Add a `<label>` for each Card style select. |
+| MT-064 | Add `aria-label="Card help"` to the info link. |
+| MT-065 | Set `aria-orientation` to a valid value or remove it. |
+| MT-066 | Use `alt=""` (or `role="presentation"`) on the decorative ornament. |
+| MT-067 | Use `role="row"` children on the grid (or remove the `role="grid"` and use a `<ul>`). |
+| MT-068 | Restructure the `<dl>` with `<dt>` / `<dd>` pairs, or convert to `<p>`s outside the dl. |
+| MT-069 | Use a valid BCP 47 code (or remove the attribute). |
+| MT-070 | Remove `aria-rowindex` from the button (it's only valid on table-row roles). |
+| MT-071 | Add a `<label>` for the Statement type select. |
+| MT-072 | Replace the styled `<p>` with `<h3>Tax documents</h3>`. |
+| MT-073 | Add an `alt` attribute to the `<input type="image">` (e.g. `alt="Scan check"`). |
+| MT-074 | Use `<input type="radio">` inside the radiogroup (or set role="radio" + aria-checked on the option divs). |
+| MT-075 | Add `aria-label="Auto-deposit recurring checks"` to the switch. |
+| MT-076 | Add `aria-label="Daily deposit limit used"` to the meter. |
+| MT-077 | Use a valid BCP 47 code (or remove the attribute). |
+| MT-078 | Increase the foreground colour contrast against the gradient. |
 
 ## Pro Advanced verification caveat
 

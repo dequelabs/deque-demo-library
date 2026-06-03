@@ -74,6 +74,83 @@ function CardItem({ card, dispatch }) {
         </p>
       )}
 
+      {/* PHASE-2 a11y issue MT-061 — see ACCESSIBILITY_ISSUES.md
+          <div role="progressbar"> for "Spending limit used: 60%" with
+          valuenow/min/max set but no accessible name. axe-core
+          `aria-progressbar-name` fires Critical (WCAG 1.1.1). */}
+      <div
+        role="progressbar"
+        aria-valuenow={60}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        style={{ marginTop: 12, height: 6, background: '#e3e8ef', borderRadius: 3, overflow: 'hidden' }}
+      >
+        <div style={{ width: '60%', height: '100%', background: 'var(--brand-primary)' }} />
+      </div>
+
+      <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+        {/* PHASE-2 a11y issue MT-062 — see ACCESSIBILITY_ISSUES.md
+            Icon-only "Freeze card" button with no text, no aria-label,
+            no title. axe-core `button-name` fires Critical (WCAG 4.1.2). */}
+        <button
+          type="button"
+          className="icon-btn"
+          onClick={(e) => e.preventDefault()}
+          style={{ width: 32, height: 32 }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M12 2v20M2 12h20M5 5l14 14M19 5L5 19" />
+          </svg>
+        </button>
+
+        {/* PHASE-2 a11y issue MT-064 — see ACCESSIBILITY_ISSUES.md
+            Icon-only <a> with no text content and no aria-label. axe-core
+            `link-name` fires Critical (WCAG 2.4.4). */}
+        <a
+          href="/fintech/help#cards"
+          style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, border: '1px solid var(--border)', borderRadius: '50%' }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 16v-4M12 8h.01" />
+          </svg>
+        </a>
+
+        {/* PHASE-2 a11y issue MT-063 — see ACCESSIBILITY_ISSUES.md
+            "Card style" <select> with options but no label / aria-label.
+            axe-core `select-name` fires Critical (WCAG 4.1.2). */}
+        <select defaultValue="chrome" onChange={(e) => e.preventDefault()} style={{ fontSize: 13 }}>
+          <option value="chrome">Chrome</option>
+          <option value="midnight">Midnight</option>
+          <option value="forest">Forest</option>
+        </select>
+
+        {/* PHASE-2 a11y issue MT-065 — see ACCESSIBILITY_ISSUES.md
+            Pivoted from aria-roledescription (empty-string variant
+            unreliable) to aria-orientation="diagonal" on role="img".
+            aria-orientation accepts only horizontal/vertical/undefined.
+            axe-core `aria-valid-attr-value` fires Critical (WCAG 4.1.2). */}
+        <span
+          role="img"
+          aria-label="Visa network logo"
+          aria-orientation="diagonal"
+          style={{ fontSize: 11, padding: '2px 8px', border: '1px solid var(--border)', borderRadius: 4 }}
+        >
+          {card.network}
+        </span>
+      </div>
+
+      {/* PHASE-2 a11y issue MT-066 — see ACCESSIBILITY_ISSUES.md
+          Decorative corner-flourish ornament SVG with verbose alt text.
+          Pro Advanced `image-decorative` AI classifier flags as Minor
+          (WCAG 1.1.1) — the AI sees the visual is purely decorative and
+          should be alt="" / role="presentation". */}
+      <img
+        src="/ornament-divider.svg"
+        alt="Ornamental gold-toned divider flourish marking the card preview boundary, evoking premium banking branding"
+        style={{ display: 'block', margin: '12px auto 0', maxWidth: 200, height: 'auto' }}
+      />
+
       <div className="card-controls" style={{ marginTop: 16 }}>
         {/* PHASE-2 a11y issue MT-014 — see ACCESSIBILITY_ISSUES.md
             Was: <label htmlFor={lockId}><input id={lockId} type="checkbox" checked={card.locked}

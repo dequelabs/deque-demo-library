@@ -82,6 +82,42 @@ export default function FintechBills() {
         </form>
       </section>
 
+      {/* PHASE-2 a11y issue MT-060 — see ACCESSIBILITY_ISSUES.md
+          Pivoted from advanced/css-focus-visible (already covered globally
+          on .icon-btn by MT-010) to Pro Advanced `text-contrast`. Light
+          gold text on a near-white gradient — axe-core color-contrast
+          goes Needs Review (gradient bg), Pro fires Serious (WCAG 1.4.3). */}
+      <div
+        style={{
+          background: 'linear-gradient(90deg, #fff 0%, #f5e9c4 100%)',
+          color: '#e8c267',
+          padding: '8px 14px',
+          borderRadius: 6,
+          marginBottom: 16,
+          fontSize: 14,
+        }}
+      >
+        Save $25 when you set up 3+ recurring bill payments this month.
+      </div>
+
+      {/* PHASE-2 a11y issue MT-056 — see ACCESSIBILITY_ISSUES.md
+          <div role="tablist"> whose children are plain <div>s (no
+          role="tab"). axe-core `aria-required-children` fires Critical
+          (WCAG 1.3.1): tablist must own at least one role="tab". */}
+      <div role="tablist" aria-label="Bill category" style={{ marginBottom: 16, display: 'flex', gap: 8 }}>
+        <div style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, fontSize: 14 }}>All</div>
+        <div style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, fontSize: 14 }}>Utilities</div>
+        <div style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, fontSize: 14 }}>Telecom</div>
+        <div style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, fontSize: 14 }}>Insurance</div>
+      </div>
+
+      {/* PHASE-2 a11y issue MT-057 — see ACCESSIBILITY_ISSUES.md
+          Stray <dd> outside any <dl>. axe-core `dlitem` fires Serious
+          (WCAG 1.3.1). */}
+      <dd style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '0 0 16px' }}>
+        Most recent payment: ComEd — $98.00 — yesterday
+      </dd>
+
       {/* Saved payees */}
       <section aria-labelledby="payees-heading">
         <div className="card-head">
@@ -103,9 +139,37 @@ export default function FintechBills() {
             {state.payees.map((p) => (
               <div key={p.id} className="payee-row">
                 <div className="payee-meta">
-                  <span className="name">{p.name}</span>
+                  <span className="name">
+                    {p.name}{' '}
+                    {/* PHASE-2 a11y issue MT-059 — see ACCESSIBILITY_ISSUES.md
+                        <span lang="xx-bills"> wraps the payee category with
+                        an invalid BCP 47 language tag. axe-core
+                        `valid-lang` fires Serious (WCAG 3.1.2). */}
+                    <span lang="xx-bills" style={{ fontSize: 11, color: 'var(--text-secondary)', marginLeft: 4 }}>
+                      ({p.category})
+                    </span>
+                  </span>
                   <span className="acct">{p.accountNumber} · {p.category}</span>
                 </div>
+                {/* PHASE-2 a11y issue MT-055 — see ACCESSIBILITY_ISSUES.md
+                    Icon-only "Edit payee" <button> with no text, no
+                    aria-label, no title. axe-core `button-name` fires
+                    Critical (WCAG 4.1.2). */}
+                <button
+                  type="button"
+                  className="icon-btn pay-now-btn"
+                  onClick={(e) => e.preventDefault()}
+                  style={{ width: 28, height: 28 }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <path d="M12 20h9" />
+                    <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4z" />
+                  </svg>
+                </button>
+                {/* PHASE-2 a11y issue MT-058 — see ACCESSIBILITY_ISSUES.md
+                    Empty <span role="tooltip">. axe-core
+                    `aria-tooltip-name` fires Serious (WCAG 4.1.2). */}
+                <span role="tooltip"></span>
                 <button
                   type="button"
                   className="btn-link"

@@ -61,7 +61,64 @@ export default function FintechStatements() {
           <div role="status" aria-live="polite" className="muted" style={{ paddingBottom: 11 }}>
             {filtered.length} {filtered.length === 1 ? 'statement' : 'statements'}
           </div>
+          {/* PHASE-2 a11y issue MT-071 — see ACCESSIBILITY_ISSUES.md
+              Unlabelled "Statement type" <select>. No <label>, no aria-label.
+              axe-core `select-name` fires Critical (WCAG 4.1.2). */}
+          <div className="form-row" style={{ marginBottom: 0, minWidth: 160 }}>
+            <select defaultValue="monthly" onChange={(e) => e.preventDefault()}>
+              <option value="monthly">Monthly statements</option>
+              <option value="tax">Tax documents</option>
+              <option value="trade">Trade confirmations</option>
+            </select>
+          </div>
         </div>
+
+        {/* PHASE-2 a11y issue MT-072 — see ACCESSIBILITY_ISSUES.md
+            "Tax documents" sub-section title rendered as styled <p>
+            instead of an h2/h3. Pro Advanced `heading-markup` AI/CV
+            rule fires Serious (WCAG 1.3.1). */}
+        <p style={{ fontSize: 22, fontWeight: 700, color: 'var(--brand-deep)', margin: '20px 0 8px' }}>
+          Tax documents
+        </p>
+
+        {/* PHASE-2 a11y issue MT-067 — see ACCESSIBILITY_ISSUES.md
+            <div role="grid"> with plain <div> children (no role="row" /
+            "rowgroup"). axe-core `aria-required-children` fires Critical
+            (WCAG 1.3.1): grid must own at least one row/rowgroup. */}
+        <div role="grid" aria-label="Quick filters" style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+          <div style={{ padding: '4px 10px', border: '1px solid var(--border)', borderRadius: 4, fontSize: 12 }}>1099-INT</div>
+          <div style={{ padding: '4px 10px', border: '1px solid var(--border)', borderRadius: 4, fontSize: 12 }}>1099-DIV</div>
+          <div style={{ padding: '4px 10px', border: '1px solid var(--border)', borderRadius: 4, fontSize: 12 }}>1098-E</div>
+        </div>
+
+        {/* PHASE-2 a11y issue MT-068 — see ACCESSIBILITY_ISSUES.md
+            <dl> containing only <p> children (no <dt>/<dd>). axe-core
+            `definition-list` fires Serious (WCAG 1.3.1). */}
+        <dl style={{ marginBottom: 16, fontSize: 13 }}>
+          <p style={{ margin: '4px 0' }}>Statement cycle ends on the last business day.</p>
+          <p style={{ margin: '4px 0' }}>Tax forms are typically available in late January.</p>
+        </dl>
+
+        {/* PHASE-2 a11y issue MT-070 — see ACCESSIBILITY_ISSUES.md
+            aria-rowindex on a <button> — aria-rowindex is not allowed
+            on button role (only on rows/cells/gridcells). axe-core
+            `aria-allowed-attr` fires Critical (WCAG 4.1.2). */}
+        <button
+          type="button"
+          aria-rowindex={2}
+          className="btn-link"
+          onClick={(e) => e.preventDefault()}
+          style={{ marginBottom: 8 }}
+        >
+          Show more years
+        </button>
+
+        {/* PHASE-2 a11y issue MT-069 — see ACCESSIBILITY_ISSUES.md
+            <span lang="zzx"> on a tax-acronym — invalid BCP 47 code.
+            axe-core `valid-lang` fires Serious (WCAG 3.1.2). */}
+        <p style={{ fontSize: 13, marginBottom: 16 }}>
+          See <span lang="zzx">Form W-9</span> guidance in your statements archive.
+        </p>
       </div>
 
       {filtered.length === 0 ? (

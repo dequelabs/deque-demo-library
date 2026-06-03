@@ -75,6 +75,67 @@ export default function FintechProfile() {
         </div>
       )}
 
+      {/* PHASE-2 a11y issue MT-044 — see ACCESSIBILITY_ISSUES.md
+          <div role="meter"> for "Profile completeness" with valuemin/max/now
+          set but NO accessible name. axe-core `aria-meter-name` fires
+          Critical (WCAG 1.1.1). */}
+      <div
+        role="meter"
+        aria-valuenow={60}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        className="card"
+        style={{ marginBottom: 24, padding: 16 }}
+      >
+        <div style={{ fontSize: 14, marginBottom: 8 }}>Profile completeness: 60%</div>
+        <div style={{ height: 6, background: '#e3e8ef', borderRadius: 3, overflow: 'hidden' }}>
+          <div style={{ width: '60%', height: '100%', background: 'var(--brand-primary)' }} />
+        </div>
+      </div>
+
+      {/* PHASE-2 a11y issue MT-048 — see ACCESSIBILITY_ISSUES.md
+          "Security preferences" reads as a section heading (22 px, bold,
+          dark navy, top margin) but is rendered as a <div> not h3. Pro
+          Advanced `heading-markup` AI/CV rule fires Serious (WCAG 1.3.1). */}
+      <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--brand-deep)', margin: '8px 0 8px' }}>
+        Security preferences
+      </div>
+      {/* PHASE-2 a11y issue MT-045 — see ACCESSIBILITY_ISSUES.md
+          <button role="switch"> with aria-checked but NO accessible name
+          (no text content, no aria-label). axe-core
+          `aria-toggle-field-name` fires Serious (WCAG 4.1.2). */}
+      <button
+        role="switch"
+        aria-checked="false"
+        style={{ width: 44, height: 24, border: '1px solid var(--border)', borderRadius: 12, background: '#fff', marginBottom: 24, cursor: 'pointer' }}
+        onClick={(e) => e.preventDefault()}
+      />
+
+      {/* PHASE-2 a11y issue MT-046 — see ACCESSIBILITY_ISSUES.md
+          <object> with no aria-label and no body fallback text. axe-core
+          `object-alt` fires Serious (WCAG 1.1.1). */}
+      <object
+        data="/branch-photo.svg"
+        type="image/svg+xml"
+        style={{ display: 'block', width: 120, height: 60, marginBottom: 24 }}
+      />
+
+      {/* PHASE-2 a11y issue MT-047 — see ACCESSIBILITY_ISSUES.md
+          Pivoted from aria-roledescription (empty-string variant doesn't
+          reliably fire — axe-core 4.10 treats empty same as absent).
+          Now: aria-orientation="diagonal" on a role="region" element —
+          aria-orientation only accepts "horizontal" / "vertical" /
+          "undefined". axe-core `aria-valid-attr-value` fires Critical
+          (WCAG 4.1.2). */}
+      <section
+        role="region"
+        aria-label="Verified identity"
+        aria-orientation="diagonal"
+        style={{ marginBottom: 24, padding: 12, background: 'var(--bg-soft)', borderRadius: 6, fontSize: 13 }}
+      >
+        Identity verified · Last reviewed: today
+      </section>
+
       {/* Personal info */}
       <section aria-labelledby="info-heading" className="card" style={{ marginBottom: 24 }}>
         <h2 id="info-heading" style={{ margin: '0 0 16px' }}>Personal info</h2>
@@ -84,6 +145,23 @@ export default function FintechProfile() {
             <Field name="lastName"  label="Last name"  defaultValue={u.lastName}  required autoComplete="family-name" />
             <Field name="email"     label="Email"      defaultValue={u.email}     required autoComplete="email"      type="email" />
             <Field name="phone"     label="Phone"      defaultValue={u.phone}     autoComplete="tel"                 type="tel" />
+          </div>
+
+          {/* PHASE-2 a11y issue MT-043 — see ACCESSIBILITY_ISSUES.md
+              "Display name" input has TWO <label htmlFor="display-name">
+              elements pointing at the same input. axe-core
+              `form-field-multiple-labels` fires Moderate (WCAG 3.3.2):
+              form fields shouldn't have more than one label, since AT
+              behaviour with multiple labels is inconsistent. */}
+          <div className="form-row" style={{ marginTop: 12 }}>
+            <label htmlFor="display-name">Display name</label>
+            <label htmlFor="display-name">Preferred name (shown on statements)</label>
+            <input
+              id="display-name"
+              name="displayName"
+              type="text"
+              defaultValue={u.firstName}
+            />
           </div>
 
           <h3 style={{ fontSize: 14, marginTop: 16, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>

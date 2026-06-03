@@ -127,8 +127,55 @@ function Step1({ state, from, setFrom, to, setTo, amount, setAmount, memo, setMe
     <>
       <h2 style={{ margin: '0 0 8px' }}>Enter transfer details</h2>
       <p className="muted" style={{ margin: '0 0 24px' }}>
-        Move funds between your DQBC accounts.
+        Move funds between your DQBC accounts.{' '}
+        {/* PHASE-2 a11y issue MT-051 — see ACCESSIBILITY_ISSUES.md
+            Empty <a href> with no body and no aria-label. axe-core
+            `link-name` fires Critical (WCAG 2.4.4). */}
+        <a href="/fintech/help" style={{ marginLeft: 6 }}></a>
       </p>
+
+      {/* PHASE-2 a11y issue MT-053 — see ACCESSIBILITY_ISSUES.md
+          Confirmation banner with light text on a gold-to-white gradient.
+          axe-core color-contrast goes Needs Review (gradient bg); Pro
+          Advanced `text-contrast` analyses the rendered pixels and
+          reports Serious (WCAG 1.4.3). */}
+      <div
+        style={{
+          background: 'linear-gradient(90deg, #f5e9c4 0%, #ffffff 100%)',
+          color: '#ffffff',
+          padding: '8px 14px',
+          borderRadius: 6,
+          marginBottom: 16,
+          fontSize: 14,
+        }}
+      >
+        Tip: same-day transfers post by 5pm ET on business days.
+      </div>
+
+      {/* PHASE-2 a11y issue MT-052 — see ACCESSIBILITY_ISSUES.md
+          aria-required="true" on role="presentation" — aria-required
+          isn't allowed on presentation role (presentation strips
+          semantics). axe-core `aria-allowed-attr` fires Critical
+          (WCAG 4.1.2). */}
+      <div role="presentation" aria-required="true" style={{ marginBottom: 8 }} />
+
+      {/* PHASE-2 a11y issue MT-054 — see ACCESSIBILITY_ISSUES.md
+          <div role="radiogroup"> with <div> children (no role="radio").
+          axe-core `aria-required-children` fires Critical (WCAG 1.3.1):
+          radiogroup must own at least one role="radio" descendant. */}
+      <div role="radiogroup" aria-label="Transfer speed" style={{ marginBottom: 16, display: 'flex', gap: 12 }}>
+        <div style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4 }}>Standard (1-2 days)</div>
+        <div style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4 }}>Express ($5 fee)</div>
+        <div style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4 }}>Wire ($25 fee)</div>
+      </div>
+
+      {/* PHASE-2 a11y issue MT-050 — see ACCESSIBILITY_ISSUES.md
+          <div role="combobox"> with no `aria-expanded` (which is a
+          required attribute for combobox role). axe-core
+          `aria-required-attr` fires Critical (WCAG 4.1.2). */}
+      <div role="combobox" aria-label="Recent recipients" style={{ marginBottom: 16, padding: '8px 12px', border: '1px solid var(--border)', borderRadius: 4 }}>
+        Choose a recent recipient…
+      </div>
 
       <form onSubmit={onContinue} noValidate>
         <div className="form-row">
@@ -184,6 +231,19 @@ function Step1({ state, from, setFrom, to, setTo, amount, setAmount, memo, setMe
             <option value="now">Now (instant)</option>
             <option value="tomorrow">Next business day</option>
             <option value="recurring">Set up recurring</option>
+          </select>
+        </div>
+
+        {/* PHASE-2 a11y issue MT-049 — see ACCESSIBILITY_ISSUES.md
+            "Frequency" <select> with no <label>, no aria-label, no
+            aria-labelledby, no title. axe-core `select-name` fires
+            Critical (WCAG 4.1.2). */}
+        <div className="form-row">
+          <select defaultValue="" onChange={(e) => e.preventDefault()}>
+            <option value="">Choose frequency…</option>
+            <option value="once">One time</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
           </select>
         </div>
 

@@ -113,8 +113,83 @@ function DepositStep1({ state, accountId, setAccountId, amount, setAmount, memo,
     <>
       <h2 style={{ margin: '0 0 8px' }}>Deposit details</h2>
       <p className="muted" style={{ margin: '0 0 24px' }}>
-        Funds are typically available the next business day.
+        Funds are typically available the next business day.{' '}
+        {/* PHASE-2 a11y issue MT-077 — see ACCESSIBILITY_ISSUES.md
+            <span lang="frzz"> wraps a banking term with an invalid
+            BCP 47 language tag. axe-core `valid-lang` fires Serious
+            (WCAG 3.1.2). */}
+        <span lang="frzz">Reçu</span>: review carefully.
       </p>
+
+      {/* PHASE-2 a11y issue MT-078 — see ACCESSIBILITY_ISSUES.md
+          Hint banner with light text on a near-white gold gradient.
+          axe-core color-contrast goes Needs Review (gradient bg); Pro
+          Advanced `text-contrast` analyses the rendered pixels and
+          reports Serious (WCAG 1.4.3). */}
+      <div
+        style={{
+          background: 'linear-gradient(90deg, #fff 0%, #f5e9c4 100%)',
+          color: '#e8c267',
+          padding: '8px 14px',
+          borderRadius: 6,
+          marginBottom: 16,
+          fontSize: 14,
+        }}
+      >
+        Capture both sides of the check in good lighting for fastest review.
+      </div>
+
+      {/* PHASE-2 a11y issue MT-076 — see ACCESSIBILITY_ISSUES.md
+          <div role="meter"> for "Daily deposit limit" with valuenow/
+          min/max but no accessible name. axe-core `aria-meter-name`
+          fires Critical (WCAG 1.1.1). */}
+      <div
+        role="meter"
+        aria-valuenow={1200}
+        aria-valuemin={0}
+        aria-valuemax={5000}
+        style={{ padding: 12, background: 'var(--bg-soft)', borderRadius: 6, marginBottom: 16 }}
+      >
+        <div style={{ fontSize: 13, marginBottom: 6 }}>Daily deposit limit used: $1,200 / $5,000</div>
+        <div style={{ height: 6, background: '#e3e8ef', borderRadius: 3, overflow: 'hidden' }}>
+          <div style={{ width: '24%', height: '100%', background: 'var(--brand-primary)' }} />
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 16 }}>
+        {/* PHASE-2 a11y issue MT-073 — see ACCESSIBILITY_ISSUES.md
+            <input type="image"> with no alt attribute. axe-core
+            `input-image-alt` fires Critical (WCAG 1.1.1) — image
+            inputs are buttons and need accessible names. */}
+        <input
+          type="image"
+          src="/check-success.svg"
+          style={{ width: 64, height: 64, cursor: 'pointer' }}
+          onClick={(e) => e.preventDefault()}
+        />
+
+        {/* PHASE-2 a11y issue MT-075 — see ACCESSIBILITY_ISSUES.md
+            <button role="switch"> with aria-checked but NO accessible
+            name. axe-core `aria-toggle-field-name` fires Serious
+            (WCAG 4.1.2). */}
+        <button
+          role="switch"
+          aria-checked="false"
+          style={{ width: 44, height: 24, border: '1px solid var(--border)', borderRadius: 12, background: '#fff', cursor: 'pointer' }}
+          onClick={(e) => e.preventDefault()}
+        />
+
+        <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Auto-deposit recurring checks</span>
+      </div>
+
+      {/* PHASE-2 a11y issue MT-074 — see ACCESSIBILITY_ISSUES.md
+          <div role="radiogroup"> with <div> children (no role="radio").
+          axe-core `aria-required-children` fires Critical (WCAG 1.3.1). */}
+      <div role="radiogroup" aria-label="Deposit type" style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
+        <div style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, fontSize: 13 }}>Personal check</div>
+        <div style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, fontSize: 13 }}>Cashier's check</div>
+        <div style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, fontSize: 13 }}>Money order</div>
+      </div>
 
       <form onSubmit={onContinue} noValidate>
         <div className="form-row">
