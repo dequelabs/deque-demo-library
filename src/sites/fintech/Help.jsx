@@ -89,6 +89,16 @@ export default function FintechHelp() {
         </div>
       </section>
 
+      {/* PHASE-2 a11y issue IGT-003 (Structure IGT) — see ACCESSIBILITY_ISSUES.md
+          Orphan region: a <section> with no aria-label, no aria-labelledby,
+          and no heading inside. The Structure IGT script flags regions that
+          contribute a landmark but lack an accessible name. */}
+      <section style={{ padding: '12px 16px', background: 'var(--bg-soft)', borderRadius: 6, margin: '24px auto', maxWidth: 760 }}>
+        <p style={{ margin: 0, fontSize: 13 }}>
+          Branch hours may vary on bank holidays. Call ahead to confirm.
+        </p>
+      </section>
+
       <FAQList
         id="faqs"
         heading="Frequently asked questions"

@@ -229,7 +229,13 @@ export default function FintechBills() {
       )}
 
       {showAddPayee && (
-        <Dialog title="Add a payee" onClose={() => setShowAddPayee(false)}>
+        /* PHASE-2 a11y issue IGT-013 (Modals IGT) — see ACCESSIBILITY_ISSUES.md
+           The Add payee dialog deliberately opts OUT of focus management
+           (no initial focus, no focus trap) via the `noFocusManagement`
+           prop. Keyboard users can tab right out of the open dialog into
+           the page behind it. The Modals IGT walks the SE through the
+           focus-trap verification flow. */
+        <Dialog title="Add a payee" onClose={() => setShowAddPayee(false)} noFocusManagement>
           <form onSubmit={onAddPayee}>
             <div className="form-row">
               <label htmlFor="np-name" className="required-mark">Payee name</label>
@@ -259,7 +265,12 @@ export default function FintechBills() {
       )}
 
       {removeId && (
-        <Dialog title="Remove payee?" onClose={() => setRemoveId(null)}>
+        /* PHASE-2 a11y issue IGT-014 (Modals IGT) — see ACCESSIBILITY_ISSUES.md
+           The remove-payee confirm dialog disables its Escape-key handler
+           via the `noEscape` prop — pressing Esc no longer closes the
+           dialog. The Modals IGT walks the SE through Esc-to-close
+           verification. */
+        <Dialog title="Remove payee?" onClose={() => setRemoveId(null)} noEscape>
           <p>This will remove the payee from your saved list. Scheduled payments to them will not be cancelled automatically.</p>
           <div className="flex gap-8 mt-16">
             <button
@@ -334,31 +345,31 @@ function MemoField() {
 }
 
 /* ---------- Accessible dialog ---------- */
-function Dialog({ title, onClose, children }) {
+function Dialog({ title, onClose, children, noFocusManagement = false, noEscape = false }) {
   const titleId = useId();
   const ref = useRef(null);
   const previouslyFocused = useRef(null);
 
   useEffect(() => {
     previouslyFocused.current = document.activeElement;
-    if (ref.current) {
+    if (!noFocusManagement && ref.current) {
       const focusable = ref.current.querySelector(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
       (focusable || ref.current).focus();
     }
     const onKey = (e) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'Tab') trapFocus(e, ref.current);
+      if (!noEscape && e.key === 'Escape') onClose();
+      if (!noFocusManagement && e.key === 'Tab') trapFocus(e, ref.current);
     };
     document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('keydown', onKey);
-      if (previouslyFocused.current && previouslyFocused.current.focus) {
+      if (!noFocusManagement && previouslyFocused.current && previouslyFocused.current.focus) {
         previouslyFocused.current.focus();
       }
     };
-  }, [onClose]);
+  }, [onClose, noFocusManagement, noEscape]);
 
   return (
     <div

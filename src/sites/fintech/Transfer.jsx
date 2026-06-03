@@ -210,6 +210,11 @@ function Step1({ state, from, setFrom, to, setTo, amount, setAmount, memo, setMe
 
         <div className="form-row">
           <label htmlFor={amountId} className="required-mark">Amount</label>
+          {/* PHASE-2 a11y issue IGT-019 (Keyboard IGT) — see ACCESSIBILITY_ISSUES.md
+              Positive tabIndex={3} on the amount input forces unnatural tab
+              order — tab focus jumps to this field out of source order. The
+              Keyboard IGT script surfaces positive tabindex values as a
+              manual review. */}
           <input
             id={amountId}
             type="text"
@@ -219,6 +224,7 @@ function Step1({ state, from, setFrom, to, setTo, amount, setAmount, memo, setMe
             placeholder="0.00"
             aria-invalid={!!errors.amount}
             aria-describedby={`${helpId}${errors.amount ? ' ' + amountErrId : ''}`}
+            tabIndex={3}
             required
           />
           <p id={helpId} className="form-help">Daily transfer limit: $25,000.</p>
@@ -262,6 +268,24 @@ function Step1({ state, from, setFrom, to, setTo, amount, setAmount, memo, setMe
             value={memo}
             onChange={(e) => setMemo(e.target.value)}
           />
+        </div>
+
+        {/* PHASE-2 a11y issue IGT-009 (Forms IGT) — see ACCESSIBILITY_ISSUES.md
+            Three related checkboxes ("Send confirmation email", "Send SMS",
+            "Skip if duplicate") with NO wrapping <fieldset> / <legend>. SR
+            users can't hear the grouping label. The Forms IGT verifies
+            related controls share a programmatic group name. */}
+        <div style={{ marginTop: 12 }}>
+          <p style={{ fontSize: 13, fontWeight: 600, margin: '0 0 6px' }}>Confirmation preferences</p>
+          <label style={{ display: 'block', fontSize: 13 }}>
+            <input type="checkbox" name="confirmEmail" /> Send confirmation email
+          </label>
+          <label style={{ display: 'block', fontSize: 13 }}>
+            <input type="checkbox" name="confirmSms" /> Send SMS
+          </label>
+          <label style={{ display: 'block', fontSize: 13 }}>
+            <input type="checkbox" name="skipDupe" /> Skip if duplicate
+          </label>
         </div>
 
         <div className="flex gap-8 mt-24">

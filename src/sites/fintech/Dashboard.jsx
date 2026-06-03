@@ -52,6 +52,17 @@ export default function FintechDashboard() {
         </div>
       </div>
 
+      {/* PHASE-2 a11y issue IGT-010 (Images IGT) — see ACCESSIBILITY_ISSUES.md
+          Two <img> elements with the SAME src AND SAME alt="DQBC seal"
+          rendered in two different positions on the page. The Images IGT
+          flags redundant image alt (an SR user hears "DQBC seal" twice for
+          the same logical image). */}
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 8 }}>
+        <img src="/fintech-hero.svg" alt="DQBC seal" style={{ width: 24, height: 24 }} />
+        <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Official member portal</span>
+        <img src="/fintech-hero.svg" alt="DQBC seal" style={{ width: 24, height: 24 }} />
+      </div>
+
       <section aria-labelledby="balance-heading">
         <h2 id="balance-heading" className="sr-only" style={srOnly}>Total balance</h2>
         <div className="balance-banner">
@@ -178,8 +189,14 @@ export default function FintechDashboard() {
           Your accounts
         </h2>
         <div className="account-grid">
-          {state.accounts.map((a) => (
-            <article key={a.id} className="account-card">
+          {state.accounts.map((a, i) => (
+            /* PHASE-2 a11y issue IGT-017 (Reading Order IGT) — see ACCESSIBILITY_ISSUES.md
+               First account card gets `order: -1`, so the visual order moves it
+               into the first slot regardless of DOM position. Visual order
+               diverges from DOM (and from the tab/SR reading order). The
+               Reading Order IGT walks the SE through verifying DOM vs visual
+               order parity. */
+            <article key={a.id} className="account-card" style={i === 0 ? { order: -1 } : undefined}>
               <span className="label">{a.name} ··{a.last4}</span>
               <span className="balance">{fmtMoney(a.balance)}</span>
               {a.apy > 0 && <span className="muted" style={{ fontSize: 13 }}>{a.apy}% APY</span>}

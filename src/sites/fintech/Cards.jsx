@@ -7,6 +7,12 @@ export default function FintechCards() {
 
   return (
     <>
+      {/* PHASE-2 a11y issue IGT-001 (Structure IGT) — see ACCESSIBILITY_ISSUES.md
+          The Cards page top-level content is wrapped in a <div role="presentation">,
+          which strips the implicit semantics from anything inside that would
+          otherwise contribute a landmark/region. axe DevTools Pro Intelligent
+          Guided Test "Structure" surfaces this on manual review. */}
+      <div role="presentation">
       <div className="page-head">
         <div>
           <h1>Cards &amp; alerts</h1>
@@ -18,6 +24,21 @@ export default function FintechCards() {
         {state.cards.map((card) => (
           <CardItem key={card.id} card={card} dispatch={dispatch} />
         ))}
+      </div>
+
+      {/* PHASE-2 a11y issue IGT-020 (Keyboard IGT) — see ACCESSIBILITY_ISSUES.md
+          Custom <div role="button" tabIndex={0}> "Order replacement card" with
+          an onClick handler but NO onKeyDown / onKeyUp — keyboard users
+          (Enter/Space) cannot activate it. The Keyboard IGT walks the SE
+          through reproducing the missed activation. */}
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => alert('Order replacement card (stub)')}
+        style={{ display: 'inline-block', marginTop: 16, padding: '8px 14px', border: '1px solid var(--border)', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}
+      >
+        Order replacement card
+      </div>
       </div>
     </>
   );
@@ -138,6 +159,13 @@ function CardItem({ card, dispatch }) {
         >
           {card.network}
         </span>
+
+        {/* PHASE-2 a11y issue IGT-012 (Images IGT) — see ACCESSIBILITY_ISSUES.md
+            Informative network-logo ornament served as alt="" (decorative).
+            The visual appears informative beside the network text, but its
+            alt empties it out so AT users miss the cue. The Images IGT
+            surfaces this as "image appears informative but marked decorative". */}
+        <img src="/ornament-divider.svg" alt="" style={{ width: 24, height: 12 }} />
       </div>
 
       {/* PHASE-2 a11y issue MT-066 — see ACCESSIBILITY_ISSUES.md

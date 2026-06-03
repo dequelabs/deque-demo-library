@@ -75,6 +75,12 @@ export default function FintechProfile() {
         </div>
       )}
 
+      {/* PHASE-2 a11y issue IGT-006 (Headings IGT) — see ACCESSIBILITY_ISSUES.md
+          Empty <h2></h2> with no text content. The Headings IGT script
+          surfaces empty heading elements as a manual review finding
+          (axe-core `empty-heading` is BP). */}
+      <h2></h2>
+
       {/* PHASE-2 a11y issue MT-044 — see ACCESSIBILITY_ISSUES.md
           <div role="meter"> for "Profile completeness" with valuemin/max/now
           set but NO accessible name. axe-core `aria-meter-name` fires
@@ -146,6 +152,16 @@ export default function FintechProfile() {
             <Field name="email"     label="Email"      defaultValue={u.email}     required autoComplete="email"      type="email" />
             <Field name="phone"     label="Phone"      defaultValue={u.phone}     autoComplete="tel"                 type="tel" />
           </div>
+          {/* PHASE-2 a11y issue IGT-008 (Forms IGT) — see ACCESSIBILITY_ISSUES.md
+              Inline error message visually adjacent to the email field, but
+              the email <input> has NO aria-describedby pointing at it. The
+              error is visually associated but not programmatically — SR
+              users won't hear it when focus lands on the email input. The
+              Forms IGT walks the SE through verifying error-message
+              programmatic association. */}
+          <p style={{ color: 'var(--danger)', margin: '4px 0 0', fontSize: 13 }}>
+            Email must include @
+          </p>
 
           {/* PHASE-2 a11y issue MT-043 — see ACCESSIBILITY_ISSUES.md
               "Display name" input has TWO <label htmlFor="display-name">
@@ -275,6 +291,12 @@ export default function FintechProfile() {
             Reset demo data
           </button>
         ) : (
+          /* PHASE-2 a11y issue IGT-015 (Modals IGT) — see ACCESSIBILITY_ISSUES.md
+             When this reset-demo confirm dialog is closed (Cancel or Yes,
+             reset), focus is NOT returned to the opener "Reset demo data"
+             button. setConfirmReset(false) just unmounts the dialog and the
+             browser drops focus to <body>. The Modals IGT walks the SE
+             through verifying focus return on close. */
           <div role="alertdialog" aria-labelledby="reset-confirm" className="card" style={{ marginTop: 12, background: 'var(--bg-soft)' }}>
             <p id="reset-confirm" style={{ margin: '0 0 12px' }}>
               Reset all demo data to seed values?

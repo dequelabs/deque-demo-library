@@ -197,6 +197,17 @@ export default function FintechLogin() {
               </div>
             </div>
 
+            {/* PHASE-2 a11y issue IGT-007 (Forms IGT) — see ACCESSIBILITY_ISSUES.md
+                Extra "Security question" field is `required` but has NO visible
+                "required" marker, NO `aria-required`, NO asterisk near the
+                label. Sighted users can't tell it's required until they submit.
+                The Forms IGT walks the SE through verifying required-state
+                visibility. */}
+            <div className="form-row">
+              <label htmlFor="login-security-q">Security question</label>
+              <input id="login-security-q" name="securityQ" type="text" required />
+            </div>
+
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, margin: '8px 0 24px' }}>
               <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--text-secondary)' }}>
                 <input type="checkbox" name="remember" />

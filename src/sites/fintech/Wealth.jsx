@@ -32,6 +32,20 @@ export default function FintechWealth() {
         </div>
       </section>
 
+      {/* PHASE-2 a11y issue IGT-004 (Headings IGT) — see ACCESSIBILITY_ISSUES.md
+          Extends MT-022 with a wider gap: a brand-new section uses <h4>
+          directly after the hero <h1> (no intermediate h2/h3 owns the
+          content above this <h4>). The Headings IGT walks the SE through
+          the manual heading-order check that catches "skipped levels". */}
+      <section className="fintech-section" aria-labelledby="wealth-h4-callout">
+        <div className="container" style={{ maxWidth: 920 }}>
+          <h4 id="wealth-h4-callout" className="section-title">A note on advisor availability</h4>
+          <p className="section-sub">
+            Wealth advisors typically reply within one business day.
+          </p>
+        </div>
+      </section>
+
       <FeatureGrid
         heading="Three ways to invest with DQBC"
         subheading="Pick the level of involvement that fits your life."

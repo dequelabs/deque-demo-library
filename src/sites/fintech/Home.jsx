@@ -81,7 +81,13 @@ export default function FintechHome() {
               Show more
             </button>
           </p>
-          <div className="flex gap-12">
+          {/* PHASE-2 a11y issue IGT-016 (Reading Order IGT) — see ACCESSIBILITY_ISSUES.md
+              The CTA pair below uses `flexDirection: 'row-reverse'`, so the
+              visual order (See Smart Savings, then Get started) is the REVERSE
+              of the DOM order (Get started first, then See Smart Savings).
+              The Reading Order IGT walks the SE through verifying DOM vs
+              visual order parity. */}
+          <div className="flex gap-12" style={{ display: 'flex', flexDirection: 'row-reverse' }}>
             <Link className="btn btn-primary" to={isAuthenticated ? '/fintech/dashboard' : '/fintech/login'}>
               {isAuthenticated ? 'Go to your accounts' : 'Get started'}
             </Link>

@@ -187,6 +187,32 @@ export default function FintechStatements() {
         </table>
       )}
 
+      {/* PHASE-2 a11y issue IGT-002 (Structure IGT) — see ACCESSIBILITY_ISSUES.md
+          A SECOND <main> element wrapping the "Tax tips" callout. The page
+          already has the AuthLayout <main>, so this creates two main landmarks.
+          axe Best Practice `landmark-one-main` covers it; the Structure IGT
+          script verifies the main count manually. */}
+      <main aria-label="Tax help tips" style={{ marginTop: 24, padding: 12, background: 'var(--bg-soft)', borderRadius: 6 }}>
+        <p style={{ margin: 0, fontSize: 13 }}>
+          Tax tips: 1099-INT and 1099-DIV become available by January 31. Keep
+          digital copies for at least 7 years.
+        </p>
+      </main>
+
+      {/* PHASE-2 a11y issue IGT-018 (Keyboard IGT) — see ACCESSIBILITY_ISSUES.md
+          Custom <div role="button" tabIndex={0}> "Open year picker" with an
+          onClick but NO onKeyDown / onKeyUp — keyboard users can focus it but
+          cannot activate it with Enter or Space. The Keyboard IGT flow
+          surfaces this. */}
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => alert('Year picker (stub)')}
+        style={{ display: 'inline-block', marginTop: 16, padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, cursor: 'pointer', fontSize: 13 }}
+      >
+        Open year picker
+      </div>
+
       <section aria-labelledby="tax-heading" style={{ marginTop: 32 }}>
         <h2 id="tax-heading" style={{ fontSize: 18, color: 'var(--brand-deep)' }}>Tax documents</h2>
         <p className="muted">1099-INT and 1099-DIV become available by January 31 each year.</p>
