@@ -13,14 +13,14 @@ export const SECTORS = [
   },
   {
     id: 'edu-gov',
-    name: 'Northbrook Public Schools',
-    tag: 'Education / Government',
+    name: 'Northbrook Connect',
+    tag: 'Education / Government (SLED)',
     blurb:
-      'District homepage, parent portal sign-in, course catalog, and a public-records request form.',
-    accent: '#1a4731',
-    accentDeep: '#0d2818',
+      'Citizen portal covering K-12 schools, public university, state services (DMV, benefits), and city services (permits, voter info) — one login across all of state government.',
+    accent: '#16604b',
+    accentDeep: '#0b2a23',
     path: '/edu-gov',
-    status: 'stub',
+    status: 'ready',
   },
   {
     id: 'saas',
