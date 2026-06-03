@@ -99,6 +99,27 @@ export default function Schools() {
             <li><span>Northbrook High fall sports kickoff</span><span className="when">Sep 12</span></li>
             <li><span>Westwood Online Academy info session (virtual)</span><span className="when">Sep 15</span></li>
           </ul>
+          {/* PHASE-2 a11y issue NB-004 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Icon-only PDF download anchor with NO text content, NO aria-label,
+              NO title. Classic SLED audit finding: districts publish the
+              student/parent handbook as a PDF, the redesign converts the link
+              to a paperclip icon, and the accessible name vanishes. axe-core
+              `link-name` fires Critical (WCAG 2.4.4). */}
+          <p style={{ marginTop: 16, textAlign: 'center', fontSize: 14, color: 'var(--text-secondary)' }}>
+            Student &amp; parent handbook (2026-2027):
+            <a
+              href="/nbps-handbook-2026.pdf"
+              style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 8, padding: '4px 8px', border: '1px solid var(--border)', borderRadius: 4, verticalAlign: 'middle' }}
+              onClick={(e) => e.preventDefault()}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <path d="M14 2v6h6" />
+                <path d="M9 18l3-3 3 3" />
+                <path d="M12 15v-4" />
+              </svg>
+            </a>
+          </p>
         </div>
       </section>
 
