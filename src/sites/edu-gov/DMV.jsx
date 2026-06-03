@@ -84,6 +84,33 @@ export default function DMV() {
         ))}
       </ol>
 
+      {/* PHASE-2 a11y issue NB-009 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+          Visual progress bar with role="progressbar" but MISSING the required
+          aria-valuenow / aria-valuemin / aria-valuemax attributes (and no
+          accessible name). axe-core `aria-required-attr` fires Critical
+          (WCAG 4.1.2). Classic SLED audit finding on multi-step gov forms
+          (renewal, enrollment, permit application) where a designer adds a
+          progress bar visually without wiring up the ARIA semantics. */}
+      <div
+        role="progressbar"
+        style={{
+          height: 6,
+          background: '#e6e2d4',
+          borderRadius: 3,
+          overflow: 'hidden',
+          margin: '0 0 16px',
+        }}
+      >
+        <div
+          style={{
+            width: `${Math.round(((step + 1) / STEPS.length) * 100)}%`,
+            height: '100%',
+            background: 'var(--brand-primary)',
+            transition: 'width 200ms ease',
+          }}
+        />
+      </div>
+
       {error && (
         <div id={errId} role="alert" className="alert-error">{error}</div>
       )}

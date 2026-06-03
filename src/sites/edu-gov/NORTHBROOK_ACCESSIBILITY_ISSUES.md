@@ -63,7 +63,10 @@ A "complete" Northbrook Phase 2 should cover, across the 14 pages:
 | NB-003 | Permits (City)    | `Permits.jsx` apply form — "Project address (line 1)" label replaced with styled `<span>` | 3.3.2   | `label`                       | Critical | axe-core | Live     |
 | NB-004 | Schools           | `Schools.jsx` icon-only "student/parent handbook" PDF `<a>` (no text body, no aria-label) | 2.4.4   | `link-name`                   | Critical | axe-core | Live     |
 | NB-005 | Grades            | `Grades.jsx` grade-portal `<table>` — `<th scope="column">` (invalid value; valid is `col`) | 1.3.1   | `scope-attr-valid`            | Serious  | axe-core (**Best Practices ON**) | Live |
-| NB-006 | Register (Univ.)  | `Register.jsx` "Instructor quick filter" `<input role="searchbox">` with no label/aria-label | 4.1.2   | `aria-input-field-name`       | Moderate | axe-core | Live     |
+| NB-006 | Register (Univ.)  | `Register.jsx` "Instructor quick filter" `<div role="searchbox" contentEditable>` with no aria-label | 4.1.2   | `aria-input-field-name`       | Moderate | axe-core | Live     |
+| NB-007 | Benefits          | `Benefits.jsx` "Important program notices" scrollable disclosure panel (no focusable children, no tabIndex) | 2.1.1   | `scrollable-region-focusable` | Serious  | axe-core | Live     |
+| NB-008 | City home         | `City.jsx` three "Read more" links on council-meeting items — identical accessible names, different destinations | 2.4.4   | `identical-links-same-purpose` | Minor   | axe-core (**Needs Review** — incomplete result; appears in the Needs Review section in axe DevTools) | Live |
+| NB-009 | DMV               | `DMV.jsx` visual `<div role="progressbar">` step indicator — no accessible name AND missing required ARIA attrs | 1.1.1   | `aria-progressbar-name`       | Critical | axe-core | Live     |
 
 > _Tool column values: `axe-core` / `axe Linter` / `Pro Advanced` / `IGT`._
 > _Status values: `TODO` / `Live` / `Removed` / `Replaced`._
@@ -98,7 +101,23 @@ A "complete" Northbrook Phase 2 should cover, across the 14 pages:
 | ------ | ----------- |
 | NB-004 | Add `aria-label="Download student & parent handbook PDF"` to the anchor, OR put visible text inside the anchor (e.g. `<a>Download PDF</a>`). |
 | NB-005 | Restore `scope="col"` (and `scope="row"` on the per-row subject `<th>` if needed) — `"column"` is not a valid value. |
-| NB-006 | Either give the quick-filter `<input>` a real `<label htmlFor>` or an `aria-label="Instructor quick filter"`; placeholder text alone is not a substitute for an accessible name. |
+| NB-006 | Either give the custom-widget `<div role="searchbox">` an `aria-label="Instructor quick filter"`, or replace the `<div contentEditable>` with a real `<input>` paired with a `<label htmlFor>`. |
+
+### Batch 3 — verification cheat sheet
+
+| ID     | Steps to reach                                                                            | Expected finding |
+| ------ | ----------------------------------------------------------------------------------------- | ---------------- |
+| NB-007 | Sign in, open `/#/edu-gov/services/benefits`, complete the Step 1 quiz so a result panel renders, run a scan | Serious: Scrollable region must have keyboard access (`scrollable-region-focusable`) on the "Important program notices" container — keyboard users cannot scroll it because the panel has no focusable descendants and no `tabIndex`. |
+| NB-008 | Open `/#/edu-gov/city`, scroll to "Upcoming council meetings", run a scan and check the **Needs Review** section | Needs Review: Links with the same accessible name must serve a similar purpose (`identical-links-same-purpose`) — three "Read more" anchors share an identical name but point to different destinations. axe-core can't decide programmatically if they serve the same purpose so the finding is surfaced for human inspection. |
+| NB-009 | Sign in, open `/#/edu-gov/services/dmv`, run a scan on any step                            | Critical: Progressbar elements must have an accessible name (`aria-progressbar-name`) on the visual `<div role="progressbar">` step indicator. (axe-core 4.10 consolidates the missing-name + missing-required-aria-attrs check under this rule.) |
+
+### Batch 3 — accessible fix (for reference)
+
+| ID     | Minimal fix |
+| ------ | ----------- |
+| NB-007 | Add `tabIndex={0}` + `role="region"` to the scrollable container. The existing `aria-labelledby="program-notices-heading"` already names it. |
+| NB-008 | Differentiate the link text: "Read budget hearing agenda", "Read rezoning packet", "Read public-comment notice" — or attach a unique `aria-label` per link. |
+| NB-009 | Add `aria-valuenow={step + 1}` `aria-valuemin={1}` `aria-valuemax={STEPS.length}` `aria-label="Renewal step progress"` to the progressbar `<div>` — or simply remove `role="progressbar"` if the visible bar is purely decorative (the existing `<ol className="steps">` already conveys the same information accessibly). |
 
 ## Suggested Phase-2 starter set
 

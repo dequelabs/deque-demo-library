@@ -160,6 +160,59 @@ export default function Benefits() {
           <h2 style={{ margin: '0 0 12px', fontSize: 18, color: 'var(--brand-deep)' }}>
             Results
           </h2>
+
+          {/* PHASE-2 a11y issue NB-007 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              "Important program notices" disclosure panel with overflow-y:auto
+              and 180 px max-height, plain text only (no focusable
+              descendants), no tabIndex on the container. Keyboard users
+              cannot scroll the panel. axe-core `scrollable-region-focusable`
+              fires Serious (WCAG 2.1.1). Realistic SLED finding: benefits
+              programs surface mandatory disclosures in scrolling panels
+              that often ship without keyboard access. */}
+          <div
+            aria-labelledby="program-notices-heading"
+            style={{
+              maxHeight: 180,
+              overflowY: 'auto',
+              border: '1px solid var(--border)',
+              borderRadius: 8,
+              padding: '12px 16px',
+              marginBottom: 16,
+              background: 'var(--bg-soft)',
+              fontSize: 13,
+              lineHeight: 1.6,
+              color: 'var(--text-secondary)',
+            }}
+          >
+            <h3 id="program-notices-heading" style={{ margin: '0 0 8px', fontSize: 14, color: 'var(--brand-deep)' }}>
+              Important program notices
+            </h3>
+            <p style={{ marginTop: 0 }}>
+              <strong>Eligibility is preliminary.</strong> The eligibility result
+              above is based solely on the information you entered and is not a
+              determination of benefits. A caseworker will review your
+              application and may request additional documentation including
+              proof of income, residency, household composition, and identity.
+            </p>
+            <p>
+              <strong>Reporting requirements.</strong> If approved, you must
+              report any change in income, household size, or address within
+              ten (10) days. Failure to report changes may result in
+              over-payment that you will be required to repay.
+            </p>
+            <p>
+              <strong>Privacy notice.</strong> Information you provide is
+              shared with state and federal agencies for the purpose of
+              determining eligibility, preventing fraud, and program
+              administration. It is not sold or shared for marketing purposes.
+            </p>
+            <p style={{ marginBottom: 0 }}>
+              <strong>Right to appeal.</strong> If your application is denied
+              or your benefits reduced, you have the right to request a fair
+              hearing within ninety (90) days of the decision.
+            </p>
+          </div>
+
           {!eligibility.snap && !eligibility.medicaid ? (
             <p>
               Based on your answers, you do not appear to qualify for SNAP or Medicaid

@@ -103,10 +103,30 @@ export default function City() {
       <section className="nbc-section" aria-labelledby="council-h">
         <h2 id="council-h" className="section-title">Upcoming council meetings</h2>
         <div style={{ maxWidth: 760, margin: '0 auto' }}>
+          {/* PHASE-2 a11y issue NB-008 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Three "Read more" links share identical accessible names but
+              point to different destinations (budget / rezoning / comment).
+              A screen-reader user pulling up the links list sees three
+              identical entries and can't tell them apart. axe-core
+              `identical-links-same-purpose` (Minor, Best Practice) surfaces
+              this as a Needs-Review finding by default and a Best-Practice
+              violation when BP is ON. Classic gov-portal pattern. */}
           <ul className="activity-strip">
-            <li><span>Regular Council Meeting — FY budget hearing</span><span className="when">Sep 10, 7:00 PM</span></li>
-            <li><span>Planning Commission — Birchwood rezoning</span><span className="when">Sep 17, 6:30 PM</span></li>
-            <li><span>Regular Council Meeting — public comment open</span><span className="when">Sep 24, 7:00 PM</span></li>
+            <li>
+              <span>Regular Council Meeting — FY budget hearing</span>
+              <span className="when">Sep 10, 7:00 PM</span>
+              <a href="/city/meetings/budget-hearing" style={{ marginLeft: 12 }}>Read more</a>
+            </li>
+            <li>
+              <span>Planning Commission — Birchwood rezoning</span>
+              <span className="when">Sep 17, 6:30 PM</span>
+              <a href="/city/meetings/birchwood-rezoning" style={{ marginLeft: 12 }}>Read more</a>
+            </li>
+            <li>
+              <span>Regular Council Meeting — public comment open</span>
+              <span className="when">Sep 24, 7:00 PM</span>
+              <a href="/city/meetings/public-comment" style={{ marginLeft: 12 }}>Read more</a>
+            </li>
           </ul>
         </div>
       </section>
