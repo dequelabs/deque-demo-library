@@ -61,6 +61,9 @@ A "complete" Northbrook Phase 2 should cover, across the 14 pages:
 | NB-001 | Schools           | `Schools.jsx` district seal `<img src="/nbps-seal.svg">` (no `alt`)                | 1.1.1   | `image-alt`                   | Critical | axe-core | Live     |
 | NB-002 | University        | `University.jsx` NSU stat-card label "Six-year graduation rate" (#b8a87a on bg-soft, ~2.3:1) | 1.4.3   | `color-contrast`              | Serious  | axe-core | Live     |
 | NB-003 | Permits (City)    | `Permits.jsx` apply form — "Project address (line 1)" label replaced with styled `<span>` | 3.3.2   | `label`                       | Critical | axe-core | Live     |
+| NB-004 | Schools           | `Schools.jsx` icon-only "student/parent handbook" PDF `<a>` (no text body, no aria-label) | 2.4.4   | `link-name`                   | Critical | axe-core | Live     |
+| NB-005 | Grades            | `Grades.jsx` grade-portal `<table>` — `<th scope="column">` (invalid value; valid is `col`) | 1.3.1   | `scope-attr-valid`            | Serious  | axe-core (**Best Practices ON**) | Live |
+| NB-006 | Register (Univ.)  | `Register.jsx` "Instructor quick filter" `<input role="searchbox">` with no label/aria-label | 4.1.2   | `aria-input-field-name`       | Moderate | axe-core | Live     |
 
 > _Tool column values: `axe-core` / `axe Linter` / `Pro Advanced` / `IGT`._
 > _Status values: `TODO` / `Live` / `Removed` / `Replaced`._
@@ -80,6 +83,22 @@ A "complete" Northbrook Phase 2 should cover, across the 14 pages:
 | NB-001 | Add `alt="Northbrook Public Schools district seal"` to the `<img>`, OR mark it as decorative with `alt=""` + `role="presentation"` if the seal is only ornamental. |
 | NB-002 | Drop the inline `style={{ color: '#b8a87a' }}` from the stat-card label so it falls back to the accessible default body colour. |
 | NB-003 | Replace the styled `<span>` with a real `<label htmlFor={`${formId}-line1`}>Project address (line 1)</label>`. |
+
+### Batch 2 — verification cheat sheet
+
+| ID     | Steps to reach                                                                  | Expected finding |
+| ------ | ------------------------------------------------------------------------------- | ---------------- |
+| NB-004 | Open `/#/edu-gov/schools`, scroll to "Upcoming district events", run a scan     | Critical: Links must have discernible text (`link-name`) on the icon-only PDF anchor beside "Student & parent handbook (2026-2027)". |
+| NB-005 | Sign in, open `/#/edu-gov/schools/grades`, **flip Best Practices: ON**, run a scan | Serious: ARIA scope attribute is invalid (`scope-attr-valid`) on all `<th scope="column">` elements of the grade table. (The valid value is `col`.) Note: `scope-attr-valid` is BP-tagged in axe-core 4.10, so it does not surface with Best Practices OFF. |
+| NB-006 | Sign in, open `/#/edu-gov/university/register`, run a scan                       | Moderate: ARIA input fields must have an accessible name (`aria-input-field-name`) on the "Instructor quick filter" `<input role="searchbox">` below the Department selector. |
+
+### Batch 2 — accessible fix (for reference)
+
+| ID     | Minimal fix |
+| ------ | ----------- |
+| NB-004 | Add `aria-label="Download student & parent handbook PDF"` to the anchor, OR put visible text inside the anchor (e.g. `<a>Download PDF</a>`). |
+| NB-005 | Restore `scope="col"` (and `scope="row"` on the per-row subject `<th>` if needed) — `"column"` is not a valid value. |
+| NB-006 | Either give the quick-filter `<input>` a real `<label htmlFor>` or an `aria-label="Instructor quick filter"`; placeholder text alone is not a substitute for an accessible name. |
 
 ## Suggested Phase-2 starter set
 

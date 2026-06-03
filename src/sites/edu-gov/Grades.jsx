@@ -84,14 +84,21 @@ export default function Grades() {
             <p>No grades have been posted yet for the current semester.</p>
           </div>
         ) : (
+          <>
+          {/* PHASE-2 a11y issue NB-005 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Column-header <th> elements use scope="column" (invalid token —
+              the valid values are col/row/colgroup/rowgroup). Classic SLED
+              audit finding on grade portals, district report cards, and
+              tax/permit tables. axe-core `scope-attr-valid` fires Serious
+              (WCAG 1.3.1). */}
           <table className="data-table">
             <caption>Current-semester grades for {active.firstName}</caption>
             <thead>
               <tr>
-                <th scope="col">Subject</th>
-                <th scope="col">Letter</th>
-                <th scope="col">Percent</th>
-                <th scope="col">Teacher</th>
+                <th scope="column">Subject</th>
+                <th scope="column">Letter</th>
+                <th scope="column">Percent</th>
+                <th scope="column">Teacher</th>
               </tr>
             </thead>
             <tbody>
@@ -105,6 +112,7 @@ export default function Grades() {
               ))}
             </tbody>
           </table>
+          </>
         )}
       </div>
     </>

@@ -178,6 +178,24 @@ export default function Register() {
                 </select>
               </div>
             </div>
+            {/* PHASE-2 a11y issue NB-006 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                Custom-widget "Instructor quick filter" rendered as a
+                <div role="searchbox" tabIndex={0} contentEditable>. The
+                aria-input-field-name rule applies specifically to ARIA
+                custom widgets (not native <input>s), so the pattern that
+                trips axe-core is a styled <div> with role="searchbox"
+                and NO aria-label / aria-labelledby. Fires Moderate
+                (WCAG 4.1.2). Realistic SLED pattern: course catalog gets
+                a "modern" widget refactor and the accessible name is
+                left behind. */}
+            <div
+              role="searchbox"
+              tabIndex={0}
+              contentEditable
+              suppressContentEditableWarning
+              style={{ marginTop: 12, padding: '6px 10px', border: '1px solid var(--border)', borderRadius: 999, width: 240, minHeight: 18, fontSize: 14, color: 'var(--text-secondary)' }}
+            />
+            <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '4px 0 0' }}>Quick-filter by instructor name</p>
           </div>
 
           <table className="data-table">
