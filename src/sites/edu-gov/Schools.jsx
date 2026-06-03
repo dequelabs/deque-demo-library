@@ -58,6 +58,18 @@ export default function Schools() {
           </div>
         )}
 
+        {/* PHASE-2 a11y issue NB-001 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            District seal <img> with NO alt attribute. axe-core `image-alt`
+            fires Critical (WCAG 1.1.1). Realistic SLED audit finding:
+            decorative-looking emblems often skip alt even though they carry
+            organisational identity. */}
+        <img
+          src="/nbps-seal.svg"
+          width="64"
+          height="64"
+          style={{ display: 'block', margin: '0 auto 16px' }}
+        />
+
         <h2 id="dir-h" className="section-title">School directory</h2>
         <p className="section-sub">
           Click any school for principal, address, and contact info.

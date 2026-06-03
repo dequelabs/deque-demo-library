@@ -1,0 +1,125 @@
+# Northbrook Connect — Accessibility Issues Catalog (Phase 2)
+
+This file is the **single source of truth** for every accessibility issue we deliberately introduce into the Northbrook Connect SLED demo site. Phase 1 produced a clean, accessible-by-default citizen portal (all 14 pages pass axe-core 4.10 on default WCAG toggles). Phase 2 reintroduces issues — surgically, one at a time — and documents each one here.
+
+## Why this matters for SLED prospects
+
+State, local, and education buyers operate under **ADA Title II** (the 2024 final rule mandates WCAG 2.1 AA for state/local government digital content by April 2026 / 2027 depending on agency size), **Section 508** (federal procurement), and state-level statutes (CA AB-434, TX 206, etc.). K-12 districts additionally answer to **Section 504** and **IDEA** requirements around accessible educational content. The issues catalogued below are weighted toward the patterns that show up most often in real SLED accessibility audits.
+
+## ID conventions
+
+| Prefix | Meaning |
+| --- | --- |
+| `NB-XXX` | Deliberate Phase 2 issue introduced for the demo. |
+| `NB-IGT-XXX` | Pattern targeted by an axe DevTools® Pro Intelligent Guided Test. |
+| `NB-PL-XXX` | Pre-existing / Phase 1 leftover we choose to document rather than fix. |
+
+This is intentionally distinct from DQBC's `MT-`/`IGT-`/`PL-` prefixes so cross-catalog citations don't collide.
+
+## How to add an issue
+
+1. Reserve the next ID below (`NB-001`, `NB-002`, …).
+2. Implement the issue in the relevant component file under `src/sites/edu-gov/`.
+3. Tag the offending code with an inline comment:
+   ```jsx
+   {/* PHASE-2 a11y issue NB-007 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md */}
+   ```
+4. Fill in the catalog row.
+5. Re-scan in axe DevTools to confirm the rule fires where expected.
+
+## Severity vocabulary
+
+axe-core's four-level impact taxonomy plus a separate column for the rule pack (axe-core baseline / Best Practice / Pro Advanced / IGT manual).
+
+| Severity   | Notes                                                              |
+| ---------- | ------------------------------------------------------------------ |
+| Critical   | Blocks access entirely; high-confidence automated detection.        |
+| Serious    | Significant barrier; reliably automated.                            |
+| Moderate   | Lower-impact WCAG conformance failure; some require Best Practices. |
+| Minor      | Code smell / pattern issue; almost always Best Practice tagged.     |
+
+## Coverage targets (Phase 2 goal)
+
+A "complete" Northbrook Phase 2 should cover, across the 14 pages:
+
+- **axe-core baseline** (WCAG 2.2 AA, BP off): 12+ distinct rules
+- **Best Practices on**: 6+ additional rules (region, heading-order, accesskeys, presentation-role-conflict, landmark-*, list, image-redundant-alt, etc.)
+- **Pro Advanced**: 3+ rules (advanced/text-contrast, advanced/heading-markup, advanced/image-decorative/informative-has-alt, advanced/css-focus-visible)
+- **IGT / Guided Tests**: 5+ scenarios across the seven IGTs (Structure, Headings, Forms, Images, Modals, Reading Order, Keyboard)
+
+**SLED-specific demo angles to over-index on:**
+- PDF link patterns ("Click here" / "View PDF") — government love affair with PDFs
+- Complex multi-step forms (DMV renewal, permit application, enrollment) with bad error association
+- Data tables (grade portal, statements, permits list) with missing scope / headers / captions
+- Language switcher patterns (when added) that don't update `html lang`
+- Embedded videos (council meetings, training) without captions / transcript
+
+## Catalog
+
+| ID     | Page              | Component / line                                                                  | WCAG    | axe rule(s)                   | Severity | Tool     | Status   |
+| ------ | ----------------- | --------------------------------------------------------------------------------- | ------- | ----------------------------- | -------- | -------- | -------- |
+| NB-001 | Schools           | `Schools.jsx` district seal `<img src="/nbps-seal.svg">` (no `alt`)                | 1.1.1   | `image-alt`                   | Critical | axe-core | Live     |
+| NB-002 | University        | `University.jsx` NSU stat-card label "Six-year graduation rate" (#b8a87a on bg-soft, ~2.3:1) | 1.4.3   | `color-contrast`              | Serious  | axe-core | Live     |
+| NB-003 | Permits (City)    | `Permits.jsx` apply form — "Project address (line 1)" label replaced with styled `<span>` | 3.3.2   | `label`                       | Critical | axe-core | Live     |
+
+> _Tool column values: `axe-core` / `axe Linter` / `Pro Advanced` / `IGT`._
+> _Status values: `TODO` / `Live` / `Removed` / `Replaced`._
+
+### Batch 1 — verification cheat sheet
+
+| ID     | Steps to reach                                                              | Expected finding |
+| ------ | --------------------------------------------------------------------------- | ---------------- |
+| NB-001 | Open `/#/edu-gov/schools`, run a scan                                       | Critical: Images must have alternate text (`image-alt`) on `img[src="/nbps-seal.svg"]` above the school directory. |
+| NB-002 | Open `/#/edu-gov/university`, scroll to "NSU at a glance", run a scan       | Serious: Elements must meet minimum color contrast (`color-contrast`) on the "Six-year graduation rate" label (sand-colour text on the bg-soft section background). |
+| NB-003 | Sign in, open `/#/edu-gov/city/permits`, click any "Apply" button to expand the form, run a scan | Critical: Form elements must have labels (`label`) on the "Project address (line 1)" `<input>` — the visible-looking label is a `<span>` and is not programmatically associated. |
+
+### Batch 1 — accessible fix (for reference)
+
+| ID     | Minimal fix |
+| ------ | ----------- |
+| NB-001 | Add `alt="Northbrook Public Schools district seal"` to the `<img>`, OR mark it as decorative with `alt=""` + `role="presentation"` if the seal is only ornamental. |
+| NB-002 | Drop the inline `style={{ color: '#b8a87a' }}` from the stat-card label so it falls back to the accessible default body colour. |
+| NB-003 | Replace the styled `<span>` with a real `<label htmlFor={`${formId}-line1`}>Project address (line 1)</label>`. |
+
+## Suggested Phase-2 starter set
+
+Below is a recommended seed list to draw from when populating Northbrook Phase 2 batches. None are implemented yet — these are the SLED-resonant patterns worth landing first.
+
+### Schools — K-12 (`Schools.jsx`, `Enroll.jsx`, `Grades.jsx`)
+- Drop alt from the district seal / school photo on `Schools.jsx` → `image-alt` (Critical, WCAG 1.1.1).
+- "Click here for the school handbook (PDF)" link with non-descriptive text → `link-name` (Critical) or BP `link-in-text-block`.
+- Drop `<th scope>` on the grade-portal `<table>` → `scope-attr-valid` / `td-has-headers` (Serious, WCAG 1.3.1).
+- Enrollment Step 1 error message rendered without `aria-describedby` association → IGT Forms (manual review).
+- Empty heading on the school directory → `empty-heading` (Minor, BP).
+
+### University (`University.jsx`, `Register.jsx`)
+- Featured-program text in too-light green on the brand-accent panel → `color-contrast` (Serious, WCAG 1.4.3).
+- "Add to cart" buttons with identical accessible name across courses → `identical-links-same-purpose` / IGT Keyboard.
+- Course-conflict warning rendered visually red but with no programmatic announcement → IGT Forms.
+- Custom `<div role="button">` "Filter by department" without keyboard handlers → IGT Keyboard.
+
+### State Services (`Services.jsx`, `DMV.jsx`, `Benefits.jsx`)
+- DMV renewal step-indicator that updates visually but not programmatically (no aria-current, no live region) → IGT Forms / Reading Order.
+- Benefits eligibility result panel that fails contrast against the bg-soft → `color-contrast` (Serious, WCAG 1.4.3) or Pro `advanced/text-contrast`.
+- Permits / public-records "View PDF" links with placeholder text "Click here" → `link-name` (Critical, WCAG 2.4.4).
+- Multi-step DMV form with required indicators only shown via asterisk in the visible label (no `required` or `aria-required`) → IGT Forms.
+
+### City (`City.jsx`, `Permits.jsx`, `Vote.jsx`)
+- Permit-application "Address" field missing `<label>` → `label` (Critical, WCAG 3.3.2).
+- Voter registration radio group without `<fieldset>`/`<legend>` → IGT Forms (manual review).
+- Polling-place "Map placeholder" given role="img" but with a non-descriptive aria-label → IGT Images.
+- Council-meetings list with redundant link text ("Read more" × 5) → `identical-links-same-purpose` (Minor, BP).
+
+### Cross-cutting (`PublicLayout.jsx`, `AuthLayout.jsx`)
+- Sign-in "Sign in" button with aria-label override that drops the visible label → `label-content-name-mismatch` (Serious, WCAG 2.5.3, Experimental).
+- Sidebar nav icon-only buttons (when added) at 20×20 → `target-size` (Serious, WCAG 2.5.8).
+- Skip-link removed or hidden → IGT Structure / Keyboard.
+
+## Demo-time toggle recommendations
+
+For the most balanced spread across the four severity buckets when scanning Northbrook in axe DevTools Pro:
+
+- **Best Practices: ON** — surfaces `region`, `heading-order`, `accesskeys`, `image-redundant-alt`, `landmark-*`, `list`, `presentation-role-conflict`, `identical-links-same-purpose`, `empty-heading`, etc. Important for ADA Title II conversations because the rule pack maps closely to WCAG 2.1 AA.
+- **Experimental: ON** — adds `label-content-name-mismatch` and similar.
+- **Needs Review** counts: `identical-links-same-purpose` and contrast-on-gradient findings live here in axe DevTools.
+- **Pro Advanced rule pack** (always on with Pro license) — adds the AI-driven rules.

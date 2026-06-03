@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
+  <circle cx="40" cy="40" r="36" fill="#0b2a23" stroke="#d2a04c" stroke-width="2" />
+  <text x="40" y="34" font-family="Georgia, serif" font-size="9" font-weight="bold" fill="#d2a04c" text-anchor="middle">NORTHBROOK</text>
+  <text x="40" y="46" font-family="Georgia, serif" font-size="9" font-weight="bold" fill="#d2a04c" text-anchor="middle">PUBLIC</text>
+  <text x="40" y="58" font-family="Georgia, serif" font-size="9" font-weight="bold" fill="#d2a04c" text-anchor="middle">SCHOOLS</text>
+  <text x="40" y="68" font-family="Georgia, serif" font-size="6" fill="#16604b" text-anchor="middle">est. 1893</text>
+</svg>

@@ -86,9 +86,15 @@ export default function University() {
             <div style={{ fontSize: 36, fontWeight: 700, color: 'var(--brand-deep)' }}>87</div>
             <p>Degree programs</p>
           </article>
+          {/* PHASE-2 a11y issue NB-002 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Stat label "Six-year graduation rate" inline-styled with
+              color #b8a87a (warm sand) on the bg-soft section background
+              (~2.3:1). axe-core `color-contrast` fires Serious (WCAG 1.4.3).
+              Common SLED audit finding: institutional brand colors used as
+              text on light backgrounds without contrast verification. */}
           <article className="service-card" style={{ alignItems: 'center', textAlign: 'center' }}>
             <div style={{ fontSize: 36, fontWeight: 700, color: 'var(--brand-deep)' }}>92%</div>
-            <p>Six-year graduation rate</p>
+            <p style={{ color: '#b8a87a' }}>Six-year graduation rate</p>
           </article>
         </div>
       </section>

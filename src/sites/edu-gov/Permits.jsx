@@ -136,8 +136,17 @@ export default function Permits() {
           {error && <div role="alert" className="alert-error">{error}</div>}
 
           <form onSubmit={submit} noValidate>
+            {/* PHASE-2 a11y issue NB-003 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                Was: <label htmlFor={`${formId}-line1`}>Project address (line 1)</label>
+                Replaced with a styled <span> that visually looks like a label
+                but is not programmatically associated. The input has no
+                aria-label, no aria-labelledby, no title, no placeholder. axe-core
+                `label` fires Critical (WCAG 3.3.2 / 4.1.2). Classic SLED audit
+                finding: long permit / records-request forms ship with a
+                misformed label tag and screen-reader users hit a nameless
+                required field. */}
             <div className="form-row">
-              <label htmlFor={`${formId}-line1`}>Project address (line 1)</label>
+              <span style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Project address (line 1)</span>
               <input
                 id={`${formId}-line1`}
                 type="text"
