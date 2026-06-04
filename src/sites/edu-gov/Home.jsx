@@ -149,6 +149,70 @@ export default function Home() {
         </div>
       </section>
 
+      {/* PHASE-2 a11y issue NB-187 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+          Decorative ornament SVG served with verbose alt text. The image
+          is purely a gold-toned brand divider — no content meaning — but
+          its alt verbosely describes the shapes. axe DevTools Pro
+          Advanced `image-decorative` AI classifier recognises the
+          decorative intent and flags the over-described alt. Minor
+          (WCAG 1.1.1). Realistic SLED pattern: brand decorative elements
+          get accidentally described instead of being marked alt="". */}
+      <img
+        src="/ornament-divider.svg"
+        alt="A delicate horizontal gold-toned civic ornamental divider featuring three centered dot and ring motifs flanked by tapered horizontal lines, evoking classic state seal imagery"
+        style={{ display: 'block', margin: '0 auto', maxWidth: 400, height: 'auto' }}
+      />
+
+      {/* PHASE-2 a11y issue NB-186 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+          "What's new this month" rendered as a styled <div> (24 px / 700 /
+          brand-deep / centered) — visually a section heading but
+          semantically not. axe DevTools Pro Advanced `heading-markup`
+          (uses AI / CV) detects the visual heading pattern and reports
+          the missing semantic markup. Serious (WCAG 1.3.1). Realistic
+          gov-portal pattern: editorial section titles styled by CSS
+          instead of using the heading toolbar in the CMS. */}
+      <section className="nbc-section">
+        <div
+          style={{
+            fontSize: 24,
+            fontWeight: 700,
+            color: 'var(--brand-deep)',
+            textAlign: 'center',
+            margin: '0 0 8px',
+          }}
+        >
+          What's new this month
+        </div>
+        <p className="section-sub">
+          Quick announcements from across Northbrook State agencies.
+        </p>
+      </section>
+
+      {/* PHASE-2 a11y issue NB-189 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+          "Apply for SNAP, Medicaid, or LIHEAP this month" banner with
+          near-white text over a sand-to-white gradient. axe-core
+          `color-contrast` can't resolve the bg deterministically (it's a
+          gradient) so the finding lands in Needs Review; the Pro
+          Advanced `text-contrast` rule runs a screenshot pass and
+          reports it as a Serious automatic violation (WCAG 1.4.3).
+          Realistic SLED pattern: state-benefit promo banners use brand
+          gradients without designer contrast checks. */}
+      <div
+        style={{
+          background: 'linear-gradient(90deg, #f4f1e6 0%, #ffffff 100%)',
+          color: '#ffffff',
+          textAlign: 'center',
+          padding: '10px 16px',
+          fontSize: 14,
+          fontWeight: 600,
+          margin: '0 auto 24px',
+          maxWidth: 760,
+          borderRadius: 6,
+        }}
+      >
+        Apply for SNAP, Medicaid, or LIHEAP this month — find out if you qualify.
+      </div>
+
       <section className="nbc-section alt" aria-labelledby="activity-heading">
         <h2 id="activity-heading" className="section-title">Around the state</h2>
         <p className="section-sub">Recent updates from Northbrook agencies.</p>

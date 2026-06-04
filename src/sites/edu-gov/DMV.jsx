@@ -123,6 +123,28 @@ export default function DMV() {
         </div>
       </div>
 
+      {/* PHASE-2 a11y issue NB-191 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+          "Save $5 with online renewal" promo banner with light gold text
+          (#e8c267) on a near-white to pale gold gradient. axe-core
+          `color-contrast` lands as Needs Review (gradient bg). axe
+          DevTools Pro Advanced `text-contrast` analyses rendered pixels
+          and reports Serious (WCAG 1.4.3). Realistic SLED pattern: DMV
+          promo banners use brand gradients without contrast checks. */}
+      <div
+        style={{
+          background: 'linear-gradient(90deg, #ffffff 0%, #f4f1e6 100%)',
+          color: '#e8c267',
+          padding: '8px 14px',
+          borderRadius: 6,
+          marginBottom: 16,
+          fontSize: 14,
+          fontWeight: 600,
+          maxWidth: 720,
+        }}
+      >
+        Save $5 with online renewal — no in-person visit required.
+      </div>
+
       <ol className="steps" aria-label="Renewal progress">
         {STEPS.map((label, i) => (
           <li

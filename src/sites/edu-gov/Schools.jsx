@@ -75,6 +75,22 @@ export default function Schools() {
           Click any school for principal, address, and contact info.
         </p>
 
+        {/* PHASE-2 a11y issue NB-188 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Cedarbrook Elementary front-entrance image served as alt=""
+            (treated as decorative) even though the visual contains
+            informative content: the school name, the "est. 1957"
+            inscription, and a recognisable building shape. axe DevTools
+            Pro Advanced `image-informative-has-alt` AI classifier sees
+            the informative cues and reports the missing alt. Minor
+            (WCAG 1.1.1). Realistic SLED audit finding: districts treat
+            building photos as decorative even when the photo carries the
+            school name in baked-in text. */}
+        <img
+          src="/cedarbrook-elementary.svg"
+          alt=""
+          style={{ display: 'block', margin: '0 auto 16px', maxWidth: 320, height: 'auto', borderRadius: 8 }}
+        />
+
         {/* PHASE-2 a11y issue NB-049 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             Icon-only "filter" button has NO accessible name. axe-core
             `button-name` fires Critical (WCAG 4.1.2). SLED pattern:

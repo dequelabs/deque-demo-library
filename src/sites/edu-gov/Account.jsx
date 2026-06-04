@@ -156,6 +156,20 @@ export default function Account() {
         </div>
       </section>
 
+      {/* PHASE-2 a11y issue NB-190 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+          "Quick actions" rendered as a styled <div> (22 px / 700 /
+          brand-deep / left-aligned) — visually a section heading but
+          semantically not. axe DevTools Pro Advanced `heading-markup`
+          AI/CV rule detects the visual heading pattern. Serious
+          (WCAG 1.3.1). Realistic SLED pattern: dashboard sub-sections
+          styled by CSS instead of using semantic heading markup. */}
+      <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--brand-deep)', margin: '0 0 8px' }}>
+        Quick actions
+      </div>
+      <p style={{ margin: '0 0 16px', color: 'var(--text-secondary)', fontSize: 14 }}>
+        The three most common things citizens do from here.
+      </p>
+
       <section aria-labelledby="activity-h" style={{ marginBottom: 32 }}>
         <h2 id="activity-h" style={{ margin: '0 0 12px', fontSize: 18, color: 'var(--brand-deep)' }}>
           Recent activity

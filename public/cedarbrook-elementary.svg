@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 120" width="320" height="120" role="img">
+  <title>Cedarbrook Elementary front entrance</title>
+  <rect width="320" height="120" fill="#cfe6d8" />
+  <rect x="40" y="40" width="240" height="70" fill="#16604b" />
+  <rect x="40" y="30" width="240" height="14" fill="#0b2a23" />
+  <polygon points="40,30 280,30 320,40 0,40" fill="#0b2a23" />
+  <rect x="148" y="60" width="24" height="50" fill="#d2a04c" />
+  <rect x="60" y="60" width="22" height="22" fill="#fff" />
+  <rect x="100" y="60" width="22" height="22" fill="#fff" />
+  <rect x="198" y="60" width="22" height="22" fill="#fff" />
+  <rect x="238" y="60" width="22" height="22" fill="#fff" />
+  <text x="160" y="22" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#0b2a23" text-anchor="middle">CEDARBROOK ELEMENTARY · est. 1957</text>
+</svg>

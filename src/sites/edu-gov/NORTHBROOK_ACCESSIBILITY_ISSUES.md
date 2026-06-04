@@ -242,6 +242,13 @@ A "complete" Northbrook Phase 2 should cover, across the 14 pages:
 | NB-182 | Vote              | `Vote.jsx` Empty "More info" anchor (no text, no aria-label)                      | 2.4.4   | `link-name`                   | Critical | axe-core | Live     |
 | NB-183 | Vote              | `Vote.jsx` Turnout <div role="meter"> with NO accessible name                     | 1.1.1   | `aria-meter-name`             | Critical | axe-core | Live     |
 | NB-184 | Vote              | `Vote.jsx` Empty <span role="tooltip"> placeholder                                | 4.1.2   | `aria-tooltip-name`           | Serious  | axe-core | Live     |
+| NB-185 | Every page (`.btn-outline`) | `theme.css` — `.btn-outline:focus, :focus-visible { outline: none; box-shadow: none }` | 2.4.7 | `advanced/css-focus-visible`         | Serious  | **Pro Advanced** (no AI credits — CSS state diff) | Live |
+| NB-186 | Home              | `Home.jsx` "What's new this month" `<div>` styled like an h2 (24 px / 700 / brand-deep)                            | 1.3.1 | `advanced/heading-markup`            | Serious  | **Pro Advanced** (uses AI credits — CV) | Live |
+| NB-187 | Home              | `Home.jsx` `/ornament-divider.svg` decorative ornament with verbose alt                                            | 1.1.1 | `advanced/image-decorative`          | Minor    | **Pro Advanced** (uses AI credits — image classifier) | Live |
+| NB-188 | Schools           | `Schools.jsx` `/cedarbrook-elementary.svg` informative school photo served `alt=""`                                | 1.1.1 | `advanced/image-informative-has-alt` | Minor    | **Pro Advanced** (uses AI credits — image classifier) | Live |
+| NB-189 | Home              | `Home.jsx` SNAP/Medicaid/LIHEAP promo banner — white text on sand-to-white gradient (~2.5–3:1)                     | 1.4.3 | `advanced/text-contrast`             | Serious  | **Pro Advanced** | Live |
+| NB-190 | Account           | `Account.jsx` "Quick actions" `<div>` styled as an h2 (22 px / 700 / brand-deep)                                   | 1.3.1 | `advanced/heading-markup`            | Serious  | **Pro Advanced** (uses AI credits — CV) | Live |
+| NB-191 | DMV               | `DMV.jsx` "Save $5 with online renewal" banner — gold text on white-to-pale-gold gradient                          | 1.4.3 | `advanced/text-contrast`             | Serious  | **Pro Advanced** | Live |
 
 > _Tool column values: `axe-core` / `axe Linter` / `Pro Advanced` / `IGT`._
 > _Status values: `TODO` / `Live` / `Removed` / `Replaced`._
