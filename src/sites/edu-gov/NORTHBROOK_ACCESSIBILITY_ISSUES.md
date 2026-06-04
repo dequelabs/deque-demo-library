@@ -84,7 +84,7 @@ A "complete" Northbrook Phase 2 should cover, across the 14 pages:
 | NB-024 | Login             | `Login.jsx` Decorative <div role="img"> seal has NO accessible name               | 1.1.1   | `role-img-alt`                | Serious  | axe-core | Live     |
 | NB-025 | Login             | `Login.jsx` Stray <dt> outside any <dl>                                           | 1.3.1   | `dlitem`                      | Serious  | axe-core | Live     |
 | NB-026 | Login             | `Login.jsx` `lang="frx"` is not a valid BCP-47 subtag                             | 3.1.2   | `valid-lang`                  | Serious  | axe-core | Live     |
-| NB-027 | Login             | `Login.jsx` "Recent usernames" custom combobox <div role="combobox"> is missing … | 4.1.2   | `aria-required-attr`          | Critical | axe-core | Live     |
+| NB-027 | Login             | `Login.jsx` "Recent usernames" `<div role="combobox" aria-controls="recent-users-list">` — missing `aria-expanded`, missing accessible name, and `aria-controls` references a non-existent id. **Co-fires 3 rules.** | 4.1.2   | `aria-required-attr` + `aria-input-field-name` + `aria-valid-attr-value` | Critical | axe-core | Live     |
 | NB-028 | Login             | `Login.jsx` `aria-labeledby` (one L) typo — should be `aria-labelledby`           | 4.1.2   | `aria-valid-attr`             | Critical | axe-core | Live     |
 | NB-029 | Login             | `Login.jsx` Disclaimer text uses a near-grey on white (~2.4:1)                    | 1.4.3   | `color-contrast`              | Serious  | axe-core | Live     |
 | NB-030 | Login             | `Login.jsx` Password-strength <div role="progressbar"> with NO aria-label / aria… | 1.1.1   | `aria-progressbar-name`       | Critical | axe-core | Live     |
@@ -653,6 +653,31 @@ A "complete" Northbrook Phase 2 should cover, across the 14 pages:
 | NB-182 | Provide visible text or `aria-label` for the link. |
 | NB-183 | Give the meter an `aria-label`. |
 | NB-184 | Give the tooltip a text content or `aria-label`. |
+
+## Pre-existing Phase 1 issues
+
+These are issues that pre-date the Phase 2 effort. They were introduced inadvertently while building the clean baseline (mostly inline body links without underlines). Catalogued here so a customer scan returns no "mystery" findings — every finding has a row.
+
+The `NB-*` IDs above are deliberate Phase 2 additions; the `NB-PL-*` IDs below are Phase 1 Leftovers. Status `Pre-existing` means we know about it, we haven't fixed it, and we're choosing to leave it in for now so demos look realistic.
+
+| ID        | Page(s)            | Component                                                                                  | WCAG  | axe rule              | Severity | Tool     | Status        |
+| --------- | ------------------ | ------------------------------------------------------------------------------------------ | ----- | --------------------- | -------- | -------- | ------------- |
+| NB-PL-001 | Login              | `Login.jsx` inline body anchors that lack underline / non-color cue: "Create an account" link below the sign-in form, plus "Terms of Use" and "Privacy Notice" in the consent line | 1.4.1 | `link-in-text-block`  | Serious  | axe-core | Pre-existing |
+
+### Notes on the NB-PL set
+
+- **NB-PL-001** mirrors DQBC's `PL-003` / `PL-004` pattern: inline anchors in body copy that are distinguished from surrounding text by color alone. Fix is the same — add `text-decoration: underline` (or another non-color visual indicator) to inline body anchors. Three nodes on the Login page.
+- These rows don't get `PHASE-2` inline tags in the source — they pre-date Phase 2. They're tracked here purely for catalog completeness so customer scans don't show "mystery" findings.
+
+### Co-firing notes for NB-027
+
+`NB-027` (Login "Recent usernames" custom combobox) co-fires three axe rules on the same element:
+
+1. **`aria-required-attr` (Critical)** — the deliberate primary issue: `role="combobox"` requires `aria-expanded` and the markup omits it.
+2. **`aria-input-field-name` (Moderate)** — combobox is treated as an input field role, so it must have an accessible name; the markup has no `aria-label` / `aria-labelledby`.
+3. **`aria-valid-attr-value` (Critical)** — `aria-controls="recent-users-list"` references a non-existent element id.
+
+This is genuinely how real hand-rolled comboboxes fail in production — adding one bad widget reliably surfaces three findings in a single scan. Worth calling out in the demo as "look at how a single component generates a cluster of issues; this is why we recommend axe Linter at write time."
 
 ## Suggested Phase-2 starter set
 
