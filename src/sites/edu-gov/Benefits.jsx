@@ -70,6 +70,63 @@ export default function Benefits() {
             Benefits — Step {step + 1} of {STEPS.length}: {STEPS[step]}
           </h1>
           <p className="subtitle">Check eligibility and apply for state assistance programs.</p>
+          {/* PHASE-2 a11y issue NB-140 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Icon-only "Print eligibility" button with NO accessible name.
+              axe-core `button-name` fires Critical (WCAG 4.1.2). SLED
+              pattern: print/save icons in toolbars omit aria-label. */}
+          <button type="button" style={{ background: 'none', border: '1px solid var(--border)', padding: 6, marginTop: 8 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path d="M6 9V2h12v7" /><rect x="4" y="9" width="16" height="8" /><path d="M6 17h12v5H6z" />
+            </svg>
+          </button>
+
+          {/* PHASE-2 a11y issue NB-141 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              SNAP/Medicaid badge <svg role="img"> with NO <title>.
+              axe-core `svg-img-alt` fires Serious (WCAG 1.1.1). SLED
+              pattern: program-eligibility badges ship as inline SVG with
+              no textual equivalent. */}
+          <svg role="img" width="32" height="32" viewBox="0 0 32 32" style={{ verticalAlign: 'middle', marginLeft: 8 }}>
+            <circle cx="16" cy="16" r="14" fill="#0a66c2" />
+            <path d="M10 16l4 4 8-8" stroke="#fff" strokeWidth="2" fill="none" />
+          </svg>
+
+          {/* PHASE-2 a11y issue NB-142 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Pale taupe disclosure subhead (#cdbf9f on #fff ~2.0:1).
+              axe-core `color-contrast` fires Serious (WCAG 1.4.3). SLED
+              pattern: secondary benefits-section subheads use brand-tint
+              text on white. */}
+          <p style={{ color: '#cdbf9f', background: '#ffffff', fontSize: 13, margin: '4px 0 0' }}>
+            Federally administered programs
+          </p>
+
+          {/* PHASE-2 a11y issue NB-143 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              `lang="zz"` is not a valid BCP-47 primary subtag. axe-core
+              `valid-lang` fires Serious (WCAG 3.1.2). SLED pattern:
+              translated benefit-program names tagged with placeholder
+              codes. */}
+          <span lang="zz" style={{ fontSize: 12, marginLeft: 8 }}>Programa de asistencia</span>
+
+          {/* PHASE-2 a11y issue NB-144 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Stray <dt> outside any <dl>. axe-core `dlitem` fires Serious
+              (WCAG 1.3.1). SLED pattern: leftover definition-list markup
+              from converted card layouts. */}
+          <dt style={{ display: 'none' }}>Eligibility</dt>
+
+          {/* PHASE-2 a11y issue NB-145 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Eligibility-likelihood <div role="meter"> with NO accessible
+              name. axe-core `aria-meter-name` fires Critical (WCAG 1.1.1).
+              SLED pattern: benefits portals visualize eligibility
+              confidence as bars without naming the meter. */}
+          <div role="meter" aria-valuenow={70} aria-valuemin={0} aria-valuemax={100} style={{ height: 6, background: '#e5e7eb', maxWidth: 240, margin: '8px 0' }}>
+            <div style={{ width: '70%', height: '100%', background: '#0a66c2' }} />
+          </div>
+
+          {/* PHASE-2 a11y issue NB-146 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              <button> with aria-rowindex (only valid on row/cell roles).
+              axe-core `aria-prohibited-attr` fires Serious (WCAG 4.1.2).
+              SLED pattern: attributes copy-pasted from data-grid cells
+              land on unrelated buttons. */}
+          <button type="button" aria-rowindex={1} style={{ display: 'none' }}>hidden</button>
         </div>
       </div>
 
@@ -92,8 +149,14 @@ export default function Benefits() {
       {step === 0 && (
         <div className="card" style={{ maxWidth: 640 }}>
           <form onSubmit={next} noValidate>
+            {/* PHASE-2 a11y issue NB-135 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                Was: <label htmlFor="ben-household">Household size</label>
+                Replaced with a styled <span> — input has no programmatic
+                name. axe-core `label` fires Critical (WCAG 3.3.2 / 4.1.2).
+                SLED pattern: benefits eligibility quizzes drop label tags
+                during a refactor and leave required fields nameless. */}
             <div className="form-row">
-              <label htmlFor="ben-household">Household size</label>
+              <span style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Household size</span>
               <input
                 id="ben-household"
                 type="number"
@@ -104,6 +167,11 @@ export default function Benefits() {
               />
               <p className="form-help">Include yourself and anyone you live with.</p>
             </div>
+            {/* PHASE-2 a11y issue NB-136 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                `autoComplete="benefit"` is not a valid WHATWG token.
+                axe-core `autocomplete-valid` fires Serious (WCAG 1.3.5).
+                SLED pattern: custom autocomplete tokens slip through on
+                state-benefits forms. */}
             <div className="form-row">
               <label htmlFor="ben-income">Monthly household income (USD)</label>
               <input
@@ -115,8 +183,40 @@ export default function Benefits() {
                 onChange={(e) => setIncome(e.target.value)}
                 placeholder="e.g. 2400"
                 inputMode="decimal"
+                autoComplete="benefit"
               />
             </div>
+
+            {/* PHASE-2 a11y issue NB-137 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                <select> with no label / aria-label. axe-core `select-name`
+                fires Critical (WCAG 4.1.2). SLED pattern: program-type
+                filter selects on benefits forms ship without an
+                accessible name. */}
+            <div className="form-row">
+              <select style={{ marginBottom: 12 }}>
+                <option>Any program</option>
+                <option>SNAP</option>
+                <option>Medicaid</option>
+                <option>WIC</option>
+              </select>
+            </div>
+
+            {/* PHASE-2 a11y issue NB-138 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                role="combobox" missing required aria-expanded attribute.
+                axe-core `aria-required-attr` fires Critical (WCAG 4.1.2).
+                SLED pattern: custom comboboxes on benefits intake forms
+                omit required ARIA state. */}
+            <div role="combobox" aria-controls="ben-listbox" style={{ display: 'none' }}>
+              Filter
+            </div>
+
+            {/* PHASE-2 a11y issue NB-139 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                aria-orientation="diagonal" is not a valid token (only
+                horizontal/vertical/undefined). axe-core
+                `aria-valid-attr-value` fires Critical (WCAG 4.1.2). SLED
+                pattern: ARIA copy-pasted from design system with
+                fabricated values. */}
+            <div role="separator" aria-orientation="diagonal" style={{ display: 'none' }} />
 
             <fieldset style={{ border: 0, padding: 0, margin: '0 0 18px' }}>
               <legend style={{ fontWeight: 600, marginBottom: 8, color: 'var(--text-primary)' }}>

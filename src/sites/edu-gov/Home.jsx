@@ -20,8 +20,19 @@ export default function Home() {
     <>
       <section className="nbc-hero" aria-labelledby="hero-heading">
         <div>
-          <span className="nbc-pill">Northbrook State Portal</span>
+          {/* PHASE-2 a11y issue NB-010 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Eyebrow pill uses a low-contrast grey (#a8a8a8 on white) ~2.5:1.
+              axe-core `color-contrast` fires Serious (WCAG 1.4.3). SLED
+              audit pattern: brand "eyebrow" pills get washed out when a
+              designer lifts colour from a dark-mode mock without retesting. */}
+          <span className="nbc-pill" style={{ color: '#a8a8a8', background: '#ffffff' }}>Northbrook State Portal</span>
           <h1 id="hero-heading">Your state, one login.</h1>
+          {/* PHASE-2 a11y issue NB-011 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Decorative-looking hero badge <img> ships with NO alt attribute.
+              axe-core `image-alt` fires Critical (WCAG 1.1.1). SLED pattern:
+              state seals slip in at the last minute via CMS upload and the
+              authoring template never asks for alt text. */}
+          <img src="/nb-state-badge.png" width="48" height="48" />
           <p className="sub">
             Manage K-12 enrollment, public university courses, vehicle
             registration, benefits, and city permits — all in one place,
@@ -37,6 +48,16 @@ export default function Home() {
             <Link className="btn btn-outline" to="/edu-gov/schools">
               Browse public schools
             </Link>
+            {/* PHASE-2 a11y issue NB-012 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                Icon-only header utility button (mobile menu toggle) has NO
+                accessible name. axe-core `button-name` fires Critical
+                (WCAG 4.1.2). Common SLED finding when a designer swaps a
+                text "Menu" button for a hamburger SVG mid-sprint. */}
+            <button type="button" style={{ background: 'none', border: 'none', padding: 8 }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M3 6h18M3 12h18M3 18h18" />
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -54,6 +75,40 @@ export default function Home() {
         <p className="section-sub">
           Four service areas, one login. Click through to get started.
         </p>
+
+        {/* PHASE-2 a11y issue NB-013 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            "Find a service" quick-jump <select> has NO associated label or
+            aria-label. axe-core `select-name` fires Critical (WCAG 4.1.2).
+            SLED audit pattern: dropdowns rendered without visible labels
+            relying on a placeholder option, which doesn't satisfy SR users. */}
+        <div style={{ maxWidth: 360, margin: '0 auto 20px' }}>
+          <select defaultValue="">
+            <option value="" disabled>Jump to a service…</option>
+            <option value="schools">K-12 schools</option>
+            <option value="university">State university</option>
+            <option value="dmv">DMV</option>
+          </select>
+        </div>
+
+        {/* PHASE-2 a11y issue NB-014 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Inline mini-chart <svg role="img"> with NO <title> or aria-label.
+            axe-core `svg-img-alt` fires Serious (WCAG 1.1.1). SLED pattern:
+            dashboards drop in informational sparklines from a charting
+            library that strips titles during SVG optimisation. */}
+        <svg role="img" width="120" height="36" viewBox="0 0 120 36" style={{ display: 'block', margin: '0 auto 16px' }}>
+          <polyline points="0,30 20,20 40,24 60,10 80,16 100,6 120,12" fill="none" stroke="#0a66c2" strokeWidth="2" />
+        </svg>
+
+        {/* PHASE-2 a11y issue NB-015 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            "Popular services" <div role="listbox"> with <div> children that
+            lack role="option". axe-core `aria-required-children` fires
+            Critical (WCAG 1.3.1). Realistic SLED finding when devs roll
+            their own combobox without reading the ARIA pattern. */}
+        <div role="listbox" aria-label="Popular services" style={{ maxWidth: 360, margin: '0 auto 16px', border: '1px solid var(--border)', borderRadius: 6 }}>
+          <div style={{ padding: 8 }}>Renew vehicle registration</div>
+          <div style={{ padding: 8 }}>Apply for SNAP benefits</div>
+          <div style={{ padding: 8 }}>Request birth certificate</div>
+        </div>
 
         <div className="service-grid">
           <Link to="/edu-gov/schools" className="service-card">
@@ -123,6 +178,47 @@ export default function Home() {
       <section className="nbc-section" aria-labelledby="faq-heading">
         <h2 id="faq-heading" className="section-title">Frequently asked</h2>
 
+        {/* PHASE-2 a11y issue NB-016 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Disclosure button uses aria-expanded="yes" instead of "true".
+            axe-core `aria-valid-attr-value` fires Critical (WCAG 4.1.2).
+            SLED pattern: designers/devs translate "yes/no" verbally into
+            attribute values and ship the wrong literal. */}
+        <button type="button" aria-expanded="yes" style={{ display: 'block', margin: '0 auto 12px', background: 'none', border: '1px solid var(--border)', padding: '6px 12px' }}>
+          See more FAQs
+        </button>
+
+        {/* PHASE-2 a11y issue NB-017 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Page-progress indicator <div role="progressbar"> with NO
+            aria-label / aria-labelledby. axe-core `aria-progressbar-name`
+            fires Critical (WCAG 1.1.1). SLED pattern: "X% of citizens have
+            completed their profile" hero widget that ships without a name. */}
+        <div role="progressbar" aria-valuenow={62} aria-valuemin={0} aria-valuemax={100} style={{ height: 8, background: '#e5e7eb', maxWidth: 360, margin: '0 auto 12px' }}>
+          <div style={{ width: '62%', height: '100%', background: '#0a66c2' }} />
+        </div>
+
+        {/* PHASE-2 a11y issue NB-018 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Empty <span role="tooltip"> placeholder. axe-core
+            `aria-tooltip-name` fires Serious (WCAG 4.1.2). SLED pattern:
+            tooltip nodes get pre-rendered for hydration and the content
+            string is bound later — but the empty node still trips axe. */}
+        <span role="tooltip" id="home-tip" style={{ display: 'none' }} />
+
+        {/* PHASE-2 a11y issue NB-019 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Stray <dt> outside of any <dl>. axe-core `dlitem` fires
+            Serious (WCAG 1.3.1). SLED pattern: a CMS author copy-pastes
+            a definition term out of a richer block and the surrounding
+            <dl> never makes it across. */}
+        <dt style={{ display: 'none' }}>Helpful term</dt>
+
+        {/* PHASE-2 a11y issue NB-020 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            `lang="xyz"` is not a valid BCP-47 tag. axe-core `valid-lang`
+            fires Serious (WCAG 3.1.2). SLED pattern: editors mark up
+            multilingual snippets but mis-spell the language subtag
+            (often "esp", "frn", "xyz" during testing). */}
+        <p style={{ textAlign: 'center', fontSize: 13, color: 'var(--text-secondary)' }}>
+          <span lang="xyz">Bienvenido a Northbrook Connect.</span>
+        </p>
+
         <div style={{ maxWidth: 760, margin: '0 auto' }}>
           <details className="faq-item">
             <summary>Do I need a separate login for each service?</summary>
@@ -146,6 +242,26 @@ export default function Home() {
               barrier, please use the accessibility contact link in the footer.
             </div>
           </details>
+
+          {/* PHASE-2 a11y issue NB-021 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Empty social/follow anchor (icon stripped) with NO text, NO
+              aria-label, NO title. axe-core `link-name` fires Critical
+              (WCAG 2.4.4). SLED pattern: footer social row uses CSS
+              background-image icons; once aria-label is forgotten the link
+              becomes nameless. */}
+          <p style={{ marginTop: 24, textAlign: 'center' }}>
+            <a href="https://example.gov/follow" onClick={(e) => e.preventDefault()} style={{ display: 'inline-block', width: 24, height: 24, border: '1px solid var(--border)', borderRadius: 4 }}></a>
+          </p>
+
+          {/* PHASE-2 a11y issue NB-022 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Newsletter signup uses autoComplete="emailaddr" — not a valid
+              WHATWG token. axe-core `autocomplete-valid` fires Serious
+              (WCAG 1.3.5). SLED pattern: marketing teams write semantic
+              guesses for autocomplete strings rather than spec values. */}
+          <form style={{ marginTop: 12, textAlign: 'center' }} onSubmit={(e) => e.preventDefault()}>
+            <label htmlFor="nb-news-email" style={{ display: 'block', marginBottom: 6 }}>Email for state updates</label>
+            <input id="nb-news-email" type="email" autoComplete="emailaddr" />
+          </form>
         </div>
       </section>
     </>
