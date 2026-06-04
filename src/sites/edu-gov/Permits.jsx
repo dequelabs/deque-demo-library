@@ -34,6 +34,8 @@ export default function Permits() {
   });
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
+  // NB-IGT-013: confirmation dialog open state (see comment near submit).
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
   const filteredTypes = PERMIT_TYPES.filter((t) => {
     if (activeFilter !== 'all' && t.kind !== activeFilter) return false;
@@ -57,6 +59,8 @@ export default function Permits() {
     setError('');
     setSelectedType(null);
     setForm((f) => ({ ...f, description: '', cost: '', startISO: '' }));
+    // NB-IGT-013: open confirmation dialog (no focus management, no trap).
+    setConfirmDialogOpen(true);
   };
 
   return (
@@ -71,6 +75,28 @@ export default function Permits() {
       {success && (
         <div className="alert-success" role="status" style={{ maxWidth: 800 }}>
           {success}
+        </div>
+      )}
+
+      {/* PHASE-2 a11y issue NB-IGT-013 (Modals IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+          Confirmation dialog opened after submit. Renders a
+          role="dialog" overlay WITHOUT initial-focus management (focus
+          stays on the submitted button) and WITHOUT a focus trap (Tab
+          escapes to the page behind). The Modals IGT verifies both
+          focus-on-open and focus-trap behavior. */}
+      {confirmDialogOpen && (
+        <div
+          role="dialog"
+          aria-labelledby="permit-confirm-h"
+          style={{ position: 'fixed', top: 80, left: '50%', transform: 'translateX(-50%)', background: '#fff', border: '1px solid var(--border)', borderRadius: 8, padding: 16, zIndex: 50, maxWidth: 360, boxShadow: '0 4px 16px rgba(0,0,0,0.12)' }}
+        >
+          <h2 id="permit-confirm-h" style={{ margin: '0 0 8px', fontSize: 16 }}>Application received</h2>
+          <p style={{ margin: '0 0 12px', fontSize: 13 }}>
+            We will email you within 3 business days with next steps.
+          </p>
+          <button type="button" className="btn btn-primary" onClick={() => setConfirmDialogOpen(false)}>
+            OK
+          </button>
         </div>
       )}
 

@@ -273,8 +273,13 @@ export default function DMV() {
                 Renewal term
               </legend>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {/* PHASE-2 a11y issue NB-IGT-019 (Keyboard IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                    Positive tabIndex={3} on a Step-2 input disrupts the
+                    natural tab order (positive values jump ahead of the
+                    rest of the page). The Keyboard IGT verifies tab
+                    sequence matches visual order. */}
                 <label style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                  <input type="radio" name="term" value="1" checked={term === '1'} onChange={(e) => setTerm(e.target.value)} />
+                  <input tabIndex={3} type="radio" name="term" value="1" checked={term === '1'} onChange={(e) => setTerm(e.target.value)} />
                   <span>1 year — $75</span>
                 </label>
                 <label style={{ display: 'flex', gap: 10, alignItems: 'center' }}>

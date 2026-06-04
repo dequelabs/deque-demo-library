@@ -199,6 +199,17 @@ export default function Login() {
               <input type="text" name="securityAnswer" />
             </div>
 
+            {/* PHASE-2 a11y issue NB-IGT-007 (Forms IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                "Mother's maiden name" input marked HTML `required` but
+                with NO visible required marker (no asterisk, no "required"
+                text), NO `aria-required`. The Forms IGT verifies that
+                required fields are programmatically AND visually
+                indicated. */}
+            <div className="form-row">
+              <label htmlFor="login-maiden">Mother's maiden name</label>
+              <input id="login-maiden" type="text" name="motherMaiden" required />
+            </div>
+
             {/* PHASE-2 a11y issue NB-033 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
                 role="button" combined with `aria-required="true"`, an
                 attribute not allowed on that role. axe-core

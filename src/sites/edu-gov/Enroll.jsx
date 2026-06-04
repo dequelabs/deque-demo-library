@@ -23,6 +23,8 @@ export default function Enroll() {
 
   const [step, setStep] = useState(0);
   const [error, setError] = useState('');
+  // NB-IGT-015: confirmation dialog open state (see comment near step 3).
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -161,6 +163,15 @@ export default function Enroll() {
                 autoComplete="given-name"
                 required
               />
+              {/* PHASE-2 a11y issue NB-IGT-008 (Forms IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                  Inline error message rendered visually next to the
+                  child's first-name field, but the input has NO
+                  aria-describedby pointing at this message. The Forms
+                  IGT verifies that visible field-level errors are
+                  programmatically associated with their input. */}
+              <p style={{ color: 'var(--danger)', fontSize: 13, margin: '4px 0 0' }}>
+                First name is required.
+              </p>
             </div>
             {/* PHASE-2 a11y issue NB-066 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
                 "Middle name" field uses a styled <span> instead of a real
@@ -308,6 +319,40 @@ export default function Enroll() {
             <h2 style={{ margin: '0 0 12px', fontSize: 18, color: 'var(--brand-deep)' }}>
               Review &amp; submit
             </h2>
+
+            {/* PHASE-2 a11y issue NB-IGT-015 (Modals IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                "Are you sure?" confirmation dialog opened from review
+                step. The Cancel button closes the dialog but does NOT
+                return focus to the opener button (the trigger). The
+                Modals IGT walks SEs through verifying focus
+                restoration when a dialog closes. */}
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={() => setConfirmOpen(true)}
+              style={{ marginBottom: 12 }}
+            >
+              Verify details
+            </button>
+            {confirmOpen && (
+              <div
+                role="dialog"
+                aria-labelledby="enr-confirm-h"
+                style={{ border: '1px solid var(--border)', borderRadius: 8, padding: 12, marginBottom: 12, background: '#fff' }}
+              >
+                <h3 id="enr-confirm-h" style={{ margin: '0 0 6px' }}>Are you sure?</h3>
+                <p style={{ margin: '0 0 8px', fontSize: 13 }}>
+                  Once you submit, the district will contact you within two business days.
+                </p>
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={() => setConfirmOpen(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
             <dl style={{ display: 'grid', gridTemplateColumns: 'max-content 1fr', gap: '6px 16px', margin: 0, fontSize: 14 }}>
               <dt style={{ color: 'var(--text-muted)' }}>Child</dt>
               <dd style={{ margin: 0 }}>{form.firstName} {form.lastName}</dd>

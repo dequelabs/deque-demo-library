@@ -228,6 +228,17 @@ export default function City() {
         </div>
       </section>
 
+      {/* PHASE-2 a11y issue NB-IGT-003 (Structure IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+          Orphan <section> with no aria-label, no aria-labelledby, and no
+          heading inside. The Structure IGT verifies that every region
+          landmark has an accessible name. axe-core's region rule may
+          flag this in Needs Review. */}
+      <section style={{ maxWidth: 720, margin: '0 auto 24px', padding: 12 }}>
+        <p style={{ margin: 0, fontSize: 13, color: 'var(--text-secondary)' }}>
+          City Hall is closed on state holidays and the day after Thanksgiving.
+        </p>
+      </section>
+
       <section className="nbc-section alt" aria-labelledby="city-news-h">
         <h2 id="city-news-h" className="section-title">City news</h2>
         <div style={{ maxWidth: 760, margin: '0 auto' }}>

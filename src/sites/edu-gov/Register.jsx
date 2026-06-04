@@ -286,6 +286,20 @@ export default function Register() {
               style={{ marginTop: 12, padding: '6px 10px', border: '1px solid var(--border)', borderRadius: 999, width: 240, minHeight: 18, fontSize: 14, color: 'var(--text-secondary)' }}
             />
             <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '4px 0 0' }}>Quick-filter by instructor name</p>
+
+            {/* PHASE-2 a11y issue NB-IGT-018 (Keyboard IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                Custom <div role="button" tabIndex={0}> with onClick but
+                NO onKeyDown / onKeyUp handler. The Keyboard IGT
+                verifies that custom controls respond to Enter/Space
+                the same way they do to clicks. */}
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={() => { /* would open advanced filters */ }}
+              style={{ display: 'inline-block', marginTop: 8, padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, cursor: 'pointer' }}
+            >
+              Open advanced filters
+            </div>
           </div>
 
           <table className="data-table">

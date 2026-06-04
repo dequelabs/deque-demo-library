@@ -236,6 +236,18 @@ export default function Services() {
         </div>
       </section>
 
+      {/* PHASE-2 a11y issue NB-IGT-002 (Structure IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+          Second <main> element on the page (page already has a parent
+          <main> in PublicLayout). The Structure IGT verifies that there
+          is exactly one main landmark per page; axe-core may surface
+          this as Needs Review depending on landmark context. */}
+      <main aria-label="State agency search" style={{ maxWidth: 480, margin: '0 auto 24px', padding: 12, border: '1px solid var(--border)', borderRadius: 8 }}>
+        <h3 style={{ margin: '0 0 6px', fontSize: 14, color: 'var(--brand-deep)' }}>Find an agency</h3>
+        <p style={{ margin: 0, fontSize: 13, color: 'var(--text-secondary)' }}>
+          Search by agency name to jump directly to its services.
+        </p>
+      </main>
+
       <section className="nbc-section alt" aria-labelledby="faq-h">
         <h2 id="faq-h" className="section-title">Frequently asked questions</h2>
         <div style={{ maxWidth: 760, margin: '0 auto' }}>

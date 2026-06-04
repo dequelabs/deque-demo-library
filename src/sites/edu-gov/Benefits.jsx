@@ -29,6 +29,8 @@ export default function Benefits() {
   const [citizen, setCitizen] = useState('yes');
   const [eligibility, setEligibility] = useState(null);
   const [applied, setApplied] = useState([]); // ['snap', 'medicaid']
+  // NB-IGT-014: SNAP confirmation dialog open state.
+  const [snapDialogOpen, setSnapDialogOpen] = useState(false);
 
   useEffect(() => {
     if (headingRef.current) headingRef.current.focus();
@@ -330,7 +332,7 @@ export default function Benefits() {
                         Application submitted
                       </span>
                     ) : (
-                      <button type="button" className="btn btn-primary" onClick={() => apply('snap')}>
+                      <button type="button" className="btn btn-primary" onClick={() => { apply('snap'); setSnapDialogOpen(true); }}>
                         Apply for SNAP
                       </button>
                     )}
@@ -357,6 +359,27 @@ export default function Benefits() {
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 20 }}>
             <button type="button" className="btn btn-outline" onClick={back}>Back to quiz</button>
           </div>
+
+          {/* PHASE-2 a11y issue NB-IGT-014 (Modals IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              SNAP confirmation dialog opens on the "Apply for SNAP"
+              click but has NO Escape-key close handler. The Modals IGT
+              walks SEs through verifying that Escape dismisses the
+              dialog. */}
+          {snapDialogOpen && (
+            <div
+              role="dialog"
+              aria-labelledby="snap-dialog-h"
+              style={{ position: 'fixed', top: 80, left: '50%', transform: 'translateX(-50%)', background: '#fff', border: '1px solid var(--border)', borderRadius: 8, padding: 16, zIndex: 50, maxWidth: 360, boxShadow: '0 4px 16px rgba(0,0,0,0.12)' }}
+            >
+              <h2 id="snap-dialog-h" style={{ margin: '0 0 8px', fontSize: 16 }}>SNAP application started</h2>
+              <p style={{ margin: '0 0 12px', fontSize: 13 }}>
+                A caseworker will reach out within 5 business days.
+              </p>
+              <button type="button" className="btn btn-primary" onClick={() => setSnapDialogOpen(false)}>
+                Close
+              </button>
+            </div>
+          )}
 
           {state.benefits.length > 0 && (
             <div style={{ marginTop: 24 }}>

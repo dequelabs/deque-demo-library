@@ -45,6 +45,18 @@ export default function University() {
         </div>
       </section>
 
+      {/* PHASE-2 a11y issue NB-IGT-004 (Headings IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+          <h4> placed directly after the page <h1> with no <h2>/<h3> in
+          between. The Headings IGT walks the SE through verifying the
+          heading outline; big skips like h1 → h4 break document
+          structure for screen-reader navigation. */}
+      <section style={{ maxWidth: 720, margin: '0 auto 16px' }}>
+        <h4 style={{ color: 'var(--brand-deep)', margin: '0 0 6px' }}>Quick facts</h4>
+        <p style={{ margin: 0, fontSize: 13, color: 'var(--text-secondary)' }}>
+          NSU is a Carnegie R2 research institution founded in 1907.
+        </p>
+      </section>
+
       <section className="nbc-section" aria-labelledby="why-h">
         {/* PHASE-2 a11y issue NB-086 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             Campus photo <img> with NO alt attribute. axe-core `image-alt`

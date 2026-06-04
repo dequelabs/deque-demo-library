@@ -249,6 +249,26 @@ A "complete" Northbrook Phase 2 should cover, across the 14 pages:
 | NB-189 | Home              | `Home.jsx` SNAP/Medicaid/LIHEAP promo banner — white text on sand-to-white gradient (~2.5–3:1)                     | 1.4.3 | `advanced/text-contrast`             | Serious  | **Pro Advanced** | Live |
 | NB-190 | Account           | `Account.jsx` "Quick actions" `<div>` styled as an h2 (22 px / 700 / brand-deep)                                   | 1.3.1 | `advanced/heading-markup`            | Serious  | **Pro Advanced** (uses AI credits — CV) | Live |
 | NB-191 | DMV               | `DMV.jsx` "Save $5 with online renewal" banner — gold text on white-to-pale-gold gradient                          | 1.4.3 | `advanced/text-contrast`             | Serious  | **Pro Advanced** | Live |
+| NB-IGT-001 | Schools           | `Schools.jsx` (Structure IGT) top-level returned content wrapped in `<div role="presentation">`, stripping landmark/region semantics from descendants | 1.3.1 | IGT manual — landmarks / regions | n/a (IGT) | IGT      | Live     |
+| NB-IGT-002 | Services          | `Services.jsx` (Structure IGT) second `<main>` element rendered inside the page (PublicLayout already provides a parent `<main>`)                       | 1.3.1 | IGT manual — landmarks / regions | n/a (IGT) | IGT      | Live     |
+| NB-IGT-003 | City              | `City.jsx` (Structure IGT) orphan `<section>` region with no `aria-label`, no `aria-labelledby`, and no inner heading — region landmark without an accessible name | 1.3.1 | IGT manual — landmarks / regions | n/a (IGT) | IGT      | Live     |
+| NB-IGT-004 | University        | `University.jsx` (Headings IGT) `<h4>` placed directly after the page `<h1>` with no `<h2>`/`<h3>` in between — heading-level skip                       | 1.3.1 | IGT manual — heading outline     | n/a (IGT) | IGT      | Live     |
+| NB-IGT-005 | Account           | `Account.jsx` (Headings IGT) second `<h1>` on the page ("Welcome to Northbrook Connect") in addition to the existing greeting `<h1>`                     | 1.3.1 | IGT manual — heading outline     | n/a (IGT) | IGT      | Live     |
+| NB-IGT-006 | Vote              | `Vote.jsx` (Headings IGT) empty `<h2>` with no accessible content — breaks the document outline                                                          | 1.3.1 | IGT manual — heading outline     | n/a (IGT) | IGT      | Live     |
+| NB-IGT-007 | Login             | `Login.jsx` (Forms IGT) "Mother's maiden name" input marked HTML `required` with NO visible required marker and NO `aria-required`                       | 3.3.2 | IGT manual — required fields     | n/a (IGT) | IGT      | Live     |
+| NB-IGT-008 | Enroll            | `Enroll.jsx` (Forms IGT) visible inline error rendered next to child's first-name input, but input has NO `aria-describedby` pointing at the message     | 3.3.1 | IGT manual — error association   | n/a (IGT) | IGT      | Live     |
+| NB-IGT-009 | Vote              | `Vote.jsx` (Forms IGT) three related "Notification preferences" checkboxes without a wrapping `<fieldset>` / `<legend>`                                  | 1.3.1 | IGT manual — control grouping    | n/a (IGT) | IGT      | Live     |
+| NB-IGT-010 | Home              | `Home.jsx` (Images IGT) two adjacent `<img>` elements with identical `src` and identical alt ("Northbrook State seal") — duplicate informative images   | 1.1.1 | IGT manual — duplicate adjacent images | n/a (IGT) | IGT  | Live     |
+| NB-IGT-011 | Schools           | `Schools.jsx` (Images IGT) second school photo whose alt text does not match the image (Cedarbrook Elementary front entrance, alt reads "Our schools")  | 1.1.1 | IGT manual — alt accuracy        | n/a (IGT) | IGT      | Live     |
+| NB-IGT-012 | Account           | `Account.jsx` (Images IGT) state seal `<img alt="">` placed next to identity content — visually informative but marked decorative                        | 1.1.1 | IGT manual — decorative vs informative | n/a (IGT) | IGT  | Live     |
+| NB-IGT-013 | Permits           | `Permits.jsx` (Modals IGT) post-submit `role="dialog"` overlay with NO initial-focus management AND NO focus trap (Tab escapes to the page behind)       | 2.4.3 | IGT manual — focus on open / focus trap | n/a (IGT) | IGT | Live     |
+| NB-IGT-014 | Benefits          | `Benefits.jsx` (Modals IGT) SNAP confirmation dialog opens on "Apply for SNAP" click but has NO Escape-key close handler                                 | 2.1.1 | IGT manual — Escape dismiss      | n/a (IGT) | IGT      | Live     |
+| NB-IGT-015 | Enroll            | `Enroll.jsx` (Modals IGT) "Are you sure?" confirmation dialog Cancel button closes the dialog but does NOT return focus to the opener (trigger button)   | 2.4.3 | IGT manual — focus restoration   | n/a (IGT) | IGT      | Live     |
+| NB-IGT-016 | Home              | `Home.jsx` (Reading Order IGT) hero CTA pair wrapped with `flexDirection: 'row-reverse'` — visual order is the reverse of DOM order                      | 1.3.2 | IGT manual — DOM vs visual order | n/a (IGT) | IGT      | Live     |
+| NB-IGT-017 | Account           | `Account.jsx` (Reading Order IGT) last service card uses `style={{ order: -1 }}` — visually renders first while remaining last in the DOM                | 1.3.2 | IGT manual — DOM vs visual order | n/a (IGT) | IGT      | Live     |
+| NB-IGT-018 | Register          | `Register.jsx` (Keyboard IGT) custom `<div role="button" tabIndex={0}>` with `onClick` but NO `onKeyDown` / `onKeyUp` — no Enter/Space activation        | 2.1.1 | IGT manual — keyboard activation | n/a (IGT) | IGT      | Live     |
+| NB-IGT-019 | DMV               | `DMV.jsx` (Keyboard IGT) positive `tabIndex={3}` on a Step-2 input disrupts natural tab order (jumps ahead of the rest of the page)                      | 2.4.3 | IGT manual — tab sequence        | n/a (IGT) | IGT      | Live     |
+| NB-IGT-020 | Vote              | `Vote.jsx` (Keyboard IGT) custom `<div role="button" tabIndex={0}>` with `onClick` but NO `onKeyDown` / `onKeyUp` — no Enter/Space activation            | 2.1.1 | IGT manual — keyboard activation | n/a (IGT) | IGT      | Live     |
 
 > _Tool column values: `axe-core` / `axe Linter` / `Pro Advanced` / `IGT`._
 > _Status values: `TODO` / `Live` / `Removed` / `Replaced`._
@@ -660,6 +680,58 @@ A "complete" Northbrook Phase 2 should cover, across the 14 pages:
 | NB-182 | Provide visible text or `aria-label` for the link. |
 | NB-183 | Give the meter an `aria-label`. |
 | NB-184 | Give the tooltip a text content or `aria-label`. |
+
+### Batch 6 — IGT cheat sheet
+
+The Batch 6 rows (NB-IGT-001 through NB-IGT-020) are surfaced via axe DevTools Pro **Intelligent Guided Tests (IGTs)** rather than automated rules. They appear in scans as **Needs Review** items (when axe can partially detect the pattern) or only after the SE runs the matching IGT in the extension panel. Severity is therefore `n/a (IGT)` in the catalog above.
+
+| ID         | IGT to run     | URL to reach                              | Pattern the SE is verifying |
+| ---------- | -------------- | ----------------------------------------- | --------------------------- |
+| NB-IGT-001 | Structure      | `/#/edu-gov/schools`                      | Top-level `<div role="presentation">` strips landmark/region semantics from descendants — IGT walks SE through landmark coverage. |
+| NB-IGT-002 | Structure      | `/#/edu-gov/services`                     | Second `<main>` element on the page (PublicLayout already provides one) — IGT verifies exactly one main landmark. |
+| NB-IGT-003 | Structure      | `/#/edu-gov/city`                         | Orphan `<section>` (region landmark) with no `aria-label` / `aria-labelledby` / inner heading — IGT verifies every region has an accessible name. |
+| NB-IGT-004 | Headings       | `/#/edu-gov/university`                   | `<h4>` placed directly after the page `<h1>` (skips `<h2>`/`<h3>`) — IGT walks SE through the heading outline. |
+| NB-IGT-005 | Headings       | `/#/edu-gov/account` (signed in)          | Second `<h1>` on the page — IGT verifies exactly one top-level heading. |
+| NB-IGT-006 | Headings       | `/#/edu-gov/vote`                         | Empty `<h2>` with no accessible content — IGT verifies every heading has meaningful text. |
+| NB-IGT-007 | Forms          | `/#/edu-gov/login`                        | "Mother's maiden name" HTML `required` input with NO visible required marker and NO `aria-required` — IGT verifies required state is both visible and programmatic. |
+| NB-IGT-008 | Forms          | `/#/edu-gov/services/enroll`              | Inline error next to child's first-name input but input has NO `aria-describedby` to the message — IGT verifies error association. |
+| NB-IGT-009 | Forms          | `/#/edu-gov/vote`                         | Three related "Notification preferences" checkboxes with no `<fieldset>` / `<legend>` — IGT verifies grouping of related controls. |
+| NB-IGT-010 | Images         | `/` (Home)                                | Two adjacent `<img>`s with identical `src` and identical alt ("Northbrook State seal") — IGT verifies whether one should be decorative or the pair merged. |
+| NB-IGT-011 | Images         | `/#/edu-gov/schools`                      | Cedarbrook Elementary photo whose alt ("Our schools") does not match the image — IGT verifies alt accuracy (automation can't catch mismatched-but-present alt). |
+| NB-IGT-012 | Images         | `/#/edu-gov/account` (signed in)          | State seal `<img alt="">` next to identity/greeting content — IGT asks SE whether `alt=""` is appropriate in this context. |
+| NB-IGT-013 | Modals         | `/#/edu-gov/city/permits` → submit form   | Confirmation `role="dialog"` overlay opens with NO initial focus AND NO focus trap — IGT verifies focus-on-open + focus trap. |
+| NB-IGT-014 | Modals         | `/#/edu-gov/services/benefits` → "Apply for SNAP" | SNAP confirmation dialog has NO Escape-key close handler — IGT verifies Escape dismiss behavior. |
+| NB-IGT-015 | Modals         | `/#/edu-gov/services/enroll` → review step → trigger "Are you sure?" | Dialog Cancel button closes but focus is NOT returned to the trigger — IGT verifies focus restoration. |
+| NB-IGT-016 | Reading Order  | `/` (Home)                                | Hero CTA pair wrapped with `flexDirection: 'row-reverse'` — visual order reverses DOM order. IGT verifies DOM vs visual parity. |
+| NB-IGT-017 | Reading Order  | `/#/edu-gov/account` (signed in)          | Last service card uses `style={{ order: -1 }}` so it renders first visually but is last in DOM — IGT verifies DOM vs visual parity. |
+| NB-IGT-018 | Keyboard       | `/#/edu-gov/university/register`          | Custom `<div role="button" tabIndex={0}>` with `onClick` but NO `onKeyDown` — IGT verifies Enter/Space activate the same as click. |
+| NB-IGT-019 | Keyboard       | `/#/edu-gov/services/dmv` → Step 2        | Positive `tabIndex={3}` on a Step-2 radio input disrupts natural tab order — IGT verifies tab sequence matches visual order. |
+| NB-IGT-020 | Keyboard       | `/#/edu-gov/vote`                         | Custom `<div role="button" tabIndex={0}>` with `onClick` but NO `onKeyDown` — IGT verifies Enter/Space activate the same as click. |
+
+### Batch 6 — accessible fix (for reference)
+
+| ID         | Minimal fix |
+| ---------- | ----------- |
+| NB-IGT-001 | Drop `role="presentation"` from the top-level wrapper (or use a semantic `<div>` / `<main>` so landmark semantics flow normally). |
+| NB-IGT-002 | Remove the nested `<main>` (PublicLayout's `<main>` already covers the page) — use a `<section aria-label="State agency search">` instead. |
+| NB-IGT-003 | Give the orphan `<section>` an accessible name — add `aria-label="…"` (or `aria-labelledby` pointing at an inner heading). |
+| NB-IGT-004 | Replace the `<h4>` with the correct level (`<h2>`) so the outline goes `h1 → h2` without skipping. |
+| NB-IGT-005 | Demote the second `<h1>` to `<h2>` (or delete it) so there is exactly one top-level heading per page. |
+| NB-IGT-006 | Either add text content to the `<h2>` or remove the empty heading. |
+| NB-IGT-007 | Add a visible required indicator (asterisk + legend) AND `aria-required="true"` on the input. |
+| NB-IGT-008 | Give the error message an `id` and add `aria-describedby="<id>"` + `aria-invalid="true"` to the input. |
+| NB-IGT-009 | Wrap the three checkboxes in a `<fieldset>` with a `<legend>Notification preferences</legend>`. |
+| NB-IGT-010 | Mark one of the duplicate seals decorative (`alt=""`) or merge them into a single image. |
+| NB-IGT-011 | Replace the alt with one that accurately describes the photo (e.g. `alt="Cedarbrook Elementary front entrance"`). |
+| NB-IGT-012 | Replace `alt=""` with an informative alt (e.g. `alt="Northbrook State seal"`) since the seal carries identity meaning in this context. |
+| NB-IGT-013 | On dialog open, move focus to the first focusable child / heading; implement a focus trap (cycle Tab/Shift+Tab inside the dialog). |
+| NB-IGT-014 | Add an `onKeyDown` (or document-level keydown listener) that closes the dialog on `Escape`. |
+| NB-IGT-015 | On dialog close, return focus to the element that opened it (store the trigger ref before opening, call `.focus()` on close). |
+| NB-IGT-016 | Reorder the DOM to match the intended visual order and drop the `flexDirection: 'row-reverse'` style. |
+| NB-IGT-017 | Reorder the cards in the DOM to match the intended visual order and drop the `style={{ order: -1 }}`. |
+| NB-IGT-018 | Add `onKeyDown` that activates the control on `Enter` and `Space` — or use a real `<button>` element. |
+| NB-IGT-019 | Remove the positive `tabIndex={3}` (use the default `tabIndex={0}` / no tabIndex so it follows DOM order). |
+| NB-IGT-020 | Add `onKeyDown` that activates the control on `Enter` and `Space` — or use a real `<button>` element. |
 
 ## Pre-existing Phase 1 issues
 

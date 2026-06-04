@@ -104,6 +104,43 @@ export default function Vote() {
               `aria-tooltip-name` fires Serious (WCAG 4.1.2). SLED
               pattern: tooltip mount nodes ship empty. */}
           <span role="tooltip" id="vote-tip" />
+
+          {/* PHASE-2 a11y issue NB-IGT-006 (Headings IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Empty <h2> with no accessible content. The Headings IGT
+              verifies that every heading has meaningful text; empty
+              headings break the document outline. */}
+          <h2></h2>
+
+          {/* PHASE-2 a11y issue NB-IGT-009 (Forms IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Three related checkboxes without a wrapping <fieldset> /
+              <legend>. The Forms IGT walks SEs through verifying
+              programmatic grouping of related controls. */}
+          <div style={{ marginTop: 8 }}>
+            <p style={{ margin: '0 0 6px', fontWeight: 600, fontSize: 13 }}>Notification preferences</p>
+            <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 13 }}>
+              <input type="checkbox" /> Receive email updates
+            </label>
+            <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 13 }}>
+              <input type="checkbox" /> Receive SMS reminders
+            </label>
+            <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 13 }}>
+              <input type="checkbox" /> Allow data sharing
+            </label>
+          </div>
+
+          {/* PHASE-2 a11y issue NB-IGT-020 (Keyboard IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Custom <div role="button" tabIndex={0}> with onClick but
+              NO onKeyDown / onKeyUp handler. The Keyboard IGT verifies
+              that custom controls respond to Enter/Space the same way
+              they do to clicks. */}
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => { /* would print registration */ }}
+            style={{ display: 'inline-block', marginTop: 8, padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, cursor: 'pointer' }}
+          >
+            Print my registration
+          </div>
         </div>
       </div>
 

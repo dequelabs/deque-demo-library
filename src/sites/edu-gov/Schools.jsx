@@ -17,7 +17,11 @@ export default function Schools() {
   const justEnrolled = location.state?.justEnrolled;
 
   return (
-    <>
+    /* PHASE-2 a11y issue NB-IGT-001 (Structure IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+       Wrapping the page's top-level returned content in a <div role="presentation">
+       strips implicit landmark/region semantics from descendants. The Structure
+       IGT walks the SE through verifying landmark coverage. */
+    <div role="presentation">
       <section className="nbc-hero" aria-labelledby="schools-h">
         <div>
           <span className="nbc-pill">Northbrook State School District</span>
@@ -246,6 +250,18 @@ export default function Schools() {
           </div>
         </section>
       )}
-    </>
+
+      {/* PHASE-2 a11y issue NB-IGT-011 (Images IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+          Second school photo whose alt text mismatches the visual content
+          (image is the Cedarbrook Elementary front entrance but alt reads
+          "Our schools"). The Images IGT asks the SE to verify that alt
+          text accurately describes the image — automation can't detect
+          mismatched-but-present alt text. */}
+      <img
+        src="/cedarbrook-elementary.svg"
+        alt="Our schools"
+        style={{ display: 'block', margin: '0 auto 16px', maxWidth: 240, height: 'auto', borderRadius: 8 }}
+      />
+    </div>
   );
 }

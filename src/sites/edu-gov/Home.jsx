@@ -38,7 +38,20 @@ export default function Home() {
             registration, benefits, and city permits — all in one place,
             with one account.
           </p>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          {/* PHASE-2 a11y issue NB-IGT-010 (Images IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Two <img> elements with identical src AND identical alt
+              ("Northbrook State seal") shown in two positions. The
+              Images IGT verifies whether duplicate adjacent images
+              should be marked decorative on one or merged. */}
+          <img src="/nb-state-seal.png" alt="Northbrook State seal" width="40" height="40" />
+          <img src="/nb-state-seal.png" alt="Northbrook State seal" width="40" height="40" />
+
+          {/* PHASE-2 a11y issue NB-IGT-016 (Reading Order IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Hero CTA pair wrapped with flexDirection: 'row-reverse' so
+              the visual order (Browse schools, then Sign in/Continue)
+              is the REVERSE of the DOM order. The Reading Order IGT
+              walks SEs through verifying DOM vs visual order parity. */}
+          <div style={{ display: 'flex', flexDirection: 'row-reverse', gap: 12, flexWrap: 'wrap' }}>
             <Link
               className="btn btn-primary"
               to={isAuthenticated ? '/edu-gov/account' : '/edu-gov/login'}

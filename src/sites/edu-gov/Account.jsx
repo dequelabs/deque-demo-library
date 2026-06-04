@@ -64,10 +64,26 @@ export default function Account() {
 
   return (
     <>
+      {/* PHASE-2 a11y issue NB-IGT-005 (Headings IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+          Second <h1> on the page ("Welcome to Northbrook Connect") in
+          addition to the existing "Welcome back, …" page <h1>. The
+          Headings IGT verifies there is exactly one top-level heading;
+          axe surfaces this as Needs Review by default. */}
+      <h1 style={{ margin: '0 0 8px', fontSize: 22, color: 'var(--brand-deep)' }}>
+        Welcome to Northbrook Connect
+      </h1>
+
       <div className="page-head">
         <div>
           <h1>Welcome back, {citizen.firstName}.</h1>
           <p className="subtitle">Here is a quick look at your services.</p>
+          {/* PHASE-2 a11y issue NB-IGT-012 (Images IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              State seal <img alt=""> placed next to identity content
+              (the citizen greeting). Visually the seal communicates
+              official identity but it's marked decorative. The Images
+              IGT asks SEs to verify whether alt="" is appropriate for
+              the surrounding context. */}
+          <img src="/nbps-seal.svg" alt="" width="32" height="32" style={{ verticalAlign: 'middle', marginLeft: 8 }} />
         </div>
         <div>
           <Link className="btn btn-outline" to="/edu-gov">Public site</Link>
@@ -146,8 +162,18 @@ export default function Account() {
             aria-labels were never added. */}
         <a href="/edu-gov/account" onClick={(e) => e.preventDefault()} style={{ display: 'inline-block', width: 20, height: 20, border: '1px solid var(--border)', marginBottom: 12 }}></a>
         <div className="service-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
-          {cards.map((c) => (
-            <Link key={c.to} to={c.to} className="service-card">
+          {cards.map((c, idx) => (
+            /* PHASE-2 a11y issue NB-IGT-017 (Reading Order IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+               Applies style={{ order: -1 }} to the LAST service card so
+               it visually renders FIRST in the grid while remaining last
+               in the DOM. The Reading Order IGT walks SEs through
+               verifying DOM vs visual order parity. */
+            <Link
+              key={c.to}
+              to={c.to}
+              className="service-card"
+              style={idx === cards.length - 1 ? { order: -1 } : undefined}
+            >
               <h3>{c.title}</h3>
               <p>{c.blurb}</p>
               <span className="count">{c.cta} &rarr;</span>
