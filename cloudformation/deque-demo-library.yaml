@@ -1,16 +1,21 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >-
-  Deque Demo Library — static SPA hosting (S3 + CloudFront).
-  Multi-sector accessibility demo site (DQBC banking + Northbrook Connect SLED
-  + remaining sector stubs). HashRouter-based Vite/React app — every route
-  resolves to /index.html so no edge function or 404-rewrite is required.
+  Deque Asset Demo Library — Amplify Hosting for the multi-sector accessibility
+  demo sites (DQBC FinTech + Northbrook Connect SLED + remaining sector stubs).
 
-  Mirrors the conventions in dequelabs/infrastructure/cloudformation/:
+  Modeled on dequelabs/axe-devtools-demos `Workshop2` Amplify template. Amplify
+  handles the build pipeline, SSL cert provisioning, branch-based subdomains,
+  and per-PR preview URLs — so this stack is dramatically simpler than the
+  equivalent S3 + CloudFront setup. The site is a HashRouter-based Vite/React
+  SPA; SPA fallback is included defensively even though HashRouter doesn't
+  strictly need it.
+
+  Conventions matched from
+  dequelabs/infrastructure/cloudformation/README.md and the Workshop2 template:
    - us-east-1 region
-   - Env parameter (dev / qa / prod) driving stack-name suffix
-   - CAPABILITY_NAMED_IAM
-   - Tags: Service, Env, Owner
-   - Stack-per-environment, no shared resources across environments
+   - Env parameter driving stack-name suffix (dev / qa / prod)
+   - CAPABILITY_NAMED_IAM (for the Amplify service role)
+   - Tags: Team / Brand / Product on every resource
 
 # -------------------------------------------------------------------------
 # Parameters
@@ -20,55 +25,64 @@ Parameters:
     Type: String
     Default: dev
     AllowedValues: [dev, qa, prod]
-    Description: Deployment environment. Drives bucket name, DNS subdomain, and tags.
+    Description: Deployment environment. Used as a stack-name suffix.
 
   DomainName:
     Type: String
-    Default: demo-library.dequelabs.com
+    Default: dequelabs.com
     Description: >-
-      Fully-qualified hostname for the deployed site. For non-prod environments
-      a per-Env subdomain is prepended automatically (dev → demo-library-dev.,
-      qa → demo-library-qa.). prod uses the base DomainName as-is.
+      Parent hosted zone for the custom domain (the Amplify Domain resource
+      attaches subdomains under this zone). Must already exist in Route53
+      in the target AWS account.
 
-  HostedZoneId:
-    Type: AWS::Route53::HostedZone::Id
-    Description: >-
-      Route53 hosted zone ID for dequelabs.com (or whichever zone owns
-      DomainName). Must already exist in the target account.
-
-  AcmCertificateArn:
+  Subdomain:
     Type: String
+    Default: demo-library
     Description: >-
-      ARN of an ACM certificate covering DomainName (and the dev/qa
-      subdomains). MUST live in us-east-1 — CloudFront only honours
-      certificates from that region.
-    AllowedPattern: ^arn:aws:acm:us-east-1:\d{12}:certificate/[a-f0-9-]+$
-    ConstraintDescription: Must be an ACM cert ARN in us-east-1.
+      Subdomain prefix. Full URL becomes <Subdomain>.<DomainName>. Per-env
+      override: dev → demo-library-dev, qa → demo-library-qa, prod →
+      demo-library (set via mapping below).
 
-  CircleCIOidcProviderArn:
+  Repository:
     Type: String
-    Default: ''
+    Default: https://github.com/dequelabs/deque-demo-library
     Description: >-
-      Optional ARN of an existing CircleCI OIDC provider in this account
-      (arn:aws:iam::<acct>:oidc-provider/oidc.circleci.com/org/<org-id>).
-      If supplied, the deploy IAM role is configured to trust CircleCI OIDC
-      tokens for the repo identified by CircleCIProjectId. Leave blank to
-      skip the role entirely (you can apply it later as a stack update).
+      GitHub repository URL the Amplify app builds from. Amplify clones this
+      repo on every push to the configured branch.
 
-  CircleCIProjectId:
+  ProductionBranch:
     Type: String
-    Default: ''
+    Default: main
     Description: >-
-      CircleCI project UUID (the "project ID" shown in CircleCI Project
-      Settings → Overview). Used in the OIDC role trust policy so only
-      pipelines from this specific project can assume the deploy role.
+      Branch wired to the PRODUCTION-staged Amplify Branch (the one mapped
+      to the custom subdomain). EnableAutoBuild + EnablePullRequestPreview
+      are both on, so opening a PR against this branch auto-generates a
+      preview URL — the per-PR-URL feature we lose by moving off Vercel
+      comes back for free with Amplify.
 
-# -------------------------------------------------------------------------
-# Conditions
-# -------------------------------------------------------------------------
-Conditions:
-  IsProd: !Equals [!Ref Env, prod]
-  HasCircleCIOidc: !Not [!Equals [!Ref CircleCIOidcProviderArn, '']]
+  GithubOAuthToken:
+    Type: String
+    NoEcho: true
+    Description: >-
+      GitHub Personal Access Token with `repo` scope. Amplify uses this to
+      clone the repo on each build. Generate one at
+      github.com/settings/tokens (classic) → repo scope. Store somewhere
+      sane (Secrets Manager, 1Password); rotate annually.
+
+  TeamTag:
+    Type: String
+    Default: se-team
+    Description: 'Tag value for "Team" (cost allocation / ownership).'
+
+  BrandTag:
+    Type: String
+    Default: axe
+    Description: 'Tag value for "Brand". Matches Workshop2 convention.'
+
+  ProductTag:
+    Type: String
+    Default: Deque Asset Demo Library
+    Description: 'Tag value for "Product".'
 
 # -------------------------------------------------------------------------
 # Mappings — per-environment subdomain prefix
@@ -76,335 +90,177 @@ Conditions:
 Mappings:
   EnvConfig:
     dev:
-      SubdomainPrefix: 'demo-library-dev'
-      CachePolicyComment: 'Dev: shorter TTLs for faster iteration'
+      SubdomainSuffix: '-dev'
     qa:
-      SubdomainPrefix: 'demo-library-qa'
-      CachePolicyComment: 'QA: prod-like caching'
+      SubdomainSuffix: '-qa'
     prod:
-      SubdomainPrefix: 'demo-library'
-      CachePolicyComment: 'Production caching'
+      SubdomainSuffix: ''
 
 # -------------------------------------------------------------------------
 # Resources
 # -------------------------------------------------------------------------
 Resources:
 
-  # ---------------- S3 origin ----------------
+  # ---------------- IAM service role ----------------
 
-  SiteBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Sub 'deque-demo-library-${Env}-${AWS::AccountId}'
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
-      OwnershipControls:
-        Rules:
-          - ObjectOwnership: BucketOwnerEnforced
-      VersioningConfiguration:
-        Status: Enabled
-      LifecycleConfiguration:
-        Rules:
-          - Id: ExpireNonCurrentAfter30d
-            Status: Enabled
-            NoncurrentVersionExpiration:
-              NoncurrentDays: 30
-      Tags:
-        - { Key: Service, Value: deque-demo-library }
-        - { Key: Env, Value: !Ref Env }
-        - { Key: Owner, Value: solutions-engineering }
-        - { Key: ManagedBy, Value: cloudformation }
-
-  # Policy granting only this CloudFront distribution permission to read.
-  # The bucket itself stays fully private (no public ACL, no public policy).
-  SiteBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref SiteBucket
-      PolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Sid: AllowCloudFrontServicePrincipalReadOnly
-            Effect: Allow
-            Principal:
-              Service: cloudfront.amazonaws.com
-            Action: s3:GetObject
-            Resource: !Sub '${SiteBucket.Arn}/*'
-            Condition:
-              StringEquals:
-                'AWS:SourceArn': !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${SiteDistribution}'
-
-  # ---------------- CloudFront distribution ----------------
-
-  # Origin Access Control replaces legacy Origin Access Identity. Lets
-  # CloudFront sign requests to the private S3 bucket using SigV4.
-  SiteOriginAccessControl:
-    Type: AWS::CloudFront::OriginAccessControl
-    Properties:
-      OriginAccessControlConfig:
-        Name: !Sub 'deque-demo-library-${Env}-oac'
-        Description: 'OAC for the Deque Demo Library S3 origin'
-        OriginAccessControlOriginType: s3
-        SigningBehavior: always
-        SigningProtocol: sigv4
-
-  # Long-cache, immutable fingerprinted assets/* — 1 year, immutable.
-  AssetsCachePolicy:
-    Type: AWS::CloudFront::CachePolicy
-    Properties:
-      CachePolicyConfig:
-        Name: !Sub 'deque-demo-library-${Env}-assets'
-        Comment: !FindInMap [EnvConfig, !Ref Env, CachePolicyComment]
-        DefaultTTL: 31536000
-        MaxTTL: 31536000
-        MinTTL: 31536000
-        ParametersInCacheKeyAndForwardedToOrigin:
-          EnableAcceptEncodingBrotli: true
-          EnableAcceptEncodingGzip: true
-          CookiesConfig: { CookieBehavior: none }
-          HeadersConfig: { HeaderBehavior: none }
-          QueryStringsConfig: { QueryStringBehavior: none }
-
-  # index.html — must NOT be aggressively cached or new deploys won't propagate.
-  IndexCachePolicy:
-    Type: AWS::CloudFront::CachePolicy
-    Properties:
-      CachePolicyConfig:
-        Name: !Sub 'deque-demo-library-${Env}-index'
-        Comment: 'index.html / no-store so deploys propagate immediately'
-        DefaultTTL: 0
-        MaxTTL: 60
-        MinTTL: 0
-        ParametersInCacheKeyAndForwardedToOrigin:
-          EnableAcceptEncodingBrotli: true
-          EnableAcceptEncodingGzip: true
-          CookiesConfig: { CookieBehavior: none }
-          HeadersConfig: { HeaderBehavior: none }
-          QueryStringsConfig: { QueryStringBehavior: none }
-
-  # Modern security headers applied at the edge. Cheap and useful.
-  ResponseHeadersPolicy:
-    Type: AWS::CloudFront::ResponseHeadersPolicy
-    Properties:
-      ResponseHeadersPolicyConfig:
-        Name: !Sub 'deque-demo-library-${Env}-headers'
-        Comment: 'Security + content-type + HSTS headers for the demo library'
-        SecurityHeadersConfig:
-          StrictTransportSecurity:
-            AccessControlMaxAgeSec: 31536000
-            IncludeSubdomains: true
-            Preload: true
-            Override: true
-          ContentTypeOptions:
-            Override: true
-          ReferrerPolicy:
-            ReferrerPolicy: strict-origin-when-cross-origin
-            Override: true
-          XSSProtection:
-            ModeBlock: true
-            Protection: true
-            Override: true
-          FrameOptions:
-            FrameOption: SAMEORIGIN
-            Override: true
-
-  SiteDistribution:
-    Type: AWS::CloudFront::Distribution
-    Properties:
-      DistributionConfig:
-        Comment: !Sub 'Deque Demo Library (${Env})'
-        Enabled: true
-        HttpVersion: http2and3
-        IPV6Enabled: true
-        PriceClass: PriceClass_100   # NA + EU edge locations (cheapest)
-        DefaultRootObject: index.html
-        Aliases:
-          - !If
-            - IsProd
-            - !Ref DomainName
-            - !Sub
-              - '${Prefix}.${BaseDomain}'
-              - Prefix: !FindInMap [EnvConfig, !Ref Env, SubdomainPrefix]
-                BaseDomain: !Select [1, !Split ['.', !Ref DomainName, 2]]
-        ViewerCertificate:
-          AcmCertificateArn: !Ref AcmCertificateArn
-          SslSupportMethod: sni-only
-          MinimumProtocolVersion: TLSv1.2_2021
-        Origins:
-          - Id: s3-origin
-            DomainName: !GetAtt SiteBucket.RegionalDomainName
-            S3OriginConfig:
-              OriginAccessIdentity: ''   # blank because we use OAC
-            OriginAccessControlId: !GetAtt SiteOriginAccessControl.Id
-        DefaultCacheBehavior:
-          TargetOriginId: s3-origin
-          ViewerProtocolPolicy: redirect-to-https
-          AllowedMethods: [GET, HEAD, OPTIONS]
-          CachedMethods: [GET, HEAD]
-          Compress: true
-          CachePolicyId: !Ref AssetsCachePolicy
-          ResponseHeadersPolicyId: !Ref ResponseHeadersPolicy
-        CacheBehaviors:
-          # index.html — short TTL so deploys propagate immediately
-          - PathPattern: '/index.html'
-            TargetOriginId: s3-origin
-            ViewerProtocolPolicy: redirect-to-https
-            AllowedMethods: [GET, HEAD, OPTIONS]
-            CachedMethods: [GET, HEAD]
-            Compress: true
-            CachePolicyId: !Ref IndexCachePolicy
-            ResponseHeadersPolicyId: !Ref ResponseHeadersPolicy
-          # Bare root path also serves index.html — same short TTL
-          - PathPattern: '/'
-            TargetOriginId: s3-origin
-            ViewerProtocolPolicy: redirect-to-https
-            AllowedMethods: [GET, HEAD, OPTIONS]
-            CachedMethods: [GET, HEAD]
-            Compress: true
-            CachePolicyId: !Ref IndexCachePolicy
-            ResponseHeadersPolicyId: !Ref ResponseHeadersPolicy
-        # HashRouter saves us from the usual SPA-on-S3 routing pain. Every
-        # in-app route lives under /#/... which never hits the server, so
-        # no 404-→-index.html rewrite (and no CloudFront Function) is
-        # needed. We still alias a few unknown paths to index.html for
-        # defensive coverage — e.g. a user pasting a /favicon.ico URL.
-        CustomErrorResponses:
-          - ErrorCode: 403
-            ResponseCode: 200
-            ResponsePagePath: /index.html
-            ErrorCachingMinTTL: 60
-          - ErrorCode: 404
-            ResponseCode: 200
-            ResponsePagePath: /index.html
-            ErrorCachingMinTTL: 60
-      Tags:
-        - { Key: Service, Value: deque-demo-library }
-        - { Key: Env, Value: !Ref Env }
-        - { Key: Owner, Value: solutions-engineering }
-        - { Key: ManagedBy, Value: cloudformation }
-
-  # ---------------- DNS ----------------
-
-  SiteDnsRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneId: !Ref HostedZoneId
-      Name: !If
-        - IsProd
-        - !Ref DomainName
-        - !Sub
-          - '${Prefix}.${BaseDomain}'
-          - Prefix: !FindInMap [EnvConfig, !Ref Env, SubdomainPrefix]
-            BaseDomain: !Select [1, !Split ['.', !Ref DomainName, 2]]
-      Type: A
-      AliasTarget:
-        DNSName: !GetAtt SiteDistribution.DomainName
-        # Magic CloudFront-only hosted zone, identical in every account / region.
-        HostedZoneId: Z2FDTNDATAQYW2
-        EvaluateTargetHealth: false
-
-  # ---------------- IAM role for CI/CD ----------------
-
-  # Deploy role assumable by the CircleCI OIDC token issued for this specific
-  # project. Scoped to: put/delete objects on this bucket only + create
-  # invalidations on this distribution only. No console / no other resources.
-  # Only created if CircleCIOidcProviderArn is supplied.
-  DeployRole:
+  # Amplify needs a role to call its own APIs on the customer's behalf during
+  # builds (read CloudWatch logs, manage hosting resources, etc.). Mirrors
+  # the Workshop2 template — minimal scope, only amplify:*.
+  AmplifyServiceRole:
     Type: AWS::IAM::Role
-    Condition: HasCircleCIOidc
     Properties:
-      RoleName: !Sub 'deque-demo-library-${Env}-deploy'
-      Description: 'CircleCI deploy role for the Deque Demo Library'
+      RoleName: !Sub 'deque-demo-library-${Env}-amplify-service'
+      Description: 'Service role assumed by AWS Amplify during builds + deploys'
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
           - Effect: Allow
             Principal:
-              Federated: !Ref CircleCIOidcProviderArn
-            Action: sts:AssumeRoleWithWebIdentity
-            Condition:
-              StringEquals:
-                # The OIDC token's `aud` claim is the CircleCI organization ID
-                # (encoded in the provider URL). The `sub` claim is the
-                # CircleCI project UUID. Locking both to specific values means
-                # only pipelines from this exact project in this exact org
-                # can assume the role.
-                'oidc.circleci.com/org/${CircleCIOrgId}:aud':
-                  !Select [1, !Split ['/org/', !Ref CircleCIOidcProviderArn]]
-              StringLike:
-                'oidc.circleci.com/org/${CircleCIOrgId}:sub':
-                  !Sub 'org/${CircleCIProjectId}/*'
+              Service: amplify.amazonaws.com
+            Action: sts:AssumeRole
       Policies:
-        - PolicyName: deploy
+        - PolicyName: AmplifyServicePolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
-              - Sid: SyncBundleToBucket
-                Effect: Allow
-                Action:
-                  - s3:ListBucket
-                  - s3:GetObject
-                  - s3:PutObject
-                  - s3:DeleteObject
-                Resource:
-                  - !GetAtt SiteBucket.Arn
-                  - !Sub '${SiteBucket.Arn}/*'
-              - Sid: InvalidateAfterDeploy
-                Effect: Allow
-                Action:
-                  - cloudfront:CreateInvalidation
-                  - cloudfront:GetInvalidation
-                  - cloudfront:ListInvalidations
-                Resource:
-                  - !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${SiteDistribution}'
+              - Effect: Allow
+                Action: 'amplify:*'
+                Resource: '*'
       Tags:
-        - { Key: Service, Value: deque-demo-library }
-        - { Key: Env, Value: !Ref Env }
-        - { Key: Owner, Value: solutions-engineering }
-        - { Key: ManagedBy, Value: cloudformation }
+        - { Key: Team,    Value: !Ref TeamTag }
+        - { Key: Brand,   Value: !Ref BrandTag }
+        - { Key: Product, Value: !Ref ProductTag }
+
+  # ---------------- Amplify App ----------------
+
+  # The Amplify App is the umbrella resource — it points at the GitHub repo
+  # and holds the build spec + SPA rewrite rules + tags. Branches and the
+  # custom domain hang off it.
+  AmplifyApp:
+    Type: AWS::Amplify::App
+    Properties:
+      Name: !Sub '${AWS::StackName}-${Env}'
+      Description: >-
+        Deque multi-sector accessibility demo sites
+        (DQBC FinTech + Northbrook Connect SLED + sector stubs)
+      Repository: !Ref Repository
+      OauthToken: !Ref GithubOAuthToken
+      IAMServiceRole: !GetAtt AmplifyServiceRole.Arn
+      AutoBranchCreationConfig:
+        EnableAutoBranchCreation: false
+        EnableAutoBuild: false
+      BuildSpec: |-
+        version: 1
+        frontend:
+          phases:
+            preBuild:
+              commands:
+                - npm ci
+            build:
+              commands:
+                - npm run build
+          artifacts:
+            # Vite outputs to dist/ — NOT build/ (which is CRA's default and
+            # what the Workshop2 template uses; CRA is not used here).
+            baseDirectory: dist
+            files:
+              - '**/*'
+          cache:
+            paths:
+              - node_modules/**/*
+      CustomRules:
+        # HashRouter means every in-app route lives under /#/... and never
+        # hits the server, so a SPA fallback is technically unnecessary.
+        # Include it anyway for defensive coverage — e.g. a user pasting a
+        # /favicon.ico-style URL, or a future migration to BrowserRouter.
+        # This is the canonical Amplify SPA-fallback regex: any path that
+        # doesn't look like a static asset extension rewrites to /index.html.
+        - Source: '</^[^.]+$|\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|woff2|ttf|map|json)$)([^.]+$)/>'
+          Target: '/index.html'
+          Status: '200'
+      Tags:
+        - { Key: Team,    Value: !Ref TeamTag }
+        - { Key: Brand,   Value: !Ref BrandTag }
+        - { Key: Product, Value: !Ref ProductTag }
+
+  # ---------------- Production branch ----------------
+
+  # The main production branch — auto-builds on every push, and every PR
+  # against it spins up its own preview URL automatically.
+  AmplifyMainBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
+      BranchName: !Ref ProductionBranch
+      Description: 'Production branch — mapped to the public subdomain'
+      EnableAutoBuild: true
+      EnablePullRequestPreview: true
+      Stage: PRODUCTION
+      Tags:
+        - { Key: Team,    Value: !Ref TeamTag }
+        - { Key: Brand,   Value: !Ref BrandTag }
+        - { Key: Product, Value: !Ref ProductTag }
+
+  # ---------------- Custom domain ----------------
+
+  # The Amplify Domain resource provisions an ACM cert and wires the
+  # subdomain → branch mapping. SSL renewal is handled automatically —
+  # we never touch ACM ourselves.
+  #
+  # EnableAutoSubDomain stays off so feature branches don't get public
+  # *.dequelabs.com URLs by accident; PR previews use the amplifyapp.com
+  # default domain instead.
+  AmplifyDomain:
+    Type: AWS::Amplify::Domain
+    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
+      DomainName: !Ref DomainName
+      EnableAutoSubDomain: false
+      SubDomainSettings:
+        - BranchName: !GetAtt AmplifyMainBranch.BranchName
+          Prefix: !Sub
+            - '${Subdomain}${Suffix}'
+            - Suffix: !FindInMap [EnvConfig, !Ref Env, SubdomainSuffix]
 
 # -------------------------------------------------------------------------
 # Outputs
 # -------------------------------------------------------------------------
 Outputs:
-  BucketName:
-    Description: S3 bucket holding the built static assets
-    Value: !Ref SiteBucket
+  AppId:
+    Description: Amplify App ID (used in console URLs and `aws amplify` CLI calls)
+    Value: !GetAtt AmplifyApp.AppId
     Export:
-      Name: !Sub '${AWS::StackName}-BucketName'
+      Name: !Sub '${AWS::StackName}-AppId'
 
-  DistributionId:
-    Description: CloudFront distribution ID (use for `aws cloudfront create-invalidation`)
-    Value: !Ref SiteDistribution
+  DefaultDomain:
+    Description: >-
+      Auto-generated *.amplifyapp.com domain. The production branch is
+      reachable at https://<ProductionBranch>.<DefaultDomain> — works
+      immediately, no DNS wait, useful for sanity checks.
+    Value: !GetAtt AmplifyApp.DefaultDomain
     Export:
-      Name: !Sub '${AWS::StackName}-DistributionId'
-
-  DistributionDomainName:
-    Description: CloudFront-assigned hostname (xxxxxxxxxxxx.cloudfront.net)
-    Value: !GetAtt SiteDistribution.DomainName
-    Export:
-      Name: !Sub '${AWS::StackName}-DistributionDomain'
+      Name: !Sub '${AWS::StackName}-DefaultDomain'
 
   SiteUrl:
-    Description: The public URL the demo library will be reachable at
+    Description: >-
+      The public vanity URL the demo library will be reachable at, once
+      ACM + DNS finish propagating (typically 5-15 minutes after first deploy).
     Value: !Sub
-      - 'https://${Host}'
-      - Host: !If
-          - IsProd
-          - !Ref DomainName
-          - !Sub
-            - '${Prefix}.${BaseDomain}'
-            - Prefix: !FindInMap [EnvConfig, !Ref Env, SubdomainPrefix]
-              BaseDomain: !Select [1, !Split ['.', !Ref DomainName, 2]]
+      - 'https://${Prefix}${Suffix}.${DomainName}'
+      - Prefix: !Ref Subdomain
+        Suffix: !FindInMap [EnvConfig, !Ref Env, SubdomainSuffix]
     Export:
       Name: !Sub '${AWS::StackName}-SiteUrl'
 
-  DeployRoleArn:
-    Description: IAM role ARN for CircleCI deploys (only present if CircleCIOidcProviderArn was provided)
-    Condition: HasCircleCIOidc
-    Value: !GetAtt DeployRole.Arn
-    Export:
-      Name: !Sub '${AWS::StackName}-DeployRoleArn'
+  ConsoleUrl:
+    Description: Direct link to this Amplify app in the AWS console
+    Value: !Sub 'https://${AWS::Region}.console.aws.amazon.com/amplify/home?region=${AWS::Region}#/${AmplifyApp.AppId}'
+
+  ProductionBranchBuildUrl:
+    Description: >-
+      Amplify console URL for the production branch's build history —
+      use this to watch the first build after `aws amplify start-job`.
+    Value: !Sub
+      - 'https://${AWS::Region}.console.aws.amazon.com/amplify/home?region=${AWS::Region}#/${AppId}/${Branch}'
+      - AppId: !GetAtt AmplifyApp.AppId
+        Branch: !Ref ProductionBranch
