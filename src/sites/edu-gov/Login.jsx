@@ -46,6 +46,20 @@ export default function Login() {
   return (
     <div className="auth-shell-public">
       <aside className="auth-shell-side">
+        {/* PHASE-2 a11y issue NB-023 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Inline brand logo <svg role="img"> with NO <title> / aria-label.
+            axe-core `svg-img-alt` fires Serious (WCAG 1.1.1). SLED pattern:
+            agencies inline-paste an exported brand SVG and trust the
+            surrounding heading to convey identity. */}
+        <svg role="img" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M3 21h18M5 21V8l7-5 7 5v13" />
+        </svg>
+        {/* PHASE-2 a11y issue NB-024 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Decorative <div role="img"> seal has NO accessible name.
+            axe-core `role-img-alt` fires Serious (WCAG 1.1.1). SLED
+            pattern: CSS-image-only seals appear identical to sighted users
+            but expose role="img" without a name to assistive tech. */}
+        <div role="img" style={{ width: 32, height: 32, background: '#0a66c2', borderRadius: '50%', display: 'inline-block', marginBottom: 8 }} />
         <h1>One login for all of Northbrook State.</h1>
         <p>
           Sign in to enroll children in school, register for university courses,
@@ -56,6 +70,17 @@ export default function Login() {
           <li>Secure two-factor sign-in available</li>
           <li>Accessible to assistive technology</li>
         </ul>
+        {/* PHASE-2 a11y issue NB-025 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Stray <dt> outside any <dl>. axe-core `dlitem` fires Serious
+            (WCAG 1.3.1). SLED pattern: CMS shortcode for "definition term"
+            renders without an enclosing <dl> when the editor only inserts
+            one half of the pair. */}
+        <dt style={{ display: 'none' }}>Account benefit</dt>
+        {/* PHASE-2 a11y issue NB-026 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            `lang="frx"` is not a valid BCP-47 subtag. axe-core
+            `valid-lang` fires Serious (WCAG 3.1.2). SLED pattern: editors
+            mistype French ("fr") as "frx" when localising welcome strings. */}
+        <p><span lang="frx">Bienvenue à Northbrook.</span></p>
       </aside>
 
       <section className="auth-shell-main">
@@ -90,6 +115,30 @@ export default function Login() {
               />
             </div>
 
+            {/* PHASE-2 a11y issue NB-027 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                "Recent usernames" custom combobox <div role="combobox"> is
+                missing required `aria-expanded`. axe-core
+                `aria-required-attr` fires Critical (WCAG 4.1.2). SLED
+                pattern: hand-rolled comboboxes ship without the required
+                ARIA states because the dev followed only a Bootstrap demo. */}
+            <div role="combobox" aria-controls="recent-users-list" tabIndex={0} style={{ padding: 6, border: '1px solid var(--border)', borderRadius: 4, marginBottom: 12, fontSize: 13, color: 'var(--text-secondary)' }}>
+              Recent usernames…
+            </div>
+
+            {/* PHASE-2 a11y issue NB-028 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                `aria-labeledby` (one L) typo — should be `aria-labelledby`.
+                axe-core `aria-valid-attr` fires Critical (WCAG 4.1.2).
+                SLED pattern: easy single-letter typo that survives code
+                review because the misspelling is plausible English. */}
+            <p id="login-disclaimer" aria-labeledby="login-disclaimer" style={{ fontSize: 12, color: '#b5b5b5', background: '#ffffff' }}>
+              {/* PHASE-2 a11y issue NB-029 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                  Disclaimer text uses a near-grey on white (~2.4:1).
+                  axe-core `color-contrast` fires Serious (WCAG 1.4.3).
+                  SLED pattern: "fine print" disclaimers intentionally
+                  toned-down for visual hierarchy but failing AA. */}
+              Sign-in attempts are logged. Do not share your password.
+            </p>
+
             <div className="form-row">
               <label htmlFor="login-password">Password</label>
               <div style={{ position: 'relative' }}>
@@ -121,6 +170,54 @@ export default function Login() {
               <p id={helpId} className="form-help">
                 Use at least 4 characters. (Demo: any non-empty value works.)
               </p>
+              {/* PHASE-2 a11y issue NB-030 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                  Password-strength <div role="progressbar"> with NO
+                  aria-label / aria-labelledby. axe-core
+                  `aria-progressbar-name` fires Critical (WCAG 1.1.1).
+                  SLED pattern: indicator implemented as a colour bar with
+                  the textual "Strong/Weak" label tucked beside it but
+                  never linked to the progressbar role. */}
+              <div role="progressbar" aria-valuenow={40} aria-valuemin={0} aria-valuemax={100} style={{ height: 6, background: '#e5e7eb', marginTop: 6 }}>
+                <div style={{ width: '40%', height: '100%', background: '#f59e0b' }} />
+              </div>
+              {/* PHASE-2 a11y issue NB-031 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                  Empty <span role="tooltip"> placeholder. axe-core
+                  `aria-tooltip-name` fires Serious (WCAG 4.1.2). SLED
+                  pattern: tooltips pre-mounted for animation but never
+                  populated with content. */}
+              <span role="tooltip" id="pwd-tip" />
+            </div>
+
+            {/* PHASE-2 a11y issue NB-032 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                Extra "Security question" <input> uses a styled <span>
+                instead of a real <label>. axe-core `label` fires Critical
+                (WCAG 3.3.2). SLED pattern: visual-redesign moves the
+                field label into a span for typography control and loses
+                the programmatic association. */}
+            <div className="form-row">
+              <span style={{ display: 'block', fontWeight: 600, marginBottom: 4 }}>Security question</span>
+              <input type="text" name="securityAnswer" />
+            </div>
+
+            {/* PHASE-2 a11y issue NB-IGT-007 (Forms IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                "Mother's maiden name" input marked HTML `required` but
+                with NO visible required marker (no asterisk, no "required"
+                text), NO `aria-required`. The Forms IGT verifies that
+                required fields are programmatically AND visually
+                indicated. */}
+            <div className="form-row">
+              <label htmlFor="login-maiden">Mother's maiden name</label>
+              <input id="login-maiden" type="text" name="motherMaiden" required />
+            </div>
+
+            {/* PHASE-2 a11y issue NB-033 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                role="button" combined with `aria-required="true"`, an
+                attribute not allowed on that role. axe-core
+                `aria-allowed-attr` fires Critical (WCAG 4.1.2). SLED
+                pattern: devs sprinkle aria-required onto anything that
+                "must be filled in" without checking role compatibility. */}
+            <div role="button" tabIndex={0} aria-required="true" style={{ padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, display: 'inline-block', marginBottom: 12 }}>
+              I agree to the terms
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '8px 0 20px', fontSize: 13 }}>
@@ -129,6 +226,13 @@ export default function Login() {
               </label>
               <Link to="/edu-gov">Forgot password?</Link>
             </div>
+
+            {/* PHASE-2 a11y issue NB-034 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                `<input type="button">` with NO `value` attribute has no
+                accessible name. axe-core `input-button-name` fires
+                Critical (WCAG 4.1.2). SLED pattern: secondary "Help"
+                buttons styled via CSS background images lose their text. */}
+            <input type="button" style={{ background: 'none', border: '1px solid var(--border)', padding: '4px 10px', marginBottom: 8 }} />
 
             <button type="submit" className="btn btn-primary btn-block">
               Sign in
@@ -144,6 +248,12 @@ export default function Login() {
             By signing in you agree to the{' '}
             <Link to="/edu-gov">Terms of Use</Link> and{' '}
             <Link to="/edu-gov">Privacy Notice</Link>.
+            {/* PHASE-2 a11y issue NB-035 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                Empty supplemental terms <a> (icon-only PDF link stripped).
+                axe-core `link-name` fires Critical (WCAG 2.4.4). SLED
+                pattern: "Read the full statute" links shipped as
+                icon-only buttons with the aria-label dropped. */}
+            {' '}<a href="/terms-full.pdf" onClick={(e) => e.preventDefault()} style={{ display: 'inline-block', width: 14, height: 14, border: '1px solid var(--border)' }}></a>
           </p>
         </div>
       </section>

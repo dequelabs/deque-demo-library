@@ -17,7 +17,11 @@ export default function Schools() {
   const justEnrolled = location.state?.justEnrolled;
 
   return (
-    <>
+    /* PHASE-2 a11y issue NB-IGT-001 (Structure IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+       Wrapping the page's top-level returned content in a <div role="presentation">
+       strips implicit landmark/region semantics from descendants. The Structure
+       IGT walks the SE through verifying landmark coverage. */
+    <div role="presentation">
       <section className="nbc-hero" aria-labelledby="schools-h">
         <div>
           <span className="nbc-pill">Northbrook State School District</span>
@@ -75,6 +79,115 @@ export default function Schools() {
           Click any school for principal, address, and contact info.
         </p>
 
+        {/* PHASE-2 a11y issue NB-188 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Cedarbrook Elementary front-entrance image served as alt=""
+            (treated as decorative) even though the visual contains
+            informative content: the school name, the "est. 1957"
+            inscription, and a recognisable building shape. axe DevTools
+            Pro Advanced `image-informative-has-alt` AI classifier sees
+            the informative cues and reports the missing alt. Minor
+            (WCAG 1.1.1). Realistic SLED audit finding: districts treat
+            building photos as decorative even when the photo carries the
+            school name in baked-in text. */}
+        <img
+          src="/cedarbrook-elementary.svg"
+          alt=""
+          style={{ display: 'block', margin: '0 auto 16px', maxWidth: 320, height: 'auto', borderRadius: 8 }}
+        />
+
+        {/* PHASE-2 a11y issue NB-049 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Icon-only "filter" button has NO accessible name. axe-core
+            `button-name` fires Critical (WCAG 4.1.2). SLED pattern:
+            directory toolbars condense to icon-only on a redesign and
+            text labels are not re-added as aria-label. */}
+        <button type="button" style={{ background: 'none', border: '1px solid var(--border)', padding: 6, marginRight: 8 }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M3 4h18l-7 8v6l-4 2v-8z" />
+          </svg>
+        </button>
+
+        {/* PHASE-2 a11y issue NB-050 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Inline informational chart <svg role="img"> with NO <title>.
+            axe-core `svg-img-alt` fires Serious (WCAG 1.1.1). SLED
+            pattern: district "enrollment trend" sparklines embedded
+            without textual equivalents. */}
+        <svg role="img" width="120" height="32" viewBox="0 0 120 32" style={{ verticalAlign: 'middle' }}>
+          <polyline points="0,28 20,18 40,22 60,12 80,16 100,8 120,14" fill="none" stroke="#0a66c2" strokeWidth="2" />
+        </svg>
+
+        {/* PHASE-2 a11y issue NB-051 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Meta line "x children enrolled" rendered in light grey
+            (#b5b5b5 on white ~2.4:1). axe-core `color-contrast` fires
+            Serious (WCAG 1.4.3). SLED pattern: secondary directory
+            metadata gets toned down past AA in pursuit of hierarchy. */}
+        <p style={{ color: '#b5b5b5', background: '#ffffff', fontSize: 13 }}>
+          {state.schools.length} schools currently in the district.
+        </p>
+
+        {/* PHASE-2 a11y issue NB-052 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            "Districts" <div role="listbox"> with plain <div> children
+            (no role="option"). axe-core `aria-required-children` fires
+            Critical (WCAG 1.3.1). SLED pattern: custom dropdowns roll
+            their own listboxes without the required child roles. */}
+        <div role="listbox" aria-label="Districts" style={{ border: '1px solid var(--border)', borderRadius: 6, maxWidth: 320, marginBottom: 12 }}>
+          <div style={{ padding: 6 }}>Northbrook</div>
+          <div style={{ padding: 6 }}>Cedarbrook</div>
+          <div style={{ padding: 6 }}>Birchwood</div>
+        </div>
+
+        {/* PHASE-2 a11y issue NB-053 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            "Grade level" <select> has NO label or aria-label. axe-core
+            `select-name` fires Critical (WCAG 4.1.2). SLED pattern:
+            filter dropdowns trust placeholder option text. */}
+        <select defaultValue="" style={{ marginRight: 8 }}>
+          <option value="" disabled>Grade level…</option>
+          <option value="k-5">K-5</option>
+          <option value="6-8">6-8</option>
+          <option value="9-12">9-12</option>
+        </select>
+
+        {/* PHASE-2 a11y issue NB-054 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            `lang="zz"` is not a valid BCP-47 subtag. axe-core
+            `valid-lang` fires Serious (WCAG 3.1.2). SLED pattern: the
+            "translations available" caption mis-spells the lang code. */}
+        <span lang="zz" style={{ fontSize: 12 }}>Disponible en español</span>
+
+        {/* PHASE-2 a11y issue NB-055 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Stray <dt> outside of any <dl>. axe-core `dlitem` fires
+            Serious (WCAG 1.3.1). SLED pattern: stray markup leftover
+            from a partial conversion to a card layout. */}
+        <dt style={{ display: 'none' }}>District name</dt>
+
+        {/* PHASE-2 a11y issue NB-056 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Enrollment <div role="meter"> with NO aria-label. axe-core
+            `aria-meter-name` fires Critical (WCAG 1.1.1). SLED
+            pattern: district capacity meters rendered as bars with
+            external text labels. */}
+        <div role="meter" aria-valuenow={1240} aria-valuemin={0} aria-valuemax={2000} style={{ height: 6, background: '#e5e7eb', maxWidth: 300, marginBottom: 12 }}>
+          <div style={{ width: '62%', height: '100%', background: '#0a66c2' }} />
+        </div>
+
+        {/* PHASE-2 a11y issue NB-057 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Empty <span role="tooltip"> placeholder. axe-core
+            `aria-tooltip-name` fires Serious (WCAG 4.1.2). SLED
+            pattern: pre-mounted tooltip target nodes with no body. */}
+        <span role="tooltip" id="schools-tip" />
+
+        {/* PHASE-2 a11y issue NB-058 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            `aria-orientation="diagonal"` is not a permitted value.
+            axe-core `aria-valid-attr-value` fires Critical (WCAG
+            4.1.2). SLED pattern: devs guess orientation values to
+            match visual layouts. */}
+        <div role="separator" aria-orientation="diagonal" style={{ height: 1, background: 'var(--border)', margin: '12px 0' }} />
+
+        {/* PHASE-2 a11y issue NB-059 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            <object data="..."> embed with NO fallback / aria-label /
+            inner content. axe-core `object-alt` fires Serious (WCAG
+            1.1.1). SLED pattern: districts embed SVG maps via
+            <object> without textual fallback. */}
+        <object data="/district-map.svg" type="image/svg+xml" width="200" height="80" />
+
+
         <div className="school-grid">
           {state.schools.map((s) => (
             <article key={s.id} className="school-card" aria-labelledby={`s-${s.id}`}>
@@ -99,6 +212,27 @@ export default function Schools() {
             <li><span>Northbrook High fall sports kickoff</span><span className="when">Sep 12</span></li>
             <li><span>Westwood Online Academy info session (virtual)</span><span className="when">Sep 15</span></li>
           </ul>
+          {/* PHASE-2 a11y issue NB-004 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Icon-only PDF download anchor with NO text content, NO aria-label,
+              NO title. Classic SLED audit finding: districts publish the
+              student/parent handbook as a PDF, the redesign converts the link
+              to a paperclip icon, and the accessible name vanishes. axe-core
+              `link-name` fires Critical (WCAG 2.4.4). */}
+          <p style={{ marginTop: 16, textAlign: 'center', fontSize: 14, color: 'var(--text-secondary)' }}>
+            Student &amp; parent handbook (2026-2027):
+            <a
+              href="/nbps-handbook-2026.pdf"
+              style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 8, padding: '4px 8px', border: '1px solid var(--border)', borderRadius: 4, verticalAlign: 'middle' }}
+              onClick={(e) => e.preventDefault()}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <path d="M14 2v6h6" />
+                <path d="M9 18l3-3 3 3" />
+                <path d="M12 15v-4" />
+              </svg>
+            </a>
+          </p>
         </div>
       </section>
 
@@ -116,6 +250,18 @@ export default function Schools() {
           </div>
         </section>
       )}
-    </>
+
+      {/* PHASE-2 a11y issue NB-IGT-011 (Images IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+          Second school photo whose alt text mismatches the visual content
+          (image is the Cedarbrook Elementary front entrance but alt reads
+          "Our schools"). The Images IGT asks the SE to verify that alt
+          text accurately describes the image — automation can't detect
+          mismatched-but-present alt text. */}
+      <img
+        src="/cedarbrook-elementary.svg"
+        alt="Our schools"
+        style={{ display: 'block', margin: '0 auto 16px', maxWidth: 240, height: 'auto', borderRadius: 8 }}
+      />
+    </div>
   );
 }

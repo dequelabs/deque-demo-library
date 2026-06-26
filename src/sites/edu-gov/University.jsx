@@ -45,7 +45,62 @@ export default function University() {
         </div>
       </section>
 
+      {/* PHASE-2 a11y issue NB-IGT-004 (Headings IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+          <h4> placed directly after the page <h1> with no <h2>/<h3> in
+          between. The Headings IGT walks the SE through verifying the
+          heading outline; big skips like h1 → h4 break document
+          structure for screen-reader navigation. */}
+      <section style={{ maxWidth: 720, margin: '0 auto 16px' }}>
+        <h4 style={{ color: 'var(--brand-deep)', margin: '0 0 6px' }}>Quick facts</h4>
+        <p style={{ margin: 0, fontSize: 13, color: 'var(--text-secondary)' }}>
+          NSU is a Carnegie R2 research institution founded in 1907.
+        </p>
+      </section>
+
       <section className="nbc-section" aria-labelledby="why-h">
+        {/* PHASE-2 a11y issue NB-086 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Campus photo <img> with NO alt attribute. axe-core `image-alt`
+            fires Critical (WCAG 1.1.1). SLED pattern: hero/gallery shots
+            slip in without alt during marketing refreshes. */}
+        <img src="/nsu-campus.jpg" width="320" height="160" style={{ display: 'block', margin: '0 auto 16px' }} />
+
+        {/* PHASE-2 a11y issue NB-087 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Program filter <select> with NO label or aria-label. axe-core
+            `select-name` fires Critical (WCAG 4.1.2). SLED pattern:
+            campus directories trust placeholder option text as the
+            label. */}
+        <select defaultValue="" style={{ marginBottom: 12 }}>
+          <option value="" disabled>Program area…</option>
+          <option value="eng">Engineering</option>
+          <option value="arts">Arts &amp; Letters</option>
+        </select>
+
+        {/* PHASE-2 a11y issue NB-088 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Icon-only "share" button with NO accessible name. axe-core
+            `button-name` fires Critical (WCAG 4.1.2). SLED pattern:
+            social-share toolbars drop the text label. */}
+        <button type="button" style={{ background: 'none', border: '1px solid var(--border)', padding: 6, marginRight: 8 }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <circle cx="6" cy="12" r="2" /><circle cx="18" cy="6" r="2" /><circle cx="18" cy="18" r="2" />
+            <path d="M8 11l8-4" /><path d="M8 13l8 4" />
+          </svg>
+        </button>
+
+        {/* PHASE-2 a11y issue NB-089 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Empty anchor with NO text or aria-label. axe-core `link-name`
+            fires Critical (WCAG 2.4.4). SLED pattern: placeholder "more
+            info" links remain in the DOM with no body. */}
+        <a href="/edu-gov/university" onClick={(e) => e.preventDefault()} style={{ display: 'inline-block', width: 24, height: 24, border: '1px solid var(--border)' }} />
+
+        {/* PHASE-2 a11y issue NB-090 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            "US News rank" <svg role="img"> with NO <title>. axe-core
+            `svg-img-alt` fires Serious (WCAG 1.1.1). SLED pattern:
+            ranking badges treated as decoration despite carrying info. */}
+        <svg role="img" width="40" height="40" viewBox="0 0 40 40" style={{ verticalAlign: 'middle' }}>
+          <circle cx="20" cy="20" r="18" fill="#0a66c2" />
+          <text x="20" y="25" textAnchor="middle" fill="#fff" fontSize="13">#14</text>
+        </svg>
+
         <h2 id="why-h" className="section-title">Why NSU</h2>
         <p className="section-sub">
           A flagship public university with the personal feel of a small college.
@@ -102,6 +157,58 @@ export default function University() {
       <section className="nbc-section" aria-labelledby="programs-h">
         <h2 id="programs-h" className="section-title">Featured programs</h2>
         <p className="section-sub">A sample of NSU's most popular degrees.</p>
+
+        {/* PHASE-2 a11y issue NB-091 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            <div role="listbox"> with plain <div> children (no
+            role="option"). axe-core `aria-required-children` fires
+            Critical (WCAG 1.3.1). SLED pattern: custom program-picker
+            dropdowns ship without required option roles. */}
+        <div role="listbox" aria-label="Programs" style={{ border: '1px solid var(--border)', borderRadius: 6, maxWidth: 320, margin: '0 auto 12px' }}>
+          <div style={{ padding: 6 }}>Computer Science</div>
+          <div style={{ padding: 6 }}>English Literature</div>
+          <div style={{ padding: 6 }}>Nursing</div>
+        </div>
+
+        {/* PHASE-2 a11y issue NB-092 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Graduation-rate <div role="meter"> with NO accessible name.
+            axe-core `aria-meter-name` fires Critical (WCAG 1.1.1).
+            SLED pattern: KPI bars rendered without meter names. */}
+        <div role="meter" aria-valuenow={92} aria-valuemin={0} aria-valuemax={100} style={{ height: 6, background: '#e5e7eb', maxWidth: 320, margin: '0 auto 12px' }}>
+          <div style={{ width: '92%', height: '100%', background: '#0a66c2' }} />
+        </div>
+
+        {/* PHASE-2 a11y issue NB-093 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Empty <span role="tooltip">. axe-core `aria-tooltip-name`
+            fires Serious (WCAG 4.1.2). SLED pattern: tooltip mount
+            nodes with no content. */}
+        <span role="tooltip" id="nsu-tip" />
+
+        {/* PHASE-2 a11y issue NB-094 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            `lang="xx"` is not a valid BCP-47 subtag. axe-core
+            `valid-lang` fires Serious (WCAG 3.1.2). SLED pattern:
+            "translations available" caption mis-spells lang. */}
+        <span lang="xx" style={{ fontSize: 12 }}>Información en español</span>
+
+        {/* PHASE-2 a11y issue NB-095 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Stray <dt> outside any <dl>. axe-core `dlitem` fires
+            Serious (WCAG 1.3.1). SLED pattern: stray markup leftover
+            from a card refactor. */}
+        <dt style={{ display: 'none' }}>Program</dt>
+
+        {/* PHASE-2 a11y issue NB-096 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            Focusable <button> inside aria-hidden="true" subtree.
+            axe-core `aria-hidden-focus` fires Serious (WCAG 4.1.2).
+            SLED pattern: hidden helper menus retain tabbable controls. */}
+        <div aria-hidden="true">
+          <button type="button" style={{ display: 'none' }}>Hidden help</button>
+        </div>
+
+        {/* PHASE-2 a11y issue NB-097 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            <span> with `aria-colindex` (only valid on row/cell roles).
+            axe-core `aria-prohibited-attr` fires Serious (WCAG 4.1.2).
+            SLED pattern: ARIA grid attributes leak onto non-grid nodes. */}
+        <span aria-colindex={2} style={{ display: 'none' }}>ranked</span>
+
         <div style={{ maxWidth: 760, margin: '0 auto' }}>
           <ul className="activity-strip">
             {featuredPrograms.map((p) => (

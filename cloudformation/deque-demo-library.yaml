@@ -1,0 +1,266 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  Deque Asset Demo Library — Amplify Hosting for the multi-sector accessibility
+  demo sites (DQBC FinTech + Northbrook Connect SLED + remaining sector stubs).
+
+  Modeled on dequelabs/axe-devtools-demos `Workshop2` Amplify template. Amplify
+  handles the build pipeline, SSL cert provisioning, branch-based subdomains,
+  and per-PR preview URLs — so this stack is dramatically simpler than the
+  equivalent S3 + CloudFront setup. The site is a HashRouter-based Vite/React
+  SPA; SPA fallback is included defensively even though HashRouter doesn't
+  strictly need it.
+
+  Conventions matched from
+  dequelabs/infrastructure/cloudformation/README.md and the Workshop2 template:
+   - us-east-1 region
+   - Env parameter driving stack-name suffix (dev / qa / prod)
+   - CAPABILITY_NAMED_IAM (for the Amplify service role)
+   - Tags: Team / Brand / Product on every resource
+
+# -------------------------------------------------------------------------
+# Parameters
+# -------------------------------------------------------------------------
+Parameters:
+  Env:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, qa, prod]
+    Description: Deployment environment. Used as a stack-name suffix.
+
+  DomainName:
+    Type: String
+    Default: dequelabs.com
+    Description: >-
+      Parent hosted zone for the custom domain (the Amplify Domain resource
+      attaches subdomains under this zone). Must already exist in Route53
+      in the target AWS account.
+
+  Subdomain:
+    Type: String
+    Default: demo-library
+    Description: >-
+      Subdomain prefix. Full URL becomes <Subdomain>.<DomainName>. Per-env
+      override: dev → demo-library-dev, qa → demo-library-qa, prod →
+      demo-library (set via mapping below).
+
+  Repository:
+    Type: String
+    Default: https://github.com/dequelabs/deque-demo-library
+    Description: >-
+      GitHub repository URL the Amplify app builds from. Amplify clones this
+      repo on every push to the configured branch.
+
+  ProductionBranch:
+    Type: String
+    Default: main
+    Description: >-
+      Branch wired to the PRODUCTION-staged Amplify Branch (the one mapped
+      to the custom subdomain). EnableAutoBuild + EnablePullRequestPreview
+      are both on, so opening a PR against this branch auto-generates a
+      preview URL — the per-PR-URL feature we lose by moving off Vercel
+      comes back for free with Amplify.
+
+  GithubOAuthToken:
+    Type: String
+    NoEcho: true
+    Description: >-
+      GitHub Personal Access Token with `repo` scope. Amplify uses this to
+      clone the repo on each build. Generate one at
+      github.com/settings/tokens (classic) → repo scope. Store somewhere
+      sane (Secrets Manager, 1Password); rotate annually.
+
+  TeamTag:
+    Type: String
+    Default: se-team
+    Description: 'Tag value for "Team" (cost allocation / ownership).'
+
+  BrandTag:
+    Type: String
+    Default: axe
+    Description: 'Tag value for "Brand". Matches Workshop2 convention.'
+
+  ProductTag:
+    Type: String
+    Default: Deque Asset Demo Library
+    Description: 'Tag value for "Product".'
+
+# -------------------------------------------------------------------------
+# Mappings — per-environment subdomain prefix
+# -------------------------------------------------------------------------
+Mappings:
+  EnvConfig:
+    dev:
+      SubdomainSuffix: '-dev'
+    qa:
+      SubdomainSuffix: '-qa'
+    prod:
+      SubdomainSuffix: ''
+
+# -------------------------------------------------------------------------
+# Resources
+# -------------------------------------------------------------------------
+Resources:
+
+  # ---------------- IAM service role ----------------
+
+  # Amplify needs a role to call its own APIs on the customer's behalf during
+  # builds (read CloudWatch logs, manage hosting resources, etc.). Mirrors
+  # the Workshop2 template — minimal scope, only amplify:*.
+  AmplifyServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'deque-demo-library-${Env}-amplify-service'
+      Description: 'Service role assumed by AWS Amplify during builds + deploys'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: amplify.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AmplifyServicePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'amplify:*'
+                Resource: '*'
+      Tags:
+        - { Key: Team,    Value: !Ref TeamTag }
+        - { Key: Brand,   Value: !Ref BrandTag }
+        - { Key: Product, Value: !Ref ProductTag }
+
+  # ---------------- Amplify App ----------------
+
+  # The Amplify App is the umbrella resource — it points at the GitHub repo
+  # and holds the build spec + SPA rewrite rules + tags. Branches and the
+  # custom domain hang off it.
+  AmplifyApp:
+    Type: AWS::Amplify::App
+    Properties:
+      Name: !Sub '${AWS::StackName}-${Env}'
+      Description: >-
+        Deque multi-sector accessibility demo sites
+        (DQBC FinTech + Northbrook Connect SLED + sector stubs)
+      Repository: !Ref Repository
+      OauthToken: !Ref GithubOAuthToken
+      IAMServiceRole: !GetAtt AmplifyServiceRole.Arn
+      AutoBranchCreationConfig:
+        EnableAutoBranchCreation: false
+        EnableAutoBuild: false
+      BuildSpec: |-
+        version: 1
+        frontend:
+          phases:
+            preBuild:
+              commands:
+                - npm ci
+            build:
+              commands:
+                - npm run build
+          artifacts:
+            # Vite outputs to dist/ — NOT build/ (which is CRA's default and
+            # what the Workshop2 template uses; CRA is not used here).
+            baseDirectory: dist
+            files:
+              - '**/*'
+          cache:
+            paths:
+              - node_modules/**/*
+      CustomRules:
+        # HashRouter means every in-app route lives under /#/... and never
+        # hits the server, so a SPA fallback is technically unnecessary.
+        # Include it anyway for defensive coverage — e.g. a user pasting a
+        # /favicon.ico-style URL, or a future migration to BrowserRouter.
+        # This is the canonical Amplify SPA-fallback regex: any path that
+        # doesn't look like a static asset extension rewrites to /index.html.
+        - Source: '</^[^.]+$|\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|woff2|ttf|map|json)$)([^.]+$)/>'
+          Target: '/index.html'
+          Status: '200'
+      Tags:
+        - { Key: Team,    Value: !Ref TeamTag }
+        - { Key: Brand,   Value: !Ref BrandTag }
+        - { Key: Product, Value: !Ref ProductTag }
+
+  # ---------------- Production branch ----------------
+
+  # The main production branch — auto-builds on every push, and every PR
+  # against it spins up its own preview URL automatically.
+  AmplifyMainBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
+      BranchName: !Ref ProductionBranch
+      Description: 'Production branch — mapped to the public subdomain'
+      EnableAutoBuild: true
+      EnablePullRequestPreview: true
+      Stage: PRODUCTION
+      Tags:
+        - { Key: Team,    Value: !Ref TeamTag }
+        - { Key: Brand,   Value: !Ref BrandTag }
+        - { Key: Product, Value: !Ref ProductTag }
+
+  # ---------------- Custom domain ----------------
+
+  # The Amplify Domain resource provisions an ACM cert and wires the
+  # subdomain → branch mapping. SSL renewal is handled automatically —
+  # we never touch ACM ourselves.
+  #
+  # EnableAutoSubDomain stays off so feature branches don't get public
+  # *.dequelabs.com URLs by accident; PR previews use the amplifyapp.com
+  # default domain instead.
+  AmplifyDomain:
+    Type: AWS::Amplify::Domain
+    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
+      DomainName: !Ref DomainName
+      EnableAutoSubDomain: false
+      SubDomainSettings:
+        - BranchName: !GetAtt AmplifyMainBranch.BranchName
+          Prefix: !Sub
+            - '${Subdomain}${Suffix}'
+            - Suffix: !FindInMap [EnvConfig, !Ref Env, SubdomainSuffix]
+
+# -------------------------------------------------------------------------
+# Outputs
+# -------------------------------------------------------------------------
+Outputs:
+  AppId:
+    Description: Amplify App ID (used in console URLs and `aws amplify` CLI calls)
+    Value: !GetAtt AmplifyApp.AppId
+    Export:
+      Name: !Sub '${AWS::StackName}-AppId'
+
+  DefaultDomain:
+    Description: >-
+      Auto-generated *.amplifyapp.com domain. The production branch is
+      reachable at https://<ProductionBranch>.<DefaultDomain> — works
+      immediately, no DNS wait, useful for sanity checks.
+    Value: !GetAtt AmplifyApp.DefaultDomain
+    Export:
+      Name: !Sub '${AWS::StackName}-DefaultDomain'
+
+  SiteUrl:
+    Description: >-
+      The public vanity URL the demo library will be reachable at, once
+      ACM + DNS finish propagating (typically 5-15 minutes after first deploy).
+    Value: !Sub
+      - 'https://${Prefix}${Suffix}.${DomainName}'
+      - Prefix: !Ref Subdomain
+        Suffix: !FindInMap [EnvConfig, !Ref Env, SubdomainSuffix]
+    Export:
+      Name: !Sub '${AWS::StackName}-SiteUrl'
+
+  ConsoleUrl:
+    Description: Direct link to this Amplify app in the AWS console
+    Value: !Sub 'https://${AWS::Region}.console.aws.amazon.com/amplify/home?region=${AWS::Region}#/${AmplifyApp.AppId}'
+
+  ProductionBranchBuildUrl:
+    Description: >-
+      Amplify console URL for the production branch's build history —
+      use this to watch the first build after `aws amplify start-job`.
+    Value: !Sub
+      - 'https://${AWS::Region}.console.aws.amazon.com/amplify/home?region=${AWS::Region}#/${AppId}/${Branch}'
+      - AppId: !GetAtt AmplifyApp.AppId
+        Branch: !Ref ProductionBranch

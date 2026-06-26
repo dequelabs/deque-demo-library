@@ -33,6 +33,114 @@ export default function Vote() {
         <div>
           <h1>Voting in Cedarbrook</h1>
           <p className="subtitle">Register to vote and find your polling place.</p>
+          {/* PHASE-2 a11y issue NB-176 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Icon-only "Look up registration" button with NO accessible
+              name. axe-core `button-name` fires Critical (WCAG 4.1.2).
+              SLED pattern: voter-portal toolbar collapses lookups to
+              icon-only controls. */}
+          <button type="button" style={{ background: 'none', border: '1px solid var(--border)', padding: 6, marginTop: 8 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </button>
+
+          {/* PHASE-2 a11y issue NB-177 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              "I voted" badge <svg role="img"> with NO <title>. axe-core
+              `svg-img-alt` fires Serious (WCAG 1.1.1). SLED pattern:
+              voter-portal badges ship as inline SVG without text. */}
+          <svg role="img" width="32" height="32" viewBox="0 0 32 32" style={{ verticalAlign: 'middle', marginLeft: 8 }}>
+            <circle cx="16" cy="16" r="14" fill="#0a66c2" />
+            <path d="M10 16l4 4 8-8" stroke="#fff" strokeWidth="2" fill="none" />
+          </svg>
+
+          {/* PHASE-2 a11y issue NB-178 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Pale-taupe disclaimer (#cdbf9f on #fff ~2.0:1). axe-core
+              `color-contrast` fires Serious (WCAG 1.4.3). SLED pattern:
+              voter-disclosure subheads use brand-tint text on white. */}
+          <p style={{ color: '#cdbf9f', background: '#ffffff', fontSize: 13, margin: '4px 0 0' }}>
+            Per state election code §29.07
+          </p>
+
+          {/* PHASE-2 a11y issue NB-179 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              `lang="zz"` is not a valid BCP-47 primary subtag. axe-core
+              `valid-lang` fires Serious (WCAG 3.1.2). SLED pattern:
+              translated voter labels tagged with placeholder codes. */}
+          <span lang="zz" style={{ fontSize: 12, marginLeft: 8 }}>Inscríbase para votar</span>
+
+          {/* PHASE-2 a11y issue NB-180 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Stray <dt> outside any <dl>. axe-core `dlitem` fires
+              Serious (WCAG 1.3.1). SLED pattern: leftover definition
+              markup from converted card layouts. */}
+          <dt style={{ display: 'none' }}>Precinct</dt>
+
+          {/* PHASE-2 a11y issue NB-181 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              <div role="radiogroup"> with NO role="radio" children.
+              axe-core `aria-required-children` fires Critical (WCAG
+              1.3.1). SLED pattern: empty radiogroup stubs persist after
+              dynamic options removed. */}
+          <div role="radiogroup" aria-label="Ballot type" style={{ display: 'inline-flex', gap: 4 }}>
+            <span>In-person</span>
+            <span>Mail</span>
+          </div>
+
+          {/* PHASE-2 a11y issue NB-182 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Empty "More info" anchor (no text, no aria-label).
+              axe-core `link-name` fires Critical (WCAG 2.4.4). SLED
+              pattern: empty placeholder links remain after CMS
+              migration. */}
+          <a href="/vote/info" onClick={(e) => e.preventDefault()} aria-label="" style={{ marginLeft: 8 }} />
+
+          {/* PHASE-2 a11y issue NB-183 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Turnout <div role="meter"> with NO accessible name.
+              axe-core `aria-meter-name` fires Critical (WCAG 1.1.1).
+              SLED pattern: voter-portal dashboards show turnout as a
+              bar without naming the meter. */}
+          <div role="meter" aria-valuenow={64} aria-valuemin={0} aria-valuemax={100} style={{ height: 6, background: '#e5e7eb', maxWidth: 240, margin: '8px 0' }}>
+            <div style={{ width: '64%', height: '100%', background: '#0a66c2' }} />
+          </div>
+
+          {/* PHASE-2 a11y issue NB-184 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Empty <span role="tooltip"> placeholder. axe-core
+              `aria-tooltip-name` fires Serious (WCAG 4.1.2). SLED
+              pattern: tooltip mount nodes ship empty. */}
+          <span role="tooltip" id="vote-tip" />
+
+          {/* PHASE-2 a11y issue NB-IGT-006 (Headings IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Empty <h2> with no accessible content. The Headings IGT
+              verifies that every heading has meaningful text; empty
+              headings break the document outline. */}
+          <h2></h2>
+
+          {/* PHASE-2 a11y issue NB-IGT-009 (Forms IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Three related checkboxes without a wrapping <fieldset> /
+              <legend>. The Forms IGT walks SEs through verifying
+              programmatic grouping of related controls. */}
+          <div style={{ marginTop: 8 }}>
+            <p style={{ margin: '0 0 6px', fontWeight: 600, fontSize: 13 }}>Notification preferences</p>
+            <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 13 }}>
+              <input type="checkbox" /> Receive email updates
+            </label>
+            <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 13 }}>
+              <input type="checkbox" /> Receive SMS reminders
+            </label>
+            <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 13 }}>
+              <input type="checkbox" /> Allow data sharing
+            </label>
+          </div>
+
+          {/* PHASE-2 a11y issue NB-IGT-020 (Keyboard IGT) — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              Custom <div role="button" tabIndex={0}> with onClick but
+              NO onKeyDown / onKeyUp handler. The Keyboard IGT verifies
+              that custom controls respond to Enter/Space the same way
+              they do to clicks. */}
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => { /* would print registration */ }}
+            style={{ display: 'inline-block', marginTop: 8, padding: '6px 12px', border: '1px solid var(--border)', borderRadius: 4, cursor: 'pointer' }}
+          >
+            Print my registration
+          </div>
         </div>
       </div>
 
@@ -51,8 +159,14 @@ export default function Vote() {
           ) : (
             <form onSubmit={onRegister} noValidate>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                {/* PHASE-2 a11y issue NB-172 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                    Was: <label htmlFor="vote-first">First name</label>.
+                    Replaced with a styled <span> — input has no
+                    programmatic name. axe-core `label` fires Critical
+                    (WCAG 3.3.2 / 4.1.2). SLED pattern: voter-registration
+                    forms drop label tags during refactor. */}
                 <div className="form-row">
-                  <label htmlFor="vote-first">First name</label>
+                  <span style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>First name</span>
                   <input
                     id="vote-first"
                     type="text"
@@ -74,6 +188,11 @@ export default function Vote() {
                   />
                 </div>
               </div>
+              {/* PHASE-2 a11y issue NB-173 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                  `autoComplete="voter"` is not a valid WHATWG token.
+                  axe-core `autocomplete-valid` fires Serious (WCAG
+                  1.3.5). SLED pattern: voter-registration forms use
+                  invented autocomplete tokens. */}
               <div className="form-row">
                 <label htmlFor="vote-dob">Date of birth</label>
                 <input
@@ -81,10 +200,33 @@ export default function Vote() {
                   type="date"
                   value={dob}
                   onChange={(e) => setDob(e.target.value)}
-                  autoComplete="bday"
+                  autoComplete="voter"
                   required
                 />
               </div>
+
+              {/* PHASE-2 a11y issue NB-174 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                  Extra unlabeled "Party" <select> with no label /
+                  aria-label. axe-core `select-name` fires Critical
+                  (WCAG 4.1.2). SLED pattern: voter-portal hidden
+                  party-affiliation selects ship without an accessible
+                  name. */}
+              <div className="form-row">
+                <select>
+                  <option>Select party…</option>
+                  <option>Democratic</option>
+                  <option>Republican</option>
+                  <option>Independent</option>
+                </select>
+              </div>
+
+              {/* PHASE-2 a11y issue NB-175 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+                  <div role="searchbox" contentEditable> with NO
+                  accessible name. axe-core `aria-input-field-name`
+                  fires Serious (WCAG 4.1.2). SLED pattern: polling
+                  lookup widgets implemented as nameless contentEditable
+                  divs. */}
+              <div role="searchbox" contentEditable suppressContentEditableWarning style={{ border: '1px solid var(--border)', borderRadius: 6, padding: 8, minHeight: 32 }} />
               <div className="form-row">
                 <label htmlFor="vote-line1">Home address</label>
                 <input
