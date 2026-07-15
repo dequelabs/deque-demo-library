@@ -1100,3 +1100,789 @@
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .auth-content { padding: 20px; }
 }
+
+/* ==========================================================================
+   BofA 1:1 mirror: multi-row header + full-bleed hero + sticky offer band.
+   Introduced when Home.jsx + PublicLayout.jsx were redesigned to visually
+   mirror bankofamerica.com.
+   ========================================================================== */
+
+/* Suppress the older single-row header so the new BofA header owns the top. */
+.fintech-topbar,
+.fintech-header:not(.product-nav) {
+  display: none;
+}
+
+/* ------------------ Row 1: FDIC strip ------------------ */
+.fdic-strip {
+  background: #f4f5f7;
+  color: #555;
+  font-size: 12px;
+  padding: 6px 24px;
+  text-align: center;
+  border-bottom: 1px solid #e0e2e6;
+  display: flex; justify-content: center; align-items: center; gap: 6px;
+}
+.fdic-badge {
+  display: inline-flex; align-items: center;
+  background: #fff;
+  border: 1px solid #999;
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #0a2540;
+  margin: 0 2px;
+}
+.fdic-badge > span { font-size: 12px; }
+
+/* ------------------ Row 2: Utility nav ------------------ */
+.utility-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 24px;
+  border-bottom: 1px solid #e0e2e6;
+  font-size: 14px;
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+}
+.utility-nav nav ul {
+  display: flex; gap: 24px;
+  list-style: none; margin: 0; padding: 0;
+}
+.utility-nav a {
+  color: var(--text-primary);
+  text-decoration: none;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+}
+.utility-nav a:hover { color: var(--brand-primary-strong); }
+.utility-nav a.active {
+  color: var(--text-primary);
+  border-bottom-color: #b71c1c;
+  font-weight: 600;
+}
+.utility-nav .lang-switch { display: inline-flex; align-items: center; gap: 6px; }
+.utility-nav .globe-icon { font-size: 14px; }
+.utility-nav .utility-divider { color: #999; }
+
+/* ------------------ Row 3: Logo + Search ------------------ */
+.logo-search-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px 16px;
+  border-bottom: 1px solid #e0e2e6;
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+}
+.brand-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.brand-mark { display: inline-flex; align-items: center; }
+.brand-wordmark {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--brand-deep);
+  letter-spacing: 0.5px;
+}
+.header-search {
+  display: flex; align-items: stretch;
+  min-width: 300px;
+  border: 1px solid #999;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+}
+.header-search input[type="search"] {
+  border: none;
+  outline: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  flex: 1;
+  background: transparent;
+}
+.header-search input[type="search"]:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: -2px;
+}
+.header-search-btn {
+  border: none;
+  background: transparent;
+  padding: 0 12px;
+  border-left: 1px solid #ddd;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex; align-items: center;
+}
+.header-search-btn:hover { color: var(--brand-primary); }
+
+/* ------------------ Row 4: Product nav ------------------ */
+.product-nav {
+  background: #fff;
+  border-bottom: 1px solid #e0e2e6;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+}
+.product-nav nav ul {
+  display: flex; gap: 4px;
+  list-style: none; margin: 0; padding: 0;
+}
+.product-nav a {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 14px 14px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 15px;
+  border-bottom: 3px solid transparent;
+}
+.product-nav a:hover {
+  color: var(--brand-primary-strong);
+  border-bottom-color: #b71c1c;
+}
+.nav-caret {
+  font-size: 10px;
+  color: #666;
+  margin-left: 2px;
+}
+.product-nav-cta .btn-link {
+  color: var(--brand-primary-strong);
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   HERO — full-bleed blue wrapper
+   ========================================================================== */
+.bofa-hero-wrap {
+  background: linear-gradient(180deg, #1a3d80 0%, #123769 100%);
+  padding: 0 0 40px;
+  color: #fff;
+}
+.bofa-hero-inner {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 32px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 20px 24px 0;
+  align-items: start;
+}
+
+/* ------------------ Login card ------------------ */
+.login-card {
+  position: relative;
+  background: #fff;
+  border-radius: 4px;
+  padding: 28px 24px 20px;
+  color: var(--text-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.login-card-accent {
+  position: absolute;
+  top: 0; left: 0;
+  width: 180px; height: 6px;
+  background: linear-gradient(90deg, #b71c1c 0%, #b71c1c 60%, #0a2540 60%, #0a2540 100%);
+  border-top-left-radius: 4px;
+}
+.login-form {
+  display: flex; flex-direction: column;
+  gap: 12px;
+}
+.login-label {
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-bottom: -8px;
+}
+.login-form input[type="text"],
+.login-form input[type="password"] {
+  padding: 8px 10px;
+  border: 1px solid #666;
+  border-radius: 3px;
+  font-size: 14px;
+}
+.login-checkbox {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px;
+  margin: 4px 0 8px;
+}
+.login-checkbox input[type="checkbox"] { width: 16px; height: 16px; }
+.btn-login {
+  background: #123769;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  font-weight: 600;
+  border-radius: 24px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.btn-login:hover { background: #0a2540; }
+.login-forgot {
+  color: var(--brand-primary-strong);
+  text-decoration: underline;
+  font-size: 13px;
+  text-align: center;
+  padding: 6px 0;
+}
+.login-secondary {
+  font-size: 13px;
+  justify-content: center;
+  padding: 4px 0;
+}
+.login-secondary a {
+  color: var(--brand-primary-strong);
+  text-decoration: underline;
+}
+.login-more {
+  background: none;
+  border: none;
+  color: var(--brand-primary-strong);
+  font-size: 13px;
+  text-decoration: underline;
+  padding: 6px 0;
+  cursor: pointer;
+  align-self: flex-start;
+}
+.btn-open-account {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin: 12px 0 0;
+  padding: 10px;
+  background: #fff;
+  color: var(--text-primary);
+  border: 1px solid #999;
+  border-radius: 24px;
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: 500;
+}
+.btn-open-account:hover { background: #f4f5f7; }
+.dollar-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--text-primary);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.popular-listbox {
+  margin-top: 20px;
+  border: 1px solid #dcdfe4;
+  border-radius: 4px;
+  padding: 12px 14px 8px;
+  background: #fff;
+}
+.popular-listbox-title {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.popular-listbox-item {
+  padding: 5px 6px;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+/* ------------------ Promo panel (right side of hero) ------------------ */
+.promo-panel { color: #fff; }
+.promo-heading {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 40px;
+  font-weight: 400;
+  color: #fff;
+  text-align: center;
+  margin: 8px 0 20px;
+  letter-spacing: -0.5px;
+}
+.promo-filter {
+  display: flex; align-items: center; gap: 8px;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+}
+.promo-filter-select {
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 12px;
+}
+.promo-filter-select option { color: var(--text-primary); }
+
+.promo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.promo-card {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  color: #fff;
+}
+.promo-card-badge {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 56px;
+  font-weight: 300;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 4px;
+  display: inline-flex; align-items: center;
+}
+.promo-badge-value { font-family: inherit; }
+.promo-label {
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.95);
+}
+.promo-note {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Credit-card visual */
+.card-art {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.6 / 1;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+.card-art--red {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 40%),
+    linear-gradient(180deg, #c62828 0%, #8b0000 100%);
+}
+.card-art--silver {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 40%),
+    linear-gradient(180deg, #b0bec5 0%, #78909c 100%);
+}
+.card-art--blue {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 40%),
+    linear-gradient(180deg, #1a4a8a 0%, #0d2b57 100%);
+}
+.card-art--white {
+  background:
+    linear-gradient(135deg, #ffffff 0%, #ececec 100%);
+  border: 1px solid #ddd;
+}
+.card-art-new-offer {
+  position: absolute;
+  top: 8px; left: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 2px;
+  letter-spacing: 0.06em;
+}
+.card-art--white .card-art-new-offer { background: #1e40af; }
+.card-art-contactless {
+  position: absolute;
+  top: 12px; right: 12px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.9);
+  transform: rotate(90deg);
+  letter-spacing: -1px;
+}
+.card-art--white .card-art-contactless { color: var(--text-primary); }
+.card-art-chip {
+  position: absolute;
+  left: 14%; top: 40%;
+  width: 18%; height: 22%;
+  background: linear-gradient(135deg, #d4af37 0%, #f5d76e 100%);
+  border-radius: 4px;
+}
+.card-art-brand {
+  position: absolute;
+  right: 10%; top: 14%;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.05em;
+}
+.card-art--white .card-art-brand { color: var(--text-primary); }
+.card-art-network {
+  position: absolute;
+  right: 10%; bottom: 12%;
+  color: #fff;
+  font-weight: 800;
+  font-size: 12px;
+  font-style: italic;
+  letter-spacing: 0.05em;
+}
+.card-art--white .card-art-network { color: #b71c1c; letter-spacing: 0; font-style: normal; }
+
+.promo-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+/* White CTA button (BofA style — link inside a bordered white pill) */
+.promo-cta-btn {
+  display: block;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  padding: 12px 14px;
+  text-decoration: none;
+  min-height: 60px;
+  display: flex; align-items: center; justify-content: center;
+}
+.promo-cta-btn:hover { background: #f4f5f7; }
+.promo-cta-text {
+  color: var(--brand-primary-strong);
+  text-decoration: underline;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: center;
+}
+
+/* ==========================================================================
+   BOTTOM band — cash offer + tiers + testimonial
+   ========================================================================== */
+.bofa-bottom-wrap {
+  background: #e6edf5;
+  padding: 32px 24px 40px;
+}
+.bofa-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr;
+  gap: 24px;
+  max-width: 1440px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.cash-offer-card { padding: 16px 20px; }
+.cash-offer-eyebrow {
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.cash-offer-body {
+  color: var(--text-primary);
+  font-size: 14px;
+  margin: 4px 0 12px;
+}
+.cash-offer-details {
+  color: var(--brand-primary-strong);
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+/* Tiers — dramatic size scaling */
+.cash-offer-tiers {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4px;
+}
+.tier {
+  display: flex; align-items: baseline; gap: 8px;
+  color: var(--brand-primary-strong);
+  line-height: 1;
+}
+.tier-amount {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  color: var(--brand-primary-strong);
+}
+.tier-amount sup { font-size: 0.5em; vertical-align: 40%; }
+.tier--small .tier-amount { font-size: 32px; }
+.tier--medium .tier-amount { font-size: 50px; }
+.tier--large .tier-amount {
+  font-size: 96px;
+  color: var(--brand-deep);
+  font-weight: 300;
+}
+.tier-label {
+  font-size: 14px;
+  color: var(--brand-deep);
+  font-family: Georgia, serif;
+}
+
+/* Testimonial */
+.testimonial-card {
+  background: #fff;
+  border-radius: 4px;
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  align-items: stretch;
+  min-height: 220px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.testimonial-content {
+  padding: 20px 24px;
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 8px;
+}
+.testimonial-quote {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: #b71c1c;
+  margin: 0;
+  line-height: 1.25;
+  quotes: none;
+}
+.testimonial-quote::before, .testimonial-quote::after { content: none; }
+.testimonial-body {
+  font-size: 14px;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.4;
+}
+.testimonial-link {
+  color: var(--brand-primary-strong);
+  text-decoration: underline;
+  font-size: 14px;
+  margin-top: 4px;
+}
+.testimonial-photo {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  min-height: 220px;
+}
+
+/* Branch footer */
+.branch-footer {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px 24px;
+}
+
+/* ==========================================================================
+   Sticky bottom offer stripe
+   ========================================================================== */
+.sticky-offer {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #e6edf5;
+  border-top: 2px solid #b71c1c;
+  z-index: 200;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.08);
+}
+.sticky-offer-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 10px 24px;
+  display: flex; align-items: center; gap: 12px;
+  font-size: 14px;
+}
+.sticky-offer-icon {
+  display: inline-flex;
+  align-items: center;
+  border: 2px solid #b71c1c;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+.sticky-offer-text { color: var(--text-primary); }
+.sticky-offer-text strong { color: var(--brand-deep); font-weight: 700; }
+.sticky-offer-link {
+  color: var(--brand-primary-strong);
+  text-decoration: underline;
+  font-weight: 500;
+}
+.sticky-offer-close {
+  margin-left: auto;
+  background: none; border: none;
+  font-size: 22px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+.sticky-offer-close:hover { color: var(--text-primary); }
+
+/* Give the body some bottom breathing-room so the sticky stripe doesn't cover content */
+main { padding-bottom: 60px; }
+
+/* ==========================================================================
+   Responsive tweaks
+   ========================================================================== */
+@media (max-width: 1100px) {
+  .promo-heading { font-size: 32px; }
+  .promo-card-badge { font-size: 44px; }
+  .tier--large .tier-amount { font-size: 72px; }
+}
+@media (max-width: 900px) {
+  .bofa-hero-inner { grid-template-columns: 1fr; }
+  .promo-grid { grid-template-columns: repeat(2, 1fr); }
+  .bofa-bottom-grid { grid-template-columns: 1fr; }
+  .testimonial-card { grid-template-columns: 1fr; }
+  .testimonial-photo { min-height: 200px; }
+  .utility-nav { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .utility-nav nav ul { flex-wrap: wrap; }
+}
+@media (max-width: 600px) {
+  .promo-grid { grid-template-columns: 1fr; }
+  .promo-heading { font-size: 26px; }
+  .product-nav nav ul { flex-wrap: wrap; }
+}
+
+/* Secondary "Learn more" link below each promo card CTA (MT-009 preserved) */
+.promo-learn-more {
+  display: block;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.95);
+  text-decoration: underline;
+  font-size: 13px;
+  text-align: center;
+}
+.promo-learn-more:hover { color: #fff; }
+
+/* ==========================================================================
+   PHASE-3 new-issue element styles
+   ========================================================================== */
+
+/* PHASE-3 a11y issue MT-083 — see ACCESSIBILITY_ISSUES.md
+   The Log in button removes its focus outline WITHOUT providing an
+   alternative visual focus indicator (no box-shadow, no border change,
+   no colour swap). Keyboard users can't see where focus is. axe DevTools
+   Pro Advanced `advanced/css-focus-visible` detects this by inspecting
+   the computed focus styles vs the default state. */
+.btn-login:focus,
+.btn-login:focus-visible {
+  outline: none;
+}
+
+/* MT-084: "Featured this month" styled div that visually reads as a heading */
+.featured-this-month {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+  text-align: center;
+  margin: 0 0 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  padding-bottom: 8px;
+}
+
+/* MT-081: fine-print low-contrast disclosure */
+.fine-print {
+  color: #c4c4c4; /* ~2.4:1 on white — hard contrast fail */
+  font-size: 11px;
+  margin: 10px 0 0;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* MT-080: nested Preview button inside the testimonial link */
+.testimonial-preview-btn {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 11px;
+  background: #b71c1c;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.testimonial-preview-btn:hover { background: #8b0000; }
+
+/* IGT-021: branch thumbnail figure w/ redundant alt */
+.branch-thumb {
+  margin: 0 auto 24px;
+  max-width: 200px;
+  text-align: center;
+}
+.branch-thumb-img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+.branch-thumb figcaption {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+/* MT-079: back-to-top chevron */
+.back-to-top {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--brand-primary-strong);
+  margin: 0 auto 24px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  text-decoration: none;
+}
+.back-to-top:hover { background: #f4f7fb; }
+
+/* IGT-023: fake button — visual button styling on a div */
+.sticky-offer-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border: 1px solid var(--brand-primary-strong);
+  border-radius: 4px;
+  color: var(--brand-primary-strong);
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+  background: transparent;
+}
+.sticky-offer-save:hover { background: rgba(21, 87, 176, 0.08); }
+.sticky-offer-save:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* MT-086: fake "Read full terms" span that's tabbable but semantically not a link */
+.fine-print-more {
+  color: var(--brand-primary-strong);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.fine-print-more:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* MT-085: aria-hidden wrapper around a focusable link (broken pattern) */
+.archive-hint {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 12px;
+}
+.archive-hint a {
+  color: var(--text-secondary);
+  text-decoration: underline;
+}
