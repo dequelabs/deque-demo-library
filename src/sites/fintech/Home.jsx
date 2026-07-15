@@ -404,46 +404,97 @@ export default function FintechHome() {
       </section>
 
       {/* ========================================================
+         Better Money Habits — educational tiles (BofA-style)
+         ======================================================== */}
+      <section className="money-habits-wrap" aria-labelledby="habits-heading">
+        <div className="money-habits">
+          <h2 id="habits-heading" className="money-habits-heading">
+            Better Money Habits<sup>&reg;</sup>
+          </h2>
+          <p className="money-habits-sub">
+            Free financial education. No login required.
+          </p>
+
+          <div className="money-habits-grid">
+            <article className="habit-tile">
+              <div className="habit-tile-icon" aria-hidden="true">💰</div>
+              <h3>Saving &amp; budgeting</h3>
+              <p>The 50/30/20 rule, emergency funds, and how to automate the boring parts.</p>
+              <Link to="/fintech/help#saving">Read the guide</Link>
+            </article>
+
+            <article className="habit-tile">
+              <div className="habit-tile-icon" aria-hidden="true">🏠</div>
+              <h3>Buying a home</h3>
+              <p>Pre-qualification, down payments, and closing costs demystified.</p>
+              <Link to="/fintech/mortgages">Explore mortgages</Link>
+            </article>
+
+            <article className="habit-tile">
+              <div className="habit-tile-icon" aria-hidden="true">📈</div>
+              <h3>Investing basics</h3>
+              <p>Brokerage vs. IRA, index funds vs. active, and what "risk tolerance" really means.</p>
+              <Link to="/fintech/wealth">Start investing</Link>
+            </article>
+
+            <article className="habit-tile">
+              <div className="habit-tile-icon" aria-hidden="true">🎓</div>
+              <h3>Managing credit</h3>
+              <p>Your credit score, how it's calculated, and habits that improve it over time.</p>
+              <Link to="/fintech/cards">Review credit tips</Link>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
          Branch footer — MT-029 + IGT-021 + MT-079
          ======================================================== */}
       <section className="branch-footer" aria-labelledby="branch-heading">
-        <h2 id="branch-heading" className="sr-only">Visit a DQBC branch</h2>
-        {/* PHASE-2 a11y issue MT-029 — see ACCESSIBILITY_ISSUES.md
-            Informative branch-building photo served with alt="". axe
-            DevTools Pro Advanced `image-informative-has-alt` (AI classifier)
-            fires Minor (WCAG 1.1.1). */}
-        <img
-          src="/branch-photo.svg"
-          alt=""
-          style={{
-            display: 'block',
-            margin: '32px auto 16px',
-            maxWidth: 320,
-            height: 'auto',
-            borderRadius: 8,
-          }}
-        />
+        <div className="branch-footer-inner">
+          <div className="branch-footer-copy">
+            <h2 id="branch-heading" className="branch-footer-heading">
+              Find a DQBC branch near you
+            </h2>
+            <p>
+              350+ locations across the U.S., open Monday through Saturday.
+              Book an appointment online or walk in — we're happy to help.
+            </p>
+            <Link to="/fintech/help#branches" className="btn btn-outline btn-outline--on-light">
+              Find a branch
+            </Link>
 
-        {/* PHASE-3 a11y issue IGT-021 (Images IGT) — see ACCESSIBILITY_ISSUES.md
-            Small branch thumbnail whose alt attribute is a verbatim copy of
-            the visible <figcaption>. Screen-reader users hear the location
-            twice. axe-core `image-redundant-alt` fires Minor as BP; the
-            Images IGT surfaces this during its walk-through of alt-text
-            quality across the page. */}
-        <figure className="branch-thumb">
+            {/* PHASE-3 a11y issue IGT-021 (Images IGT) — see ACCESSIBILITY_ISSUES.md
+                Small branch thumbnail whose alt attribute is a verbatim copy
+                of the visible <figcaption>. axe-core `image-redundant-alt`
+                fires Minor (BP); Images IGT surfaces this in its alt-text
+                quality walkthrough. */}
+            <figure className="branch-thumb">
+              <img
+                src="/branch-photo.svg"
+                alt="DQBC Downtown branch"
+                className="branch-thumb-img"
+              />
+              <figcaption>DQBC Downtown branch</figcaption>
+            </figure>
+          </div>
+
+          {/* PHASE-2 a11y issue MT-029 — see ACCESSIBILITY_ISSUES.md
+              Informative branch-building photo served with alt="". axe
+              DevTools Pro Advanced `image-informative-has-alt` (AI
+              classifier) fires Minor (WCAG 1.1.1). */}
           <img
             src="/branch-photo.svg"
-            alt="DQBC Downtown branch"
-            className="branch-thumb-img"
+            alt=""
+            className="branch-footer-hero"
           />
-          <figcaption>DQBC Downtown branch</figcaption>
-        </figure>
+        </div>
 
         {/* PHASE-3 a11y issue MT-079 — see ACCESSIBILITY_ISSUES.md
             "Back to top" chevron link with no visible text, no aria-label,
             no aria-labelledby, no title. Its only child is an <svg
-            aria-hidden="true">. Screen readers announce it as an unnamed
-            link. axe-core `link-name` fires Critical (WCAG 2.4.4/4.1.2). */}
+            aria-hidden="true">. axe-core `link-name` fires Critical
+            (WCAG 2.4.4/4.1.2). */}
         <a href="#top" className="back-to-top">
           <svg
             aria-hidden="true"
