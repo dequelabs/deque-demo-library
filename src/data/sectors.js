@@ -25,13 +25,13 @@ export const SECTORS = [
   {
     id: 'saas',
     name: 'Pulsegrid',
-    tag: 'SaaS',
+    tag: 'SaaS · Observability',
     blurb:
-      'B2B analytics product: marketing page, login, dashboard with data tables, settings.',
+      'Datadog-inspired observability platform: marketing site, mock auth, and an interactive post-login product with metrics, services, alerts, hosts, logs, incidents, and security.',
     accent: '#6366f1',
     accentDeep: '#1e1b4b',
     path: '/saas',
-    status: 'stub',
+    status: 'ready',
   },
   {
     id: 'agency',
