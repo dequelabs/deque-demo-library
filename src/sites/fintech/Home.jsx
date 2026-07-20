@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from './auth.jsx';
 
 /**
  * DQBC marketing homepage — BofA 1:1 visual mirror.
@@ -14,10 +15,29 @@ import { Link } from 'react-router-dom';
  * MT-028, MT-029, MT-030, IGT-016). See ACCESSIBILITY_ISSUES.md.
  */
 export default function FintechHome() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [saveId, setSaveId] = useState(false);
   const [stripeVisible, setStripeVisible] = useState(true);
+  const [loginError, setLoginError] = useState('');
+
+  // Homepage login card — mirrors the /fintech/login validation:
+  // any user ID + password ≥ 4 chars signs in and jumps to the dashboard.
+  // NOTE: We intentionally keep this form's a11y issues (IGT-022 positive
+  // tabIndex on the button, IGT-016 row-reverse below, MT-030 aria-expanded
+  // "yes") — this fix is purely a behavioral wire-up, not an a11y change.
+  const handleHomeLogin = (e) => {
+    e.preventDefault();
+    if (!userId || password.length < 4) {
+      setLoginError('Please enter your user ID and a password of at least 4 characters.');
+      return;
+    }
+    setLoginError('');
+    login();
+    navigate('/fintech/dashboard');
+  };
 
   const cards = [
     {
@@ -71,7 +91,15 @@ export default function FintechHome() {
             <div className="login-card-accent" aria-hidden="true" />
             <h2 id="login-heading" className="sr-only">Sign in to online banking</h2>
 
-            <form className="login-form" onSubmit={(e) => e.preventDefault()}>
+            <form className="login-form" onSubmit={handleHomeLogin}>
+              {loginError && (
+                <div
+                  role="alert"
+                  style={{ background: '#fdecea', color: '#8a1c11', border: '1px solid #f5c2c0', padding: '8px 10px', borderRadius: 4, marginBottom: 10, fontSize: 13 }}
+                >
+                  {loginError}
+                </div>
+              )}
               <label htmlFor="home-userid" className="login-label">User ID</label>
               <input
                 id="home-userid"
