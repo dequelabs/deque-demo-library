@@ -404,12 +404,19 @@ export default function FintechHome() {
                 We asked teammates like Priya R., &ldquo;What makes this company
                 a great place to work?&rdquo;
               </p>
-              <Link to="/fintech/stories" className="testimonial-link">
+              <Link to="/fintech/stories" className="testimonial-link" role="button">
                 Read their stories
                 {/* PHASE-3 a11y issue MT-080 — see ACCESSIBILITY_ISSUES.md
                     Nested <button> inside an <a> (React Router <Link>).
                     Interactive elements must not be nested — axe-core
-                    `nested-interactive` fires Serious (WCAG 4.1.2). */}
+                    `nested-interactive` fires Serious (WCAG 4.1.2).
+                    NOTE (2026-07-27): axe-core's nested-interactive rule only
+                    evaluates elements whose ARIA role has childrenPresentational
+                    (button, checkbox, tab, etc.) — a plain link role does not,
+                    so a <button> nested in a bare <a> never tripped the rule in
+                    axe-core 4.11. The role="button" override recreates a common
+                    real-world mistake (a link redecorated to look like a button)
+                    and makes the rule fire reliably. */}
                 <button
                   type="button"
                   className="testimonial-preview-btn"

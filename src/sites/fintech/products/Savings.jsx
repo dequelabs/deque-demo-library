@@ -4,6 +4,10 @@ import RatesTable   from '../../../components/marketing/RatesTable.jsx';
 import FAQList      from '../../../components/marketing/FAQList.jsx';
 import CTABanner    from '../../../components/marketing/CTABanner.jsx';
 
+function showCompoundingDetail() {
+  alert('Compounding detail: coming soon.');
+}
+
 export default function FintechSavings() {
   return (
     <>
@@ -46,6 +50,70 @@ export default function FintechSavings() {
         ]}
         note="APY accurate as of today and subject to change. Tiered rates do not apply — every dollar earns the same yield."
       />
+
+      {/* PHASE-3 a11y issue MT-089 — see ACCESSIBILITY_ISSUES.md
+          Pale-gold-to-white gradient banner with white text — passes at the
+          gold end, fails at the white end. axe-core `color-contrast` can
+          only return "Needs Review" because the background is a CSS
+          gradient, not a single color. axe DevTools Pro Advanced
+          `text-contrast` (screenshot-based) resolves it as an automatic
+          Serious finding — same pattern as MT-028/041/053/060/078. */}
+      <div
+        className="container"
+        style={{
+          maxWidth: 700,
+          margin: '24px auto 0',
+          padding: '16px 24px',
+          background: 'linear-gradient(90deg, var(--brand-accent), #ffffff)',
+          borderRadius: 8,
+          color: '#ffffff',
+        }}
+      >
+        {/* PHASE-3 a11y issue MT-097 — see ACCESSIBILITY_ISSUES.md
+            FDIC-insured shield/seal icon rendered as `<svg role="img">`
+            with no `<title>`, no aria-label, no aria-labelledby. axe-core
+            `svg-img-alt` fires Serious (WCAG 1.1.1) under the DEFAULT scan
+            (no toggles needed) — same rule as MT-026 on Home, new instance
+            here since the icon genuinely conveys "FDIC insured" meaning,
+            not just decoration. */}
+        <svg
+          role="img"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          style={{ verticalAlign: 'middle', marginRight: 6 }}
+        >
+          <path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z" />
+        </svg>
+        Every dollar compounds daily — see exactly how in the math above.{' '}
+        {/* PHASE-3 a11y issue MT-090 — see ACCESSIBILITY_ISSUES.md
+            Keyboard-focusable (tabIndex=0), clickable span styled as a
+            solid pill BUTTON (background fill, no underline) but with no
+            button/link role. Deliberately a different visual shape than
+            MT-088's underlined-text link look, so the Keyboard IGT's AI
+            role-mismatch reasoning suggests `role="button"` here instead
+            of `role="link"`. axe-core `focus-order-semantics` fires Minor
+            (BP, WCAG 2.4.3); the automated Keyboard IGT's role-mismatch
+            lens also catches this. */}
+        <span
+          tabIndex={0}
+          onClick={showCompoundingDetail}
+          style={{
+            display: 'inline-block',
+            padding: '4px 12px',
+            background: '#ffffff',
+            color: 'var(--brand-deep)',
+            borderRadius: 999,
+            fontWeight: 700,
+            cursor: 'pointer',
+          }}
+        >
+          See a compounding example
+        </span>
+      </div>
 
       <FAQList
         items={[
