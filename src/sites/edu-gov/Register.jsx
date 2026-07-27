@@ -167,19 +167,19 @@ export default function Register() {
           {/* PHASE-2 a11y issue NB-103 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
               `aria-labeledby` typo of `aria-labelledby`. axe-core
               `aria-valid-attr` fires Critical (WCAG 4.1.2). */}
-          <div aria-labeledby="reg-h" style={{ display: 'none' }} />
+          <div aria-labeledby="reg-h" />
 
           {/* PHASE-2 a11y issue NB-104 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
               `role="presentation"` with `aria-required="true"`. axe-core
               `aria-allowed-attr` fires Serious (WCAG 4.1.2). SLED
               pattern: wrappers get role=presentation but keep required
               attribute from an earlier form widget. */}
-          <span role="presentation" aria-required="true" style={{ display: 'none' }} />
+          <span role="presentation" aria-required="true" />
 
           {/* PHASE-2 a11y issue NB-105 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
               <h2> with `aria-rowindex` (only valid on row/cell roles).
               axe-core `aria-prohibited-attr` fires Serious (WCAG 4.1.2). */}
-          <h2 aria-rowindex={1} style={{ display: 'none' }}>hidden heading</h2>
+          <h2 aria-rowindex={1}>hidden heading</h2>
         </div>
       </div>
 

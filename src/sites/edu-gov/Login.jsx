@@ -70,12 +70,25 @@ export default function Login() {
           <li>Secure two-factor sign-in available</li>
           <li>Accessible to assistive technology</li>
         </ul>
+        {/* PHASE-3 a11y issue NB-192 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            "Need help signing in?" reads visually as a section heading
+            (16px / 700 / white, own line, top margin) but is a plain <div>
+            — no heading role in the document outline. axe DevTools Pro
+            Advanced `heading-markup` (CV/AI classifier) flags this; the
+            axe-core baseline has no automatic equivalent. First Pro
+            Advanced instance on Login — previously had none. */}
+        <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginTop: 20 }}>
+          Need help signing in?
+        </div>
+        <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13 }}>
+          Call the Northbrook Connect help desk at (555) 010-0199, Mon–Fri 8am–6pm.
+        </p>
         {/* PHASE-2 a11y issue NB-025 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             Stray <dt> outside any <dl>. axe-core `dlitem` fires Serious
             (WCAG 1.3.1). SLED pattern: CMS shortcode for "definition term"
             renders without an enclosing <dl> when the editor only inserts
             one half of the pair. */}
-        <dt style={{ display: 'none' }}>Account benefit</dt>
+        <dt>Account benefit</dt>
         {/* PHASE-2 a11y issue NB-026 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             `lang="frx"` is not a valid BCP-47 subtag. axe-core
             `valid-lang` fires Serious (WCAG 3.1.2). SLED pattern: editors

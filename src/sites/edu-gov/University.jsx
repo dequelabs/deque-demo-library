@@ -193,21 +193,21 @@ export default function University() {
             Stray <dt> outside any <dl>. axe-core `dlitem` fires
             Serious (WCAG 1.3.1). SLED pattern: stray markup leftover
             from a card refactor. */}
-        <dt style={{ display: 'none' }}>Program</dt>
+        <dt>Program</dt>
 
         {/* PHASE-2 a11y issue NB-096 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             Focusable <button> inside aria-hidden="true" subtree.
             axe-core `aria-hidden-focus` fires Serious (WCAG 4.1.2).
             SLED pattern: hidden helper menus retain tabbable controls. */}
         <div aria-hidden="true">
-          <button type="button" style={{ display: 'none' }}>Hidden help</button>
+          <button type="button">Hidden help</button>
         </div>
 
         {/* PHASE-2 a11y issue NB-097 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             <span> with `aria-colindex` (only valid on row/cell roles).
             axe-core `aria-prohibited-attr` fires Serious (WCAG 4.1.2).
             SLED pattern: ARIA grid attributes leak onto non-grid nodes. */}
-        <span aria-colindex={2} style={{ display: 'none' }}>ranked</span>
+        <span aria-colindex={2}>ranked</span>
 
         <div style={{ maxWidth: 760, margin: '0 auto' }}>
           <ul className="activity-strip">

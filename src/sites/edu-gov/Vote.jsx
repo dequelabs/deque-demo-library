@@ -67,11 +67,25 @@ export default function Vote() {
               translated voter labels tagged with placeholder codes. */}
           <span lang="zz" style={{ fontSize: 12, marginLeft: 8 }}>Inscríbase para votar</span>
 
+          {/* PHASE-3 a11y issue NB-194 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+              "Key dates" reads visually as a section heading (18px / 700 /
+              brand-deep, own line) but is a plain <div> — no heading role
+              in the document outline. axe DevTools Pro Advanced
+              `heading-markup` (CV/AI classifier) flags this; the axe-core
+              baseline has no automatic equivalent. First Pro Advanced
+              instance on Vote, previously had none. */}
+          <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--brand-deep)', marginTop: 16 }}>
+            Key dates
+          </div>
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+            Registration deadline: October 6. Early voting begins October 20.
+          </p>
+
           {/* PHASE-2 a11y issue NB-180 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
               Stray <dt> outside any <dl>. axe-core `dlitem` fires
               Serious (WCAG 1.3.1). SLED pattern: leftover definition
               markup from converted card layouts. */}
-          <dt style={{ display: 'none' }}>Precinct</dt>
+          <dt>Precinct</dt>
 
           {/* PHASE-2 a11y issue NB-181 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
               <div role="radiogroup"> with NO role="radio" children.

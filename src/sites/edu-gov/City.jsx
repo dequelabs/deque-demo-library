@@ -102,7 +102,7 @@ export default function City() {
               Stray <dt> outside any <dl>. axe-core `dlitem` fires Serious
               (WCAG 1.3.1). SLED pattern: leftover dt from a converted
               card. */}
-          <dt style={{ display: 'none' }}>Population</dt>
+          <dt>Population</dt>
 
           {/* PHASE-2 a11y issue NB-155 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
               Pale-taupe caption (#cdbf9f on #fff ~2.0:1). axe-core
@@ -125,14 +125,14 @@ export default function City() {
               axe-core `autocomplete-valid` fires Serious (WCAG 1.3.5).
               SLED pattern: city-home address inputs use invented
               autocomplete tokens. */}
-          <input type="text" autoComplete="address-zip" placeholder="ZIP" style={{ display: 'none' }} />
+          <input type="text" autoComplete="address-zip" placeholder="ZIP" />
 
           {/* PHASE-2 a11y issue NB-158 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
               <object> with NO accessible name (no aria-label / title /
               fallback). axe-core `object-alt` fires Serious (WCAG 1.1.1).
               SLED pattern: embedded SVG/PDF assets ship without
               alternative text. */}
-          <object data="/city-seal.svg" type="image/svg+xml" style={{ display: 'none' }} />
+          <object data="/city-seal.svg" type="image/svg+xml" />
 
           {/* PHASE-2 a11y issue NB-159 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
               Empty <span role="tooltip"> placeholder. axe-core

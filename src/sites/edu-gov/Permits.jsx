@@ -162,7 +162,7 @@ export default function Permits() {
             Stray <dt> outside any <dl>. axe-core `dlitem` fires Serious
             (WCAG 1.3.1). SLED pattern: leftover dt from converted
             card. */}
-        <dt style={{ display: 'none' }}>Zoning</dt>
+        <dt>Zoning</dt>
 
         {/* PHASE-2 a11y issue NB-166 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             Permit-volume <div role="meter"> with NO accessible name.
@@ -178,7 +178,7 @@ export default function Permits() {
             `aria-required-attr` fires Critical (WCAG 4.1.2). SLED
             pattern: custom comboboxes on permit forms omit required ARIA
             state. */}
-        <div role="combobox" aria-controls="permits-listbox" style={{ display: 'none' }}>
+        <div role="combobox" aria-controls="permits-listbox">
           Filter
         </div>
 
@@ -186,7 +186,7 @@ export default function Permits() {
             `aria-labeledby` is a typo of `aria-labelledby`. axe-core
             `aria-valid-attr` fires Critical (WCAG 4.1.2). SLED pattern:
             ARIA attribute misspellings survive code review. */}
-        <div aria-labeledby="permit-search" style={{ display: 'none' }} />
+        <div aria-labeledby="permit-search" />
 
         {/* PHASE-2 a11y issue NB-169 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             Pale-taupe required-marker (#cdbf9f on #fff ~2.0:1). axe-core
