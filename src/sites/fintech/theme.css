@@ -1102,12 +1102,12 @@
 }
 
 /* ==========================================================================
-   BofA 1:1 mirror: multi-row header + full-bleed hero + sticky offer band.
+   Consumer-banking layout: multi-row header + full-bleed hero + sticky offer band.
    Introduced when Home.jsx + PublicLayout.jsx were redesigned to visually
    mirror bankofamerica.com.
    ========================================================================== */
 
-/* Suppress the older single-row header so the new BofA header owns the top. */
+/* Suppress the older single-row header so the new DQBC multi-row header owns the top. */
 .fintech-topbar,
 .fintech-header:not(.product-nav) {
   display: none;
@@ -1264,12 +1264,12 @@
 /* ==========================================================================
    HERO — full-bleed blue wrapper
    ========================================================================== */
-.bofa-hero-wrap {
+.dqbc-hero-wrap {
   background: linear-gradient(180deg, #1a3d80 0%, #123769 100%);
   padding: 0 0 40px;
   color: #fff;
 }
-.bofa-hero-inner {
+.dqbc-hero-inner {
   display: grid;
   grid-template-columns: 340px 1fr;
   gap: 32px;
@@ -1540,7 +1540,7 @@
   margin-bottom: 10px;
 }
 
-/* White CTA button (BofA style — link inside a bordered white pill) */
+/* White CTA button — link inside a bordered white pill */
 .promo-cta-btn {
   display: block;
   width: 100%;
@@ -1565,11 +1565,11 @@
 /* ==========================================================================
    BOTTOM band — cash offer + tiers + testimonial
    ========================================================================== */
-.bofa-bottom-wrap {
+.dqbc-bottom-wrap {
   background: #e6edf5;
   padding: 32px 24px 40px;
 }
-.bofa-bottom-grid {
+.dqbc-bottom-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1.4fr;
   gap: 24px;
@@ -1731,9 +1731,9 @@ main { padding-bottom: 60px; }
   .tier--large .tier-amount { font-size: 72px; }
 }
 @media (max-width: 900px) {
-  .bofa-hero-inner { grid-template-columns: 1fr; }
+  .dqbc-hero-inner { grid-template-columns: 1fr; }
   .promo-grid { grid-template-columns: repeat(2, 1fr); }
-  .bofa-bottom-grid { grid-template-columns: 1fr; }
+  .dqbc-bottom-grid { grid-template-columns: 1fr; }
   .testimonial-card { grid-template-columns: 1fr; }
   .testimonial-photo { min-height: 200px; }
   .utility-nav { flex-direction: column; align-items: flex-start; gap: 6px; }

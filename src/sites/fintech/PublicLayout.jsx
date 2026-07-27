@@ -5,7 +5,7 @@ import { useAuth } from './auth.jsx';
 import SearchPopover from './SearchPopover.jsx';
 
 /**
- * Public layout: BofA-style multi-row header + marketing footer.
+ * Public layout: multi-row consumer-banking header + marketing footer.
  *
  * Header structure (top-to-bottom):
  *   1. FDIC strip — deposit-insurance disclosure
