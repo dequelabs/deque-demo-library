@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import MarketingHero from '../../../components/marketing/MarketingHero.jsx';
 import FeatureGrid  from '../../../components/marketing/FeatureGrid.jsx';
 import RatesTable   from '../../../components/marketing/RatesTable.jsx';
@@ -5,6 +6,7 @@ import FAQList      from '../../../components/marketing/FAQList.jsx';
 import CTABanner    from '../../../components/marketing/CTABanner.jsx';
 
 export default function FintechMortgages() {
+  const [panel, setPanel] = useState('rate');
   return (
     <>
       <MarketingHero
@@ -46,6 +48,83 @@ export default function FintechMortgages() {
         ]}
         note="Illustrative rates assume excellent credit, owner-occupied, $400,000 loan amount. Your actual rate depends on credit, loan amount, LTV, and term. Rates change daily."
       />
+
+      {/* PHASE-3 a11y issue MT-093 — see ACCESSIBILITY_ISSUES.md
+          Branch-photo image showing a real DQBC branch (used as the
+          "find a loan officer in person" visual) served with alt="" —
+          treats informative content as decorative. axe-core `image-alt`
+          has nothing to flag (an empty alt is valid syntax); axe DevTools
+          Pro Advanced `image-informative-has-alt` (AI image classifier)
+          recognizes the photo as informative and flags the empty alt —
+          same pattern as MT-029. */}
+      <div className="container text-center" style={{ maxWidth: 700, margin: '24px auto 0', padding: '0 24px' }}>
+        <img src="/branch-photo.svg" alt="" style={{ width: 160, height: 80 }} />
+        <p style={{ marginTop: 8, color: 'var(--text-secondary)' }}>
+          Prefer to talk in person? Loan officers are available at every DQBC branch.
+        </p>
+
+        {/* PHASE-3 a11y issue MT-094 — see ACCESSIBILITY_ISSUES.md
+            A segmented-control / TAB-look pair — two keyboard-focusable
+            (tabIndex=0) spans with no `role="tab"` / `tablist` ancestor,
+            no `aria-selected`. A third distinct interaction shape from
+            MT-088 (link) and MT-090 (button): the Keyboard IGT's AI
+            role-mismatch reasoning suggests `role="tab"` for each. Two
+            tab stops instead of one — richer demo than a single link.
+            axe-core `focus-order-semantics` fires Minor (BP, WCAG 2.4.3)
+            on each; the automated Keyboard IGT's role-mismatch lens also
+            catches both. */}
+        <div style={{ display: 'inline-flex', gap: 4, borderBottom: '1px solid var(--border)' }}>
+          <span
+            tabIndex={0}
+            onClick={() => setPanel('rate')}
+            style={{
+              padding: '6px 14px',
+              cursor: 'pointer',
+              fontWeight: panel === 'rate' ? 700 : 400,
+              color: panel === 'rate' ? 'var(--brand-deep)' : 'var(--text-secondary)',
+              borderBottom: panel === 'rate' ? '2px solid var(--brand-primary)' : '2px solid transparent',
+            }}
+          >
+            Rate lock terms
+          </span>
+          <span
+            tabIndex={0}
+            onClick={() => setPanel('lock')}
+            style={{
+              padding: '6px 14px',
+              cursor: 'pointer',
+              fontWeight: panel === 'lock' ? 700 : 400,
+              color: panel === 'lock' ? 'var(--brand-deep)' : 'var(--text-secondary)',
+              borderBottom: panel === 'lock' ? '2px solid var(--brand-primary)' : '2px solid transparent',
+            }}
+          >
+            Extended lock options
+          </span>
+          {/* PHASE-3 a11y issue MT-098 — see ACCESSIBILITY_ISSUES.md
+              Icon-only help toggle with an explicit `role="button"` but no
+              visible text, aria-label, aria-labelledby, or title (SVG is
+              aria-hidden). axe-core `aria-command-name` fires Serious
+              (WCAG 4.1.2) under the DEFAULT scan — same rule as MT-096 on
+              Checking, second instance for broader demo coverage. */}
+          <span
+            role="button"
+            tabIndex={0}
+            onClick={() => alert('Help: coming soon.')}
+            style={{ marginLeft: 6, alignSelf: 'center', cursor: 'pointer', display: 'inline-flex' }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </span>
+        </div>
+        <p style={{ marginTop: 8, fontSize: 13, color: 'var(--text-secondary)' }}>
+          {panel === 'rate'
+            ? 'Lock your rate for 30, 45, or 60 days at no cost once you\'re under contract.'
+            : 'Extended locks (up to 180 days) are available for new construction, for a small fee.'}
+        </p>
+      </div>
 
       <FAQList
         items={[

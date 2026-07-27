@@ -46,6 +46,15 @@
   box-shadow: none;
 }
 
+/* PHASE-3 a11y issue MT-091 — see ACCESSIBILITY_ISSUES.md
+   Same css-focus-visible pattern as MT-010/MT-083, applied to the Credit
+   Cards page's per-card "Apply" CTA. */
+.sector-fintech .card-apply-btn:focus,
+.sector-fintech .card-apply-btn:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
 /* ---------- Skip link ---------- */
 .skip-link {
   position: absolute;
