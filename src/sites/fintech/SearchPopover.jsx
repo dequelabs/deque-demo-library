@@ -114,6 +114,26 @@ export default function SearchPopover({ open, onClose, returnFocusRef }) {
       if (e.key === 'Escape') {
         e.stopPropagation();
         onClose();
+        return;
+      }
+      // Focus trap — Tab from the last focusable inside the panel wraps to
+      // the first; Shift+Tab from the first wraps to the last. Without this
+      // the Keyboard IGT tabs out of the popover into the (visually hidden)
+      // underlying page and appears "stuck" — focus is somewhere invisible
+      // and the popover is still on top.
+      if (e.key !== 'Tab' || !panelRef.current) return;
+      const focusables = panelRef.current.querySelectorAll(
+        'input, button, [href], [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
       }
     };
     document.addEventListener('mousedown', onPointer);

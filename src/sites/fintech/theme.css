@@ -1250,6 +1250,14 @@
   color: var(--brand-primary-strong);
   border-bottom-color: #b71c1c;
 }
+/* Active-page highlight — mirrors the underline on hover so the current
+   section stays visibly anchored in the primary nav. React Router NavLink
+   auto-applies `.active` to the matched route. */
+.product-nav a.active {
+  color: var(--brand-primary-strong);
+  border-bottom-color: #b71c1c;
+  font-weight: 700;
+}
 .nav-caret {
   font-size: 10px;
   color: #666;
