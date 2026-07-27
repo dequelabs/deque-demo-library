@@ -104,12 +104,12 @@ export default function DMV() {
           {/* PHASE-2 a11y issue NB-127 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
               `aria-labeledby` typo of `aria-labelledby`. axe-core
               `aria-valid-attr` fires Critical (WCAG 4.1.2). */}
-          <div aria-labeledby="dmv-h" style={{ display: 'none' }} />
+          <div aria-labeledby="dmv-h" />
 
           {/* PHASE-2 a11y issue NB-128 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
               `role="presentation"` with `aria-required="true"`. axe-core
               `aria-allowed-attr` fires Serious (WCAG 4.1.2). */}
-          <span role="presentation" aria-required="true" style={{ display: 'none' }} />
+          <span role="presentation" aria-required="true" />
 
           {/* PHASE-2 a11y issue NB-129 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
               Empty <span role="tooltip">. axe-core `aria-tooltip-name`
@@ -119,7 +119,7 @@ export default function DMV() {
           {/* PHASE-2 a11y issue NB-130 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
               Stray <dt> outside any <dl>. axe-core `dlitem` fires
               Serious (WCAG 1.3.1). */}
-          <dt style={{ display: 'none' }}>Vehicle</dt>
+          <dt>Vehicle</dt>
         </div>
       </div>
 

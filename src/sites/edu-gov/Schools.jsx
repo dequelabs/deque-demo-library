@@ -156,7 +156,7 @@ export default function Schools() {
             Stray <dt> outside of any <dl>. axe-core `dlitem` fires
             Serious (WCAG 1.3.1). SLED pattern: stray markup leftover
             from a partial conversion to a card layout. */}
-        <dt style={{ display: 'none' }}>District name</dt>
+        <dt>District name</dt>
 
         {/* PHASE-2 a11y issue NB-056 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             Enrollment <div role="meter"> with NO aria-label. axe-core

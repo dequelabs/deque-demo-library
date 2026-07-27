@@ -223,7 +223,7 @@ export default function Account() {
             Stray <dd> outside any <dl>. axe-core `dlitem` fires
             Serious (WCAG 1.3.1). SLED pattern: orphaned description
             element left after a partial markup refactor. */}
-        <dd style={{ display: 'none' }}>Activity description</dd>
+        <dd>Activity description</dd>
         <ul className="activity-strip">
           {activity.map((a, i) => (
             <li key={i}>

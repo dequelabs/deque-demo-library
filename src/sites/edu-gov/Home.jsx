@@ -371,14 +371,14 @@ export default function Home() {
             `aria-tooltip-name` fires Serious (WCAG 4.1.2). SLED pattern:
             tooltip nodes get pre-rendered for hydration and the content
             string is bound later — but the empty node still trips axe. */}
-        <span role="tooltip" id="home-tip" style={{ display: 'none' }} />
+        <span role="tooltip" id="home-tip" />
 
         {/* PHASE-2 a11y issue NB-019 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             Stray <dt> outside of any <dl>. axe-core `dlitem` fires
             Serious (WCAG 1.3.1). SLED pattern: a CMS author copy-pastes a
             definition term out of a richer block and the surrounding <dl>
             never makes it across. */}
-        <dt style={{ display: 'none' }}>Helpful term</dt>
+        <dt>Helpful term</dt>
 
         {/* PHASE-2 a11y issue NB-020 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             `lang="xyz"` is not a valid BCP-47 tag. axe-core `valid-lang`

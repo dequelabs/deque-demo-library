@@ -111,20 +111,20 @@ export default function Grades() {
             `aria-labeledby` is a typo of `aria-labelledby`. axe-core
             `aria-valid-attr` fires Critical (WCAG 4.1.2). SLED pattern:
             ARIA attribute misspellings survive code review. */}
-        <div aria-labeledby="grades-h" style={{ display: 'none' }} />
+        <div aria-labeledby="grades-h" />
 
         {/* PHASE-2 a11y issue NB-082 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             Stray <dt> outside any <dl>. axe-core `dlitem` fires Serious
             (WCAG 1.3.1). SLED pattern: leftover markup from a converted
             card layout. */}
-        <dt style={{ display: 'none' }}>Current semester</dt>
+        <dt>Current semester</dt>
 
         {/* PHASE-2 a11y issue NB-083 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             <button> with `aria-rowindex` (only valid on row/cell roles).
             axe-core `aria-prohibited-attr` fires Serious (WCAG 4.1.2).
             SLED pattern: copy/pasted attributes from table rows land on
             unrelated controls. */}
-        <button type="button" aria-rowindex={1} style={{ display: 'none' }}>hidden</button>
+        <button type="button" aria-rowindex={1}>hidden</button>
       </div>
 
       {/* PHASE-2 a11y issue NB-084 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
