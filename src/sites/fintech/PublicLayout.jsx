@@ -93,7 +93,12 @@ export default function PublicLayout() {
               ref={searchBtnRef}
               type="search"
               placeholder="Search"
-              onFocus={() => setSearchOpen(true)}
+              // Was: onFocus={() => setSearchOpen(true)} — that caused the
+              // Keyboard IGT to get stuck: closing the popover returns focus
+              // to this input, the focus event re-fires open, infinite loop.
+              // Now: opens on explicit pointer interaction only. Keyboard
+              // users open via the adjacent Submit-search button.
+              onMouseDown={() => setSearchOpen(true)}
             />
             <button
               type="button"
@@ -101,7 +106,7 @@ export default function PublicLayout() {
               aria-label="Submit search"
               aria-haspopup="dialog"
               aria-expanded={searchOpen}
-              onClick={() => setSearchOpen(true)}
+              onClick={() => setSearchOpen((v) => !v)}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <circle cx="11" cy="11" r="7" />
