@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './auth.jsx';
 
 /**
- * DQBC marketing homepage — BofA 1:1 visual mirror.
+ * DQBC marketing homepage — big-bank consumer-banking layout.
  *
  * Composition (top-to-bottom, within a full-width blue hero container):
  *   - Two-column hero: login card (left) + card promo grid (right)
@@ -84,8 +84,8 @@ export default function FintechHome() {
       {/* ========================================================
          HERO — full-bleed blue container wrapping login + promos
          ======================================================== */}
-      <section className="bofa-hero-wrap" aria-labelledby="hero-heading">
-        <div className="bofa-hero-inner">
+      <section className="dqbc-hero-wrap" aria-labelledby="hero-heading">
+        <div className="dqbc-hero-inner">
           {/* LEFT — Login card ---------------------------------- */}
           <aside className="login-card" aria-labelledby="login-heading">
             <div className="login-card-accent" aria-hidden="true" />
@@ -336,7 +336,7 @@ export default function FintechHome() {
       {/* ========================================================
          BOTTOM band — cash offer + tiers + testimonial
          ======================================================== */}
-      <section className="bofa-bottom-wrap" aria-labelledby="offers-heading">
+      <section className="dqbc-bottom-wrap" aria-labelledby="offers-heading">
         {/* MT-012: decorative ornament with verbose alt */}
         {/* PHASE-2 a11y issue MT-012 — see ACCESSIBILITY_ISSUES.md
             Ornament divider is purely decorative but the alt text describes
@@ -350,7 +350,7 @@ export default function FintechHome() {
 
         <h2 id="offers-heading" className="sr-only">Featured offers</h2>
 
-        <div className="bofa-bottom-grid">
+        <div className="dqbc-bottom-grid">
           {/* Cash offer card */}
           <div className="cash-offer-card">
             <div className="cash-offer-eyebrow">NEW CHECKING CUSTOMERS</div>
@@ -432,7 +432,7 @@ export default function FintechHome() {
       </section>
 
       {/* ========================================================
-         Better Money Habits — educational tiles (BofA-style)
+         Better Money Habits — educational tiles
          ======================================================== */}
       <section className="money-habits-wrap" aria-labelledby="habits-heading">
         <div className="money-habits">
@@ -539,7 +539,7 @@ export default function FintechHome() {
       </section>
 
       {/* ========================================================
-         Sticky bottom offer banner (BofA-style, dismissible)
+         Sticky bottom offer banner (dismissible)
          ======================================================== */}
       {stripeVisible && (
         <div className="sticky-offer" role="complementary" aria-label="Featured offer">
