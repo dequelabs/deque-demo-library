@@ -47,9 +47,23 @@ import EduGovPermits from './sites/edu-gov/Permits.jsx';
 import EduGovVote from './sites/edu-gov/Vote.jsx';
 import EduGovComingSoon from './sites/edu-gov/ComingSoon.jsx';
 
-// Other sectors - stubbed pending approval
+// SaaS — Pulsegrid (Datadog-inspired observability platform)
 import SaasLayout from './sites/saas/Layout.jsx';
-import SaasStub from './sites/saas/Stub.jsx';
+import SaasPublicLayout from './sites/saas/PublicLayout.jsx';
+import SaasAuthLayout from './sites/saas/AuthLayout.jsx';
+import { ProtectedRoute as SaasProtectedRoute } from './sites/saas/auth.jsx';
+import SaasHome from './sites/saas/Home.jsx';
+import SaasLogin from './sites/saas/Login.jsx';
+import SaasDashboard from './sites/saas/Dashboard.jsx';
+import SaasServices from './sites/saas/Services.jsx';
+import SaasHosts from './sites/saas/Hosts.jsx';
+import SaasLogs from './sites/saas/Logs.jsx';
+import SaasAlerts from './sites/saas/Alerts.jsx';
+import SaasIncidents from './sites/saas/Incidents.jsx';
+import SaasSecurity from './sites/saas/Security.jsx';
+import SaasSettings from './sites/saas/Settings.jsx';
+
+// Other sectors - stubbed pending approval
 import AgencyLayout from './sites/agency/Layout.jsx';
 import AgencyStub from './sites/agency/Stub.jsx';
 import HospitalityLayout from './sites/hospitality/Layout.jsx';
@@ -128,9 +142,31 @@ export default function App() {
         </Route>
       </Route>
 
-      {/* SaaS */}
+      {/* SaaS — Pulsegrid */}
       <Route path="/saas" element={<SaasLayout />}>
-        <Route index element={<SaasStub />} />
+        {/* Public-facing pages */}
+        <Route element={<SaasPublicLayout />}>
+          <Route index       element={<SaasHome />} />
+          <Route path="login" element={<SaasLogin />} />
+        </Route>
+
+        {/* Authed pages */}
+        <Route
+          element={
+            <SaasProtectedRoute>
+              <SaasAuthLayout />
+            </SaasProtectedRoute>
+          }
+        >
+          <Route path="dashboard" element={<SaasDashboard />} />
+          <Route path="services"  element={<SaasServices />} />
+          <Route path="hosts"     element={<SaasHosts />} />
+          <Route path="logs"      element={<SaasLogs />} />
+          <Route path="alerts"    element={<SaasAlerts />} />
+          <Route path="incidents" element={<SaasIncidents />} />
+          <Route path="security"  element={<SaasSecurity />} />
+          <Route path="settings"  element={<SaasSettings />} />
+        </Route>
       </Route>
 
       {/* Agency */}
