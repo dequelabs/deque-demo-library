@@ -112,7 +112,7 @@ export default function Benefits() {
               Stray <dt> outside any <dl>. axe-core `dlitem` fires Serious
               (WCAG 1.3.1). SLED pattern: leftover definition-list markup
               from converted card layouts. */}
-          <dt style={{ display: 'none' }}>Eligibility</dt>
+          <dt>Eligibility</dt>
 
           {/* PHASE-2 a11y issue NB-145 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
               Eligibility-likelihood <div role="meter"> with NO accessible
@@ -128,7 +128,7 @@ export default function Benefits() {
               axe-core `aria-prohibited-attr` fires Serious (WCAG 4.1.2).
               SLED pattern: attributes copy-pasted from data-grid cells
               land on unrelated buttons. */}
-          <button type="button" aria-rowindex={1} style={{ display: 'none' }}>hidden</button>
+          <button type="button" aria-rowindex={1}>hidden</button>
         </div>
       </div>
 
@@ -208,7 +208,7 @@ export default function Benefits() {
                 axe-core `aria-required-attr` fires Critical (WCAG 4.1.2).
                 SLED pattern: custom comboboxes on benefits intake forms
                 omit required ARIA state. */}
-            <div role="combobox" aria-controls="ben-listbox" style={{ display: 'none' }}>
+            <div role="combobox" aria-controls="ben-listbox">
               Filter
             </div>
 
@@ -218,7 +218,7 @@ export default function Benefits() {
                 `aria-valid-attr-value` fires Critical (WCAG 4.1.2). SLED
                 pattern: ARIA copy-pasted from design system with
                 fabricated values. */}
-            <div role="separator" aria-orientation="diagonal" style={{ display: 'none' }} />
+            <div role="separator" aria-orientation="diagonal" />
 
             <fieldset style={{ border: 0, padding: 0, margin: '0 0 18px' }}>
               <legend style={{ fontWeight: 600, marginBottom: 8, color: 'var(--text-primary)' }}>

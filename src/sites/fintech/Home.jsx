@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from './auth.jsx';
 
 /**
- * DQBC marketing homepage — BofA 1:1 visual mirror.
+ * DQBC marketing homepage — big-bank consumer-banking layout.
  *
  * Composition (top-to-bottom, within a full-width blue hero container):
  *   - Two-column hero: login card (left) + card promo grid (right)
@@ -14,10 +15,29 @@ import { Link } from 'react-router-dom';
  * MT-028, MT-029, MT-030, IGT-016). See ACCESSIBILITY_ISSUES.md.
  */
 export default function FintechHome() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [saveId, setSaveId] = useState(false);
   const [stripeVisible, setStripeVisible] = useState(true);
+  const [loginError, setLoginError] = useState('');
+
+  // Homepage login card — mirrors the /fintech/login validation:
+  // any user ID + password ≥ 4 chars signs in and jumps to the dashboard.
+  // NOTE: We intentionally keep this form's a11y issues (IGT-022 positive
+  // tabIndex on the button, IGT-016 row-reverse below, MT-030 aria-expanded
+  // "yes") — this fix is purely a behavioral wire-up, not an a11y change.
+  const handleHomeLogin = (e) => {
+    e.preventDefault();
+    if (!userId || password.length < 4) {
+      setLoginError('Please enter your user ID and a password of at least 4 characters.');
+      return;
+    }
+    setLoginError('');
+    login();
+    navigate('/fintech/dashboard');
+  };
 
   const cards = [
     {
@@ -64,14 +84,22 @@ export default function FintechHome() {
       {/* ========================================================
          HERO — full-bleed blue container wrapping login + promos
          ======================================================== */}
-      <section className="bofa-hero-wrap" aria-labelledby="hero-heading">
-        <div className="bofa-hero-inner">
+      <section className="dqbc-hero-wrap" aria-labelledby="hero-heading">
+        <div className="dqbc-hero-inner">
           {/* LEFT — Login card ---------------------------------- */}
           <aside className="login-card" aria-labelledby="login-heading">
             <div className="login-card-accent" aria-hidden="true" />
             <h2 id="login-heading" className="sr-only">Sign in to online banking</h2>
 
-            <form className="login-form" onSubmit={(e) => e.preventDefault()}>
+            <form className="login-form" onSubmit={handleHomeLogin}>
+              {loginError && (
+                <div
+                  role="alert"
+                  style={{ background: '#fdecea', color: '#8a1c11', border: '1px solid #f5c2c0', padding: '8px 10px', borderRadius: 4, marginBottom: 10, fontSize: 13 }}
+                >
+                  {loginError}
+                </div>
+              )}
               <label htmlFor="home-userid" className="login-label">User ID</label>
               <input
                 id="home-userid"
@@ -308,7 +336,7 @@ export default function FintechHome() {
       {/* ========================================================
          BOTTOM band — cash offer + tiers + testimonial
          ======================================================== */}
-      <section className="bofa-bottom-wrap" aria-labelledby="offers-heading">
+      <section className="dqbc-bottom-wrap" aria-labelledby="offers-heading">
         {/* MT-012: decorative ornament with verbose alt */}
         {/* PHASE-2 a11y issue MT-012 — see ACCESSIBILITY_ISSUES.md
             Ornament divider is purely decorative but the alt text describes
@@ -322,7 +350,7 @@ export default function FintechHome() {
 
         <h2 id="offers-heading" className="sr-only">Featured offers</h2>
 
-        <div className="bofa-bottom-grid">
+        <div className="dqbc-bottom-grid">
           {/* Cash offer card */}
           <div className="cash-offer-card">
             <div className="cash-offer-eyebrow">NEW CHECKING CUSTOMERS</div>
@@ -376,12 +404,19 @@ export default function FintechHome() {
                 We asked teammates like Priya R., &ldquo;What makes this company
                 a great place to work?&rdquo;
               </p>
-              <Link to="/fintech/stories" className="testimonial-link">
+              <Link to="/fintech/stories" className="testimonial-link" role="button">
                 Read their stories
                 {/* PHASE-3 a11y issue MT-080 — see ACCESSIBILITY_ISSUES.md
                     Nested <button> inside an <a> (React Router <Link>).
                     Interactive elements must not be nested — axe-core
-                    `nested-interactive` fires Serious (WCAG 4.1.2). */}
+                    `nested-interactive` fires Serious (WCAG 4.1.2).
+                    NOTE (2026-07-27): axe-core's nested-interactive rule only
+                    evaluates elements whose ARIA role has childrenPresentational
+                    (button, checkbox, tab, etc.) — a plain link role does not,
+                    so a <button> nested in a bare <a> never tripped the rule in
+                    axe-core 4.11. The role="button" override recreates a common
+                    real-world mistake (a link redecorated to look like a button)
+                    and makes the rule fire reliably. */}
                 <button
                   type="button"
                   className="testimonial-preview-btn"
@@ -404,46 +439,97 @@ export default function FintechHome() {
       </section>
 
       {/* ========================================================
+         Better Money Habits — educational tiles
+         ======================================================== */}
+      <section className="money-habits-wrap" aria-labelledby="habits-heading">
+        <div className="money-habits">
+          <h2 id="habits-heading" className="money-habits-heading">
+            Better Money Habits<sup>&reg;</sup>
+          </h2>
+          <p className="money-habits-sub">
+            Free financial education. No login required.
+          </p>
+
+          <div className="money-habits-grid">
+            <article className="habit-tile">
+              <div className="habit-tile-icon" aria-hidden="true">💰</div>
+              <h3>Saving &amp; budgeting</h3>
+              <p>The 50/30/20 rule, emergency funds, and how to automate the boring parts.</p>
+              <Link to="/fintech/help#saving">Read the guide</Link>
+            </article>
+
+            <article className="habit-tile">
+              <div className="habit-tile-icon" aria-hidden="true">🏠</div>
+              <h3>Buying a home</h3>
+              <p>Pre-qualification, down payments, and closing costs demystified.</p>
+              <Link to="/fintech/mortgages">Explore mortgages</Link>
+            </article>
+
+            <article className="habit-tile">
+              <div className="habit-tile-icon" aria-hidden="true">📈</div>
+              <h3>Investing basics</h3>
+              <p>Brokerage vs. IRA, index funds vs. active, and what "risk tolerance" really means.</p>
+              <Link to="/fintech/wealth">Start investing</Link>
+            </article>
+
+            <article className="habit-tile">
+              <div className="habit-tile-icon" aria-hidden="true">🎓</div>
+              <h3>Managing credit</h3>
+              <p>Your credit score, how it's calculated, and habits that improve it over time.</p>
+              <Link to="/fintech/cards">Review credit tips</Link>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
          Branch footer — MT-029 + IGT-021 + MT-079
          ======================================================== */}
       <section className="branch-footer" aria-labelledby="branch-heading">
-        <h2 id="branch-heading" className="sr-only">Visit a DQBC branch</h2>
-        {/* PHASE-2 a11y issue MT-029 — see ACCESSIBILITY_ISSUES.md
-            Informative branch-building photo served with alt="". axe
-            DevTools Pro Advanced `image-informative-has-alt` (AI classifier)
-            fires Minor (WCAG 1.1.1). */}
-        <img
-          src="/branch-photo.svg"
-          alt=""
-          style={{
-            display: 'block',
-            margin: '32px auto 16px',
-            maxWidth: 320,
-            height: 'auto',
-            borderRadius: 8,
-          }}
-        />
+        <div className="branch-footer-inner">
+          <div className="branch-footer-copy">
+            <h2 id="branch-heading" className="branch-footer-heading">
+              Find a DQBC branch near you
+            </h2>
+            <p>
+              350+ locations across the U.S., open Monday through Saturday.
+              Book an appointment online or walk in — we're happy to help.
+            </p>
+            <Link to="/fintech/help#branches" className="btn btn-outline btn-outline--on-light">
+              Find a branch
+            </Link>
 
-        {/* PHASE-3 a11y issue IGT-021 (Images IGT) — see ACCESSIBILITY_ISSUES.md
-            Small branch thumbnail whose alt attribute is a verbatim copy of
-            the visible <figcaption>. Screen-reader users hear the location
-            twice. axe-core `image-redundant-alt` fires Minor as BP; the
-            Images IGT surfaces this during its walk-through of alt-text
-            quality across the page. */}
-        <figure className="branch-thumb">
+            {/* PHASE-3 a11y issue IGT-021 (Images IGT) — see ACCESSIBILITY_ISSUES.md
+                Small branch thumbnail whose alt attribute is a verbatim copy
+                of the visible <figcaption>. axe-core `image-redundant-alt`
+                fires Minor (BP); Images IGT surfaces this in its alt-text
+                quality walkthrough. */}
+            <figure className="branch-thumb">
+              <img
+                src="/branch-photo.svg"
+                alt="DQBC Downtown branch"
+                className="branch-thumb-img"
+              />
+              <figcaption>DQBC Downtown branch</figcaption>
+            </figure>
+          </div>
+
+          {/* PHASE-2 a11y issue MT-029 — see ACCESSIBILITY_ISSUES.md
+              Informative branch-building photo served with alt="". axe
+              DevTools Pro Advanced `image-informative-has-alt` (AI
+              classifier) fires Minor (WCAG 1.1.1). */}
           <img
             src="/branch-photo.svg"
-            alt="DQBC Downtown branch"
-            className="branch-thumb-img"
+            alt=""
+            className="branch-footer-hero"
           />
-          <figcaption>DQBC Downtown branch</figcaption>
-        </figure>
+        </div>
 
         {/* PHASE-3 a11y issue MT-079 — see ACCESSIBILITY_ISSUES.md
             "Back to top" chevron link with no visible text, no aria-label,
             no aria-labelledby, no title. Its only child is an <svg
-            aria-hidden="true">. Screen readers announce it as an unnamed
-            link. axe-core `link-name` fires Critical (WCAG 2.4.4/4.1.2). */}
+            aria-hidden="true">. axe-core `link-name` fires Critical
+            (WCAG 2.4.4/4.1.2). */}
         <a href="#top" className="back-to-top">
           <svg
             aria-hidden="true"
@@ -460,7 +546,7 @@ export default function FintechHome() {
       </section>
 
       {/* ========================================================
-         Sticky bottom offer banner (BofA-style, dismissible)
+         Sticky bottom offer banner (dismissible)
          ======================================================== */}
       {stripeVisible && (
         <div className="sticky-offer" role="complementary" aria-label="Featured offer">

@@ -69,7 +69,7 @@ A "complete" Northbrook Phase 2 should cover, across the 14 pages:
 | NB-009 | DMV               | `DMV.jsx` visual `<div role="progressbar">` step indicator — no accessible name AND missing required ARIA attrs | 1.1.1   | `aria-progressbar-name`       | Critical | axe-core | Live     |
 | NB-010 | Home              | `Home.jsx` Eyebrow pill uses a low-contrast grey (#a8a8a8 on white) ~2.5:1        | 1.4.3   | `color-contrast`              | Serious  | axe-core | Live     |
 | NB-011 | Home              | `Home.jsx` Decorative-looking hero badge <img> ships with NO alt attribute        | 1.1.1   | `image-alt`                   | Critical | axe-core | Live     |
-| NB-012 | Home              | `Home.jsx` Icon-only header utility button (mobile menu toggle) has NO accessibl… | 4.1.2   | `button-name`                 | Critical | axe-core | Live     |
+| NB-012 | Home              | `Home.jsx` Icon-only `.carousel-pause` button in the hero (top-left) has NO accessible name | 4.1.2   | `button-name`                 | Critical | axe-core | Live     |
 | NB-013 | Home              | `Home.jsx` "Find a service" quick-jump <select> has NO associated label or aria-… | 4.1.2   | `select-name`                 | Critical | axe-core | Live     |
 | NB-014 | Home              | `Home.jsx` Inline mini-chart <svg role="img"> with NO <title> or aria-label       | 1.1.1   | `svg-img-alt`                 | Serious  | axe-core | Live     |
 | NB-015 | Home              | `Home.jsx` "Popular services" <div role="listbox"> with <div> children that lack… | 1.3.1   | `aria-required-children`      | Critical | axe-core | Live     |
@@ -243,12 +243,15 @@ A "complete" Northbrook Phase 2 should cover, across the 14 pages:
 | NB-183 | Vote              | `Vote.jsx` Turnout <div role="meter"> with NO accessible name                     | 1.1.1   | `aria-meter-name`             | Critical | axe-core | Live     |
 | NB-184 | Vote              | `Vote.jsx` Empty <span role="tooltip"> placeholder                                | 4.1.2   | `aria-tooltip-name`           | Serious  | axe-core | Live     |
 | NB-185 | Every page (`.btn-outline`) | `theme.css` — `.btn-outline:focus, :focus-visible { outline: none; box-shadow: none }` | 2.4.7 | `advanced/css-focus-visible`         | Serious  | **Pro Advanced** (no AI credits — CSS state diff) | Live |
-| NB-186 | Home              | `Home.jsx` "What's new this month" `<div>` styled like an h2 (24 px / 700 / brand-deep)                            | 1.3.1 | `advanced/heading-markup`            | Serious  | **Pro Advanced** (uses AI credits — CV) | Live |
+| NB-186 | Home              | `Home.jsx` "News" `<div>` styled like an h2 (24 px / 700 / brand-deep) above the News card grid                     | 1.3.1 | `advanced/heading-markup`            | Serious  | **Pro Advanced** (uses AI credits — CV) | Live |
 | NB-187 | Home              | `Home.jsx` `/ornament-divider.svg` decorative ornament with verbose alt                                            | 1.1.1 | `advanced/image-decorative`          | Minor    | **Pro Advanced** (uses AI credits — image classifier) | Live |
 | NB-188 | Schools           | `Schools.jsx` `/cedarbrook-elementary.svg` informative school photo served `alt=""`                                | 1.1.1 | `advanced/image-informative-has-alt` | Minor    | **Pro Advanced** (uses AI credits — image classifier) | Live |
 | NB-189 | Home              | `Home.jsx` SNAP/Medicaid/LIHEAP promo banner — white text on sand-to-white gradient (~2.5–3:1)                     | 1.4.3 | `advanced/text-contrast`             | Serious  | **Pro Advanced** | Live |
 | NB-190 | Account           | `Account.jsx` "Quick actions" `<div>` styled as an h2 (22 px / 700 / brand-deep)                                   | 1.3.1 | `advanced/heading-markup`            | Serious  | **Pro Advanced** (uses AI credits — CV) | Live |
 | NB-191 | DMV               | `DMV.jsx` "Save $5 with online renewal" banner — gold text on white-to-pale-gold gradient                          | 1.4.3 | `advanced/text-contrast`             | Serious  | **Pro Advanced** | Live |
+| NB-192 | Login             | `Login.jsx` "Need help signing in?" styled `<div>` above the help-desk phone number — reads as a heading visually but not in the outline | 1.3.1 | `advanced/heading-markup`            | Serious  | **Pro Advanced** (uses AI credits — CV) | Live |
+| NB-193 | Services          | `Services.jsx` "Most agencies now offer same-day appointments" banner — white text on a sand-to-white gradient (~2.5–3:1) | 1.4.3 | `advanced/text-contrast` (axe-core `color-contrast` returns **Needs Review** because the bg is a gradient) | Serious | **Pro Advanced** | Live |
+| NB-194 | Vote              | `Vote.jsx` "Key dates" styled `<div>` above the registration-deadline copy — reads as a heading visually but not in the outline | 1.3.1 | `advanced/heading-markup`            | Serious  | **Pro Advanced** (uses AI credits — CV) | Live |
 | NB-IGT-001 | Schools           | `Schools.jsx` (Structure IGT) top-level returned content wrapped in `<div role="presentation">`, stripping landmark/region semantics from descendants | 1.3.1 | IGT manual — landmarks / regions | n/a (IGT) | IGT      | Live     |
 | NB-IGT-002 | Services          | `Services.jsx` (Structure IGT) second `<main>` element rendered inside the page (PublicLayout already provides a parent `<main>`)                       | 1.3.1 | IGT manual — landmarks / regions | n/a (IGT) | IGT      | Live     |
 | NB-IGT-003 | City              | `City.jsx` (Structure IGT) orphan `<section>` region with no `aria-label`, no `aria-labelledby`, and no inner heading — region landmark without an accessible name | 1.3.1 | IGT manual — landmarks / regions | n/a (IGT) | IGT      | Live     |
@@ -258,7 +261,7 @@ A "complete" Northbrook Phase 2 should cover, across the 14 pages:
 | NB-IGT-007 | Login             | `Login.jsx` (Forms IGT) "Mother's maiden name" input marked HTML `required` with NO visible required marker and NO `aria-required`                       | 3.3.2 | IGT manual — required fields     | n/a (IGT) | IGT      | Live     |
 | NB-IGT-008 | Enroll            | `Enroll.jsx` (Forms IGT) visible inline error rendered next to child's first-name input, but input has NO `aria-describedby` pointing at the message     | 3.3.1 | IGT manual — error association   | n/a (IGT) | IGT      | Live     |
 | NB-IGT-009 | Vote              | `Vote.jsx` (Forms IGT) three related "Notification preferences" checkboxes without a wrapping `<fieldset>` / `<legend>`                                  | 1.3.1 | IGT manual — control grouping    | n/a (IGT) | IGT      | Live     |
-| NB-IGT-010 | Home              | `Home.jsx` (Images IGT) two adjacent `<img>` elements with identical `src` and identical alt ("Northbrook State seal") — duplicate informative images   | 1.1.1 | IGT manual — duplicate adjacent images | n/a (IGT) | IGT  | Live     |
+| NB-IGT-010 | Home              | `Home.jsx` (Images IGT) two News-card thumbnails with identical `src` and identical alt ("Northbrook State seal") — duplicate informative images         | 1.1.1 | IGT manual — duplicate adjacent images | n/a (IGT) | IGT  | Live     |
 | NB-IGT-011 | Schools           | `Schools.jsx` (Images IGT) second school photo whose alt text does not match the image (Cedarbrook Elementary front entrance, alt reads "Our schools")  | 1.1.1 | IGT manual — alt accuracy        | n/a (IGT) | IGT      | Live     |
 | NB-IGT-012 | Account           | `Account.jsx` (Images IGT) state seal `<img alt="">` placed next to identity content — visually informative but marked decorative                        | 1.1.1 | IGT manual — decorative vs informative | n/a (IGT) | IGT  | Live     |
 | NB-IGT-013 | Permits           | `Permits.jsx` (Modals IGT) post-submit `role="dialog"` overlay with NO initial-focus management AND NO focus trap (Tab escapes to the page behind)       | 2.4.3 | IGT manual — focus on open / focus trap | n/a (IGT) | IGT | Live     |
@@ -800,3 +803,37 @@ For the most balanced spread across the four severity buckets when scanning Nort
 - **Experimental: ON** — adds `label-content-name-mismatch` and similar.
 - **Needs Review** counts: `identical-links-same-purpose` and contrast-on-gradient findings live here in axe DevTools.
 - **Pro Advanced rule pack** (always on with Pro license) — adds the AI-driven rules.
+
+## Scan-vs-catalog alignment (verified July 2026 — axe MCP server, axe-core 4.11.0)
+
+This is the **first full verification sweep** run against this catalog (no prior appendix existed). Full sweep across all 14 pages using the axe MCP server's `analyze` (WCAG 2.2 AA, `advancedRules: thorough`) and `igt` (`keyboard`) tools per CLAUDE.md's mandated workflow.
+
+### Flagship finding: systemic `display: 'none'` bug (30 instances, now fixed)
+
+Every "stray markup" style defect in this catalog (`dlitem`, and several `aria-valid-attr` / `aria-allowed-attr` / `aria-prohibited-attr` / `aria-hidden-focus` instances) was implemented with an inline `style={{ display: 'none' }}` on the offending element. **Root cause, confirmed by reading the axe-core source directly**: none of these rules set `excludeHidden: false` in their rule config, so they inherit axe-core's default behavior of skipping hidden elements entirely — the check never even runs on a `display:none` node. This wasn't a markup bug so much as a design mistake baked into the original Phase 2 authoring: the element was *never perceivable*, so axe correctly ignored it. Confirmed empirically: every single page swept was missing its `dlitem` row, and several pages were also missing their `aria-valid-attr`/`aria-allowed-attr`/`aria-prohibited-attr`/`aria-hidden-focus` rows — always traced to the same `display:none` pattern.
+
+**Fix applied**: removed the ` style={{ display: 'none' }}` (30 exact occurrences, confirmed 1:1 against the 30 affected IDs below via grep — no other legitimate UI code in these 14 files used that exact style, so the removal was a clean, unambiguous batch edit) from every affected element across all 14 page files. This makes the defects genuinely perceivable and thus correctly detectable, which is the entire point of the demo. Visually the affected elements now render as small stray text/box artifacts (e.g. "Helpful term", "Account benefit") — confirmed via Playwright screenshot, not just assumed — which reads as authentic "leftover markup" and matches the narrative already written into these elements' own code comments ("SLED pattern: leftover markup from a converted card layout").
+
+Affected IDs (all confirmed firing after the fix, spot-verified via `analyze` on Home/Login/Services/Vote): NB-018, NB-019, NB-025, NB-046, NB-055, NB-064, NB-081, NB-082, NB-083, NB-095, NB-096, NB-097, NB-103, NB-104, NB-105, NB-118, NB-127, NB-128, NB-130, NB-138, NB-139, NB-144, NB-146, NB-154, NB-157, NB-158, NB-165, NB-167, NB-168, NB-180.
+
+### Known gap: NB-181 (`aria-required-children`, Vote radiogroup)
+
+`Vote.jsx`'s empty `<div role="radiogroup">` (no `role="radio"` children) does not fire `aria-required-children` in axe-core 4.11. Root-caused via source: the rule's `reviewEmpty` option (which grants review-only leniency to empty `listbox`/`tablist`/`tree`/etc. containers) does **not** include `radiogroup` in its list, yet empirically the check still passes on an empty radiogroup — same underlying limitation already documented in DQBC's catalog for `MT-054`/`MT-074` (Transfer/Deposit radiogroups). Left as a known gap rather than force-fixed in this pass, consistent with how DQBC handled its analogous instances. Probable pivot (same as DQBC): switch to `role="tree"` (reliably requires `treeitem` children) or add a genuinely broken `role="radio"` child missing `aria-checked`.
+
+### Other individual findings
+
+- **NB-106** (Register "Intended major" input, `label` rule) — doesn't fire because the element carries `placeholder="Intended major"`, and axe-core's `label` check treats a non-empty `placeholder` as a passing (if weak) labeling mechanism. Not a hidden-element issue — a different, documented axe-core leniency. Left as-is; fixing would mean removing the placeholder entirely, which changes the field's visible appearance.
+- **NB-131** (DMV "VIN lookup" input, `label` rule) — doesn't fire because the same input already carries `aria-label="VIN"` for an unrelated reason (needed elsewhere in the markup), which independently satisfies the `label` check. Left as-is for the same reason as NB-106.
+- **Register.jsx Keyboard IGT** — the automated Keyboard IGT flagged a *new*, uncatalogued observation: a disabled `<button>Full</button>` in the course table was reported as `keyboard-inaccessible` by the tool's AI reasoning. This reads as a false positive (a `disabled` button correctly has no keyboard function) rather than a real defect — noted here for transparency, not added as a catalogued issue.
+
+### Pro Advanced rules — same caveat as DQBC
+
+Confirmed via direct inspection of the installed axe-core 4.11.0 bundle (the same one this MCP server's `analyze` tool runs locally) that none of the `advanced/*` rule IDs exist in open-source axe-core at all. The `advancedRules` parameter on `analyze` has no effect locally regardless of preset. All Pro Advanced rows in this catalog (NB-185 through NB-194) require the licensed axe DevTools Pro extension to verify.
+
+### Keyboard IGT tooling gap — same caveat as DQBC
+
+The automated Keyboard IGT correctly records each tab-stop's role/tabIndex data but does not flag a positive-`tabIndex` value out of natural order (NB-IGT-019, DMV) or a focusable `role="button"` div with `onClick` but no `onKeyDown`/`onKeyUp` (NB-IGT-018 Register, NB-IGT-020 Vote) as issues, even when the element is present in the raw tab-stop list with the anomalous property. This is the same architectural limitation already documented in DQBC's catalog — confirmed here to be tool-wide, not site-specific.
+
+### NB-192 through NB-194 added
+
+Three Pro-Advanced-tagged instances added to the 3 pages that previously had zero Pro Advanced coverage (Login, Services, Vote) — `heading-markup` ×2, `text-contrast` ×1 — rounding Pro Advanced coverage out to 7 of 14 pages. Verified via `analyze` that none of the three introduced an unintended axe-core baseline violation (e.g. the new visible text on Login/Vote and the new gradient banner on Services all pass contrast or correctly return no automatic verdict).

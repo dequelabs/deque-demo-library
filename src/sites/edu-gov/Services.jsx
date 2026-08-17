@@ -100,7 +100,7 @@ export default function Services() {
         {/* PHASE-2 a11y issue NB-118 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             Stray <dt> outside any <dl>. axe-core `dlitem` fires Serious
             (WCAG 1.3.1). */}
-        <dt style={{ display: 'none' }}>Agency</dt>
+        <dt>Agency</dt>
 
         {/* PHASE-2 a11y issue NB-119 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
             "Avg wait" rendered in pale taupe (#cdbf9f on #fff ~2.0:1).
@@ -114,6 +114,27 @@ export default function Services() {
             axe-core `aria-meter-name` fires Critical (WCAG 1.1.1). */}
         <div role="meter" aria-valuenow={12} aria-valuemin={0} aria-valuemax={60} style={{ height: 6, background: '#e5e7eb', maxWidth: 240, margin: '8px 0' }}>
           <div style={{ width: '20%', height: '100%', background: '#0a66c2' }} />
+        </div>
+
+        {/* PHASE-3 a11y issue NB-193 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
+            "Most agencies now offer same-day appointments" banner — white
+            text on a sand-to-white gradient (~2.5-3:1). axe-core
+            `color-contrast` can only return "Needs Review" because the
+            background is a CSS gradient, not a single color. axe DevTools
+            Pro Advanced `text-contrast` (screenshot-based) resolves it as
+            an automatic Serious finding — first Pro Advanced instance on
+            Services, previously had none. */}
+        <div
+          style={{
+            marginTop: 12,
+            padding: '10px 16px',
+            background: 'linear-gradient(90deg, #cdbf9f, #ffffff)',
+            borderRadius: 8,
+            color: '#ffffff',
+            fontSize: 13,
+          }}
+        >
+          Most agencies now offer same-day appointments — check availability above.
         </div>
 
         {/* PHASE-2 a11y issue NB-121 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md

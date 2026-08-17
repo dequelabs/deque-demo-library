@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import MarketingHero from '../../../components/marketing/MarketingHero.jsx';
 import RatesTable   from '../../../components/marketing/RatesTable.jsx';
 import FAQList      from '../../../components/marketing/FAQList.jsx';
 import CTABanner    from '../../../components/marketing/CTABanner.jsx';
 
 export default function FintechCreditCards() {
+  const [remember, setRemember] = useState(false);
   return (
     <>
       <MarketingHero
@@ -37,13 +39,41 @@ export default function FintechCreditCards() {
               <div className="muted" style={{ fontSize: 12, marginBottom: 12 }}>
                 Annual fee: <strong>{c.fee}</strong> · APR: <strong>{c.apr}</strong>
               </div>
-              <a className="btn btn-primary btn-block" href="/#/fintech/login">Apply</a>
+              {/* PHASE-3 a11y issue MT-091 — see ACCESSIBILITY_ISSUES.md
+                  .card-apply-btn strips the keyboard focus ring (theme.css)
+                  with no replacement visual state. axe DevTools Pro
+                  Advanced `css-focus-visible` (screenshot diff of
+                  unfocused vs focused state) flags this — same pattern as
+                  MT-010/MT-083. */}
+              <a className="btn btn-primary btn-block card-apply-btn" href="/#/fintech/login">Apply</a>
             </article>
           ))}
         </div>
       </section>
 
+      {/* PHASE-3 a11y issue MT-095 — see ACCESSIBILITY_ISSUES.md
+          RatesTable's `id` prop reuses the page's existing anchor id
+          "compare" (already used above on the card-grid <section id="compare">,
+          targeted by the hero's "Compare cards" href="#compare"). RatesTable
+          derives its own heading id as `${id}-heading` = "compare-heading" —
+          identical to the card-grid section's own <h2 id="compare-heading">.
+          Confirmed via Playwright DOM inspection: both "compare" and
+          "compare-heading" genuinely render twice, and both sections'
+          aria-labelledby reference the duplicated heading id — ambiguous
+          which heading labels which region. axe-core `duplicate-id-aria`
+          IS violated here (WCAG 4.1.1/4.1.2), but this rule ships with
+          `reviewOnFail: true` in axe-core's config — confirmed by reading
+          the rule definition directly — so it always surfaces as a
+          **Needs Review** finding, never a confirmed violation, same
+          bucket as MT-009. The axe MCP server's `analyze` tool only
+          returns confirmed violations, so this genuinely won't appear in
+          its output (verified: scanning this page returns empty) even
+          though the defect is real — check the Needs Review panel in the
+          axe DevTools extension instead. A realistic copy-paste mistake:
+          a dev reused an anchor id for a new component without realizing
+          it also drives an internal accessible-name id. */}
       <RatesTable
+        id="compare"
         heading="Rates & fees"
         caption="Credit card rates and fees"
         columns={['Card', 'Annual fee', 'Purchase APR', 'Cash advance APR', 'Foreign tx fee']}
@@ -54,6 +84,41 @@ export default function FintechCreditCards() {
         ]}
         note="APRs vary based on creditworthiness and the Prime Rate. See your cardmember agreement for full terms."
       />
+
+      {/* PHASE-3 a11y issue MT-092 — see ACCESSIBILITY_ISSUES.md
+          Keyboard-focusable (tabIndex=0), clickable CHECKBOX look-alike
+          (square box + checkmark) with no role at all — a different
+          interaction model than MT-088/MT-090's link/button look-alikes,
+          so the Keyboard IGT's AI role-mismatch reasoning suggests
+          `role="checkbox"` here. axe-core `focus-order-semantics` fires
+          Minor (BP, WCAG 2.4.3); the automated Keyboard IGT's
+          role-mismatch lens also catches this. */}
+      <div className="container" style={{ maxWidth: 700, margin: '24px auto 0', padding: '0 24px' }}>
+        <div
+          tabIndex={0}
+          onClick={() => setRemember((v) => !v)}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}
+        >
+          <span
+            style={{
+              width: 16,
+              height: 16,
+              border: '1px solid var(--border)',
+              borderRadius: 3,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: remember ? 'var(--brand-primary)' : '#fff',
+              color: '#fff',
+              fontSize: 11,
+              lineHeight: 1,
+            }}
+          >
+            {remember ? '✓' : ''}
+          </span>
+          Remember my card choice for next time
+        </div>
+      </div>
 
       <FAQList
         items={[

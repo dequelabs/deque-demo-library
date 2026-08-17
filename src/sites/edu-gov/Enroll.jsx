@@ -119,7 +119,7 @@ export default function Enroll() {
               Stray <dt> outside any <dl>. axe-core `dlitem` fires
               Serious (WCAG 1.3.1). SLED pattern: orphan markup left from
               a "definitions" component conversion. */}
-          <dt style={{ display: 'none' }}>Estimated time</dt>
+          <dt>Estimated time</dt>
           {/* PHASE-2 a11y issue NB-065 — see NORTHBROOK_ACCESSIBILITY_ISSUES.md
               Focusable <button> wrapped inside <span aria-hidden="true">,
               creating a focusable but AT-hidden control. axe-core
